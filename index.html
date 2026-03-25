@@ -24,8 +24,9 @@ html,body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Hiragino S
 .pfill{height:100%;border-radius:2px;background:linear-gradient(90deg,#f59e0b,#06b6d4,#8b5cf6);transition:width .4s;width:0}
 .ptx{display:flex;justify-content:space-between;margin-top:5px;font-size:11px;color:#555570;font-weight:500}
 .wrap{max-width:500px;margin:0 auto;padding:12px 16px 20px}
-.pnl{visibility:hidden;height:0;overflow:hidden;opacity:0;transition:opacity .2s}
-.pnl.vis{visibility:visible;height:auto;overflow:visible;opacity:1}
+/* 关键：用position+clip隐藏panel，保持input值可读 */
+.pnl{position:absolute;left:-9999px;opacity:0}
+.pnl.vis{position:static;left:auto;opacity:1}
 .shd{display:flex;align-items:center;gap:10px;margin-bottom:12px}
 .sico{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:18px}
 .sico-m{background:rgba(245,158,11,.15)}.sico-n{background:rgba(6,182,212,.15)}.sico-e{background:rgba(139,92,246,.15)}
@@ -53,18 +54,13 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
 .pw input{flex:1;width:0;min-width:0;padding:10px 4px 10px 12px;border:none;background:none;color:#e8e8f0;font-size:16px;font-family:inherit;outline:none;-webkit-appearance:none;-moz-appearance:textfield}
 .pw input::-webkit-inner-spin-button,.pw input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}.pw input::placeholder{color:#555570}
 .pu{padding-right:10px;font-size:14px;color:#8888a8;white-space:nowrap;flex-shrink:0;display:none}.pw.hv .pu{display:block}
-
-/* 时间输入框 */
-.time-fd{
-  padding:10px 12px;border-radius:10px;
+.tfd{
+  width:100%;padding:10px 12px;border-radius:10px;
   border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04);
-  color:#e8e8f0;font-size:18px;font-family:inherit;font-weight:600;
-  outline:none;-webkit-appearance:none;text-align:center;
-  width:100%;letter-spacing:2px;
+  color:#e8e8f0;font-size:16px;font-family:inherit;
+  outline:none;-webkit-appearance:none;min-height:44px;
 }
-.time-fd:focus{border-color:#6366f1}
-.time-fd::placeholder{color:#555570;font-weight:400;font-size:14px;letter-spacing:0}
-
+.tfd:focus{border-color:#6366f1}
 .bot{background:#0d0d18;border-top:1px solid rgba(255,255,255,.06);padding:12px 16px;padding-bottom:calc(12px + env(safe-area-inset-bottom,8px))}
 .bi{max-width:500px;margin:0 auto;display:flex;gap:10px}
 .bn{flex:1;padding:14px;border:none;border-radius:16px;font-size:15px;font-weight:600;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:6px;-webkit-appearance:none}.bn:active{opacity:.7}
@@ -80,7 +76,7 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
 <div class="prog"><div class="pbar"><div class="pfill" id="pf"></div></div><div class="ptx"><span id="pl">已完成 0 项</span><span id="pp">0%</span></div></div>
 <div class="wrap">
 <div class="pnl vis" id="s0"><div class="shd"><div class="sico sico-m">🌅</div><div class="stt">早上</div></div><div class="stk">
-  <div class="ic"><div class="il">⏰ 起床时间</div><input type="text" inputmode="numeric" id="wakeTime" class="time-fd" placeholder="点击输入 如 0730" maxlength="5"></div>
+  <div class="ic"><div class="il">⏰ 起床时间</div><input type="time" id="wakeTime" step="60" class="tfd"></div>
   <div class="cg"><label class="cw"><input type="checkbox" class="chk"><div class="cf"><div class="cm"><svg viewBox="0 0 16 16"><polyline points="3.5 8.5 6.5 11.5 12.5 4.5"/></svg></div><span class="ct">刷牙</span></div></label><label class="cw"><input type="checkbox" class="chk"><div class="cf"><div class="cm"><svg viewBox="0 0 16 16"><polyline points="3.5 8.5 6.5 11.5 12.5 4.5"/></svg></div><span class="ct">洗脸</span></div></label><label class="cw"><input type="checkbox" class="chk"><div class="cf"><div class="cm"><svg viewBox="0 0 16 16"><polyline points="3.5 8.5 6.5 11.5 12.5 4.5"/></svg></div><span class="ct">洗头</span></div></label></div>
   <div class="cg cg2"><label class="cw"><input type="checkbox" class="chk"><div class="cf"><div class="cm"><svg viewBox="0 0 16 16"><polyline points="3.5 8.5 6.5 11.5 12.5 4.5"/></svg></div><span class="ct">脸部擦药</span></div></label><label class="cw"><input type="checkbox" class="chk"><div class="cf"><div class="cm"><svg viewBox="0 0 16 16"><polyline points="3.5 8.5 6.5 11.5 12.5 4.5"/></svg></div><span class="ct">手部擦药</span></div></label></div>
   <div class="cg"><label class="cw"><input type="checkbox" class="chk"><div class="cf"><div class="cm"><svg viewBox="0 0 16 16"><polyline points="3.5 8.5 6.5 11.5 12.5 4.5"/></svg></div><span class="ct">换干净衣服</span></div></label><label class="cw"><input type="checkbox" class="chk"><div class="cf"><div class="cm"><svg viewBox="0 0 16 16"><polyline points="3.5 8.5 6.5 11.5 12.5 4.5"/></svg></div><span class="ct">整理发型</span></div></label><label class="cw"><input type="checkbox" class="chk"><div class="cf"><div class="cm"><svg viewBox="0 0 16 16"><polyline points="3.5 8.5 6.5 11.5 12.5 4.5"/></svg></div><span class="ct">整理衣服</span></div></label></div>
@@ -99,7 +95,7 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
   <div class="cg"><label class="cw"><input type="checkbox" class="chk"><div class="cf"><div class="cm"><svg viewBox="0 0 16 16"><polyline points="3.5 8.5 6.5 11.5 12.5 4.5"/></svg></div><span class="ct">洗澡</span></div></label><label class="cw"><input type="checkbox" class="chk"><div class="cf"><div class="cm"><svg viewBox="0 0 16 16"><polyline points="3.5 8.5 6.5 11.5 12.5 4.5"/></svg></div><span class="ct">洗头</span></div></label><label class="cw"><input type="checkbox" class="chk"><div class="cf"><div class="cm"><svg viewBox="0 0 16 16"><polyline points="3.5 8.5 6.5 11.5 12.5 4.5"/></svg></div><span class="ct">洗脚</span></div></label></div>
   <label><input type="checkbox" class="chk"><div class="rw"><div class="bx"><svg viewBox="0 0 16 16"><polyline points="3.5 8.5 6.5 11.5 12.5 4.5"/></svg></div><span class="tx">睡前刷牙</span></div></label>
   <div class="cg cg2"><label class="cw"><input type="checkbox" class="chk"><div class="cf"><div class="cm"><svg viewBox="0 0 16 16"><polyline points="3.5 8.5 6.5 11.5 12.5 4.5"/></svg></div><span class="ct">脸部擦药</span></div></label><label class="cw"><input type="checkbox" class="chk"><div class="cf"><div class="cm"><svg viewBox="0 0 16 16"><polyline points="3.5 8.5 6.5 11.5 12.5 4.5"/></svg></div><span class="ct">手部擦药</span></div></label></div>
-  <div class="ic"><div class="il">😴 睡觉时间</div><input type="text" inputmode="numeric" id="sleepTime" class="time-fd" placeholder="点击输入 如 2230" maxlength="5"></div>
+  <div class="ic"><div class="il">😴 睡觉时间</div><input type="time" id="sleepTime" step="60" class="tfd"></div>
 </div></div>
 </div>
 <div class="bot"><div class="bi"><button class="bn bs" id="btnR" type="button">↺ 重置</button><button class="bn bp" id="btnS" type="button">📸 生成截图</button></div></div>
@@ -112,85 +108,81 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
   ge('pT').value=pad(now.getHours())+':'+pad(now.getMinutes());
   function getCurDT(){var d=ge('pD').value,t=ge('pT').value;if(d&&t)return new Date(d+'T'+t);return new Date();}
   var tbs=[ge('t0'),ge('t1'),ge('t2')],pns=[ge('s0'),ge('s1'),ge('s2')],tcls=['am','pm','em'];
-  function doTab(idx){for(var i=0;i<3;i++){tbs[i].className='tbtn';pns[i].className='pnl';}tbs[idx].className='tbtn '+tcls[idx];pns[idx].className='pnl vis';}
+
+  // Tab切换：用position:absolute移出屏幕（不是display:none）
+  function doTab(idx){
+    for(var i=0;i<3;i++){tbs[i].className='tbtn';pns[i].className='pnl';}
+    tbs[idx].className='tbtn '+tcls[idx];pns[idx].className='pnl vis';
+  }
   tbs[0].onclick=function(){doTab(0);};tbs[1].onclick=function(){doTab(1);};tbs[2].onclick=function(){doTab(2);};
+
   var chks=document.querySelectorAll('.chk');
   function updP(){var total=chks.length,done=0;for(var i=0;i<total;i++){if(chks[i].checked)done++;}var pct=total>0?Math.round(done/total*100):0;ge('pf').style.width=pct+'%';ge('pl').textContent='已完成 '+done+'/'+total+' 项';ge('pp').textContent=pct+'%';}
   for(var i=0;i<chks.length;i++){chks[i].onchange=function(){updP();sav();};}
   function spw(iid,wid){var inp=ge(iid),w=ge(wid);function u(){w.className=inp.value?'pw hv':'pw';}inp.oninput=function(){u();sav();};inp.onchange=function(){u();sav();};u();}
 
-  // 时间自动格式化：输入数字自动加冒号
-  function setupTimeInput(id){
-    var el=ge(id);
-    el.oninput=function(){
-      // 只保留数字
-      var nums=el.value.replace(/[^0-9]/g,'');
-      if(nums.length>=3){
-        el.value=nums.substring(0,2)+':'+nums.substring(2,4);
-      }else{
-        el.value=nums;
-      }
-      sav();
-    };
-    el.onchange=sav;
-    el.onblur=function(){
-      // 失焦时格式化
-      var nums=el.value.replace(/[^0-9]/g,'');
-      if(nums.length===3) nums='0'+nums;
-      if(nums.length>=4){
-        var h=parseInt(nums.substring(0,2)),m=parseInt(nums.substring(2,4));
-        if(h>23)h=23;if(m>59)m=59;
-        el.value=pad(h)+':'+pad(m);
-      }else if(nums.length>0){
-        el.value=nums; // 不完整，保留
-      }
-      sav();
-    };
-  }
-  setupTimeInput('wakeTime');
-  setupTimeInput('sleepTime');
-
+  // ══ fdata 内存对象：每个input变化时立即存入 ══
+  var fdata={};
   var fids=['wakeTime','sleepTime','breakfastPrice','breakfastFood','lunchPrice','lunchFood','dinnerPrice','dinnerFood'];
   function skey(){var d=getCurDT();return 'dk_'+d.getFullYear()+'_'+(d.getMonth()+1)+'_'+d.getDate();}
+
+  // 给每个字段绑定事件，变化时写入fdata
+  function bindField(id){
+    var el=ge(id);
+    function up(){fdata[id]=el.value;sav();}
+    el.onchange=up;
+    el.oninput=up;
+    el.onblur=up;
+  }
+  for(var i=0;i<fids.length;i++) bindField(fids[i]);
+
+  // 保存：合并写入，从fdata读（不从input读，避免隐藏input值丢失）
   function sav(){
     try{
       var o={c:[],f:{}};
       for(var j=0;j<chks.length;j++)o.c.push(chks[j].checked);
-      for(var j=0;j<fids.length;j++){var v=ge(fids[j]).value;if(v)o.f[fids[j]]=v;}
+      for(var k in fdata){if(fdata[k])o.f[k]=fdata[k];}
       localStorage.setItem(skey(),JSON.stringify(o));
     }catch(e){}
   }
+
+  // 加载：恢复到input和fdata
   function ld(){
     try{var raw=localStorage.getItem(skey());if(!raw)return;var o=JSON.parse(raw);
     if(o.c){for(var j=0;j<chks.length&&j<o.c.length;j++)chks[j].checked=!!o.c[j];}
-    if(o.f){for(var j=0;j<fids.length;j++){if(o.f[fids[j]])ge(fids[j]).value=o.f[fids[j]];}}
+    if(o.f){for(var j=0;j<fids.length;j++){var v=o.f[fids[j]];if(v){ge(fids[j]).value=v;fdata[fids[j]]=v;}}}
     updP();}catch(e){}
   }
-  var allInputs=document.querySelectorAll('.fd');
-  for(var i=0;i<allInputs.length;i++){allInputs[i].onchange=sav;allInputs[i].oninput=sav;allInputs[i].onblur=sav;}
 
   function toast(m){var t=ge('toast');t.textContent=m;t.className='toast show';setTimeout(function(){t.className='toast';},2000);}
-  ge('btnR').onclick=function(){if(!confirm('确定要重置所有打卡记录吗？'))return;for(var j=0;j<chks.length;j++)chks[j].checked=false;for(var j=0;j<fids.length;j++)ge(fids[j]).value='';try{localStorage.removeItem(skey());}catch(e){}updP();spw('breakfastPrice','w0');spw('lunchPrice','w1');spw('dinnerPrice','w2');toast('已重置 ✓');};
 
-  // ══ 截图 ══
+  ge('btnR').onclick=function(){
+    if(!confirm('确定要重置所有打卡记录吗？'))return;
+    for(var j=0;j<chks.length;j++)chks[j].checked=false;
+    for(var j=0;j<fids.length;j++)ge(fids[j]).value='';
+    fdata={};
+    try{localStorage.removeItem(skey());}catch(e){}
+    updP();spw('breakfastPrice','w0');spw('lunchPrice','w1');spw('dinnerPrice','w2');
+    toast('已重置 ✓');
+  };
+
+  // ══ 截图：从fdata读取（始终可靠）══
   ge('btnS').onclick=function(){
-    var wake=ge('wakeTime').value;
-    var sleep=ge('sleepTime').value;
-    // 兜底localStorage
-    if(!wake||!sleep){try{var raw=localStorage.getItem(skey());if(raw){var st=JSON.parse(raw);if(st.f){if(!wake)wake=st.f.wakeTime||'';if(!sleep)sleep=st.f.sleepTime||'';}}}catch(e){}}
+    // 再从localStorage兜底一次
+    try{var raw=localStorage.getItem(skey());if(raw){var st=JSON.parse(raw);if(st.f){for(var k in st.f){if(st.f[k]&&!fdata[k])fdata[k]=st.f[k];}}}}catch(e){}
+
+    var wake=fdata.wakeTime||'';
+    var sleep=fdata.sleepTime||'';
+    var bP=fdata.breakfastPrice||'',bF=fdata.breakfastFood||'未记录';
+    var lP=fdata.lunchPrice||'',lF=fdata.lunchFood||'未记录';
+    var dP=fdata.dinnerPrice||'',dF=fdata.dinnerFood||'未记录';
+    var spend=(parseFloat(bP)||0)+(parseFloat(lP)||0)+(parseFloat(dP)||0);
 
     var total=chks.length,done=0;
     for(var i=0;i<total;i++){if(chks[i].checked)done++;}
     var pct=total>0?Math.round(done/total*100):0;
     var dt=getCurDT(),wks=['日','一','二','三','四','五','六'];
-    var ds=dt.getFullYear()+'年'+(dt.getMonth()+1)+'月'+dt.getDate()+'日 周'+wks[dt.getDay()];
-    var bP=ge('breakfastPrice').value,bF=ge('breakfastFood').value||'未记录';
-    var lP=ge('lunchPrice').value,lF=ge('lunchFood').value||'未记录';
-    var dP=ge('dinnerPrice').value,dF=ge('dinnerFood').value||'未记录';
-    // 兜底
-    if(!bP||!lP||!dP||bF==='未记录'||lF==='未记录'||dF==='未记录'){try{var raw=localStorage.getItem(skey());if(raw){var st=JSON.parse(raw);if(st.f){if(!bP&&st.f.breakfastPrice)bP=st.f.breakfastPrice;if(bF==='未记录'&&st.f.breakfastFood)bF=st.f.breakfastFood;if(!lP&&st.f.lunchPrice)lP=st.f.lunchPrice;if(lF==='未记录'&&st.f.lunchFood)lF=st.f.lunchFood;if(!dP&&st.f.dinnerPrice)dP=st.f.dinnerPrice;if(dF==='未记录'&&st.f.dinnerFood)dF=st.f.dinnerFood;}}}catch(e){}}
-    if(!bF)bF='未记录';if(!lF)lF='未记录';if(!dF)dF='未记录';
-    var spend=(parseFloat(bP)||0)+(parseFloat(lP)||0)+(parseFloat(dP)||0);
+    var ds=dt.getFullYear()+'年'+(dt.getMonth()+1)+'月'+dt.getDate()+'日 周'+wks[dt.getDay()]+' '+pad(dt.getHours())+':'+pad(dt.getMinutes());
 
     function col(sid){var s=ge(sid),lbs=s.querySelectorAll('label'),arr=[];for(var k=0;k<lbs.length;k++){var cb=lbs[k].querySelector('.chk');var tx=lbs[k].querySelector('.tx')||lbs[k].querySelector('.ct');if(cb&&tx)arr.push({t:tx.textContent,ok:cb.checked});}return arr;}
     function rr(c,x,y,w,h,r){c.beginPath();c.moveTo(x+r,y);c.lineTo(x+w-r,y);c.quadraticCurveTo(x+w,y,x+w,y+r);c.lineTo(x+w,y+h-r);c.quadraticCurveTo(x+w,y+h,x+w-r,y+h);c.lineTo(x+r,y+h);c.quadraticCurveTo(x,y+h,x,y+h-r);c.lineTo(x,y+r);c.quadraticCurveTo(x,y,x+r,y);c.closePath();}
@@ -246,8 +238,61 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
       return cy;
     }
     var totalH=draw(true);cv.height=totalH;ctx.fillStyle='#0a0a0f';ctx.fillRect(0,0,LW,totalH);draw(false);
-    try{var url=cv.toDataURL('image/png');var a=document.createElement('a');a.href=url;a.download='每日汇报_'+(dt.getMonth()+1)+'月'+dt.getDate()+'日.png';document.body.appendChild(a);a.click();document.body.removeChild(a);toast('截图已保存 📸');}catch(e){toast('截图失败: '+e.message);}
+    try{var url=cv.toDataURL('image/png');showPreview(url,(dt.getMonth()+1)+'月'+dt.getDate()+'日');}catch(e){toast('截图失败: '+e.message);}
   };
+
+  // ══ 截图预览弹窗 ══
+  function showPreview(dataUrl,dateLabel){
+    // 创建遮罩
+    var mask=document.createElement('div');
+    mask.style.cssText='position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.85);z-index:300;display:flex;flex-direction:column;align-items:center;padding:20px;overflow-y:auto;-webkit-overflow-scrolling:touch;';
+
+    // 提示文字
+    var tip=document.createElement('div');
+    tip.style.cssText='color:#8888a8;font-size:13px;margin-bottom:12px;text-align:center;';
+    tip.textContent='💡 长按图片可保存到相册';
+    mask.appendChild(tip);
+
+    // 图片
+    var img=document.createElement('img');
+    img.src=dataUrl;
+    img.style.cssText='width:100%;max-width:390px;border-radius:12px;box-shadow:0 8px 30px rgba(0,0,0,.5);';
+    mask.appendChild(img);
+
+    // 按钮区
+    var btns=document.createElement('div');
+    btns.style.cssText='display:flex;gap:10px;margin-top:16px;width:100%;max-width:390px;';
+
+    // 分享按钮
+    var shareBtn=document.createElement('button');
+    shareBtn.textContent='📤 分享到其它APP / 保存到相册';
+    shareBtn.style.cssText='flex:1;padding:14px;border:none;border-radius:14px;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;font-size:15px;font-weight:600;font-family:inherit;-webkit-appearance:none;';
+    shareBtn.onclick=function(){
+      try{
+        var arr=dataUrl.split(','),mime=arr[0].match(/:(.*?);/)[1];
+        var bstr=atob(arr[1]),n=bstr.length,u8=new Uint8Array(n);
+        while(n--)u8[n]=bstr.charCodeAt(n);
+        var blob=new Blob([u8],{type:mime});
+        var file=new File([blob],'每日汇报_'+dateLabel+'.png',{type:'image/png'});
+        if(navigator.share && navigator.canShare && navigator.canShare({files:[file]})){
+          navigator.share({files:[file],title:'每日打卡汇报'}).then(function(){
+            toast('分享成功 ✓');
+          }).catch(function(err){if(err.name!=='AbortError') toast('分享取消');});
+        }else{toast('请长按图片保存后再分享');}
+      }catch(e){toast('请长按图片保存后再分享');}
+    };
+    btns.appendChild(shareBtn);
+    mask.appendChild(btns);
+
+    // 关闭按钮
+    var closeBtn=document.createElement('button');
+    closeBtn.textContent='✕ 关闭';
+    closeBtn.style.cssText='margin-top:12px;padding:10px 30px;border:none;border-radius:10px;background:transparent;color:#555570;font-size:14px;font-family:inherit;-webkit-appearance:none;';
+    closeBtn.onclick=function(){document.body.removeChild(mask);};
+    mask.appendChild(closeBtn);
+
+    document.body.appendChild(mask);
+  }
 
   ld();updP();spw('breakfastPrice','w0');spw('lunchPrice','w1');spw('dinnerPrice','w2');
 })();
