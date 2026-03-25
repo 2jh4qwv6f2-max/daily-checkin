@@ -95,12 +95,36 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
 .reason-btn{flex:1;padding:12px;border:none;border-radius:14px;font-size:15px;font-weight:600;font-family:inherit;cursor:pointer;-webkit-appearance:none}
 .reason-btn-ok{background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff}
 .reason-btn-cancel{background:#1c1c2e;color:#8888a8;border:1px solid rgba(255,255,255,.06)}
+.tbtn.ht{background:rgba(34,197,94,.15);color:#22c55e}
+.hq-btn{padding:7px 14px;border:1px solid rgba(255,255,255,.08);border-radius:8px;background:rgba(255,255,255,.04);color:#a0a0c0;font-size:13px;font-weight:500;font-family:inherit;cursor:pointer;-webkit-appearance:none}
+.hq-btn.hq-sel{background:rgba(99,102,241,.2);border-color:rgba(99,102,241,.4);color:#a5b4fc}
+.h-stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.h-stat-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:10px 12px;text-align:center}
+.h-stat-val{font-size:20px;font-weight:800;color:#a78bfa}
+.h-stat-lbl{font-size:11px;color:#8888a8;margin-top:2px}
+.h-day{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:12px;margin-top:8px;cursor:pointer;-webkit-user-select:none;user-select:none}
+.h-day:active{background:rgba(255,255,255,.08)}
+.h-day-top{display:flex;justify-content:space-between;align-items:center}
+.h-day-date{font-size:14px;font-weight:600;color:#e8e8f0}
+.h-day-pct{font-size:14px;font-weight:700}
+.h-day-bot{display:flex;gap:10px;margin-top:4px;font-size:12px;color:#8888a8}
+.h-day-edit{display:inline-flex;align-items:center;gap:3px;padding:2px 8px;border-radius:6px;background:rgba(245,158,11,.15);color:#f59e0b;font-size:11px;font-weight:600;cursor:pointer}
+.h-log-item{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:10px 12px;margin-bottom:8px}
+.h-log-hd{display:flex;justify-content:space-between;font-size:12px;color:#8888a8;margin-bottom:6px}
+.h-log-reason{font-size:12px;color:#f59e0b;margin-bottom:6px}
+.h-log-change{display:flex;justify-content:space-between;align-items:center;padding:4px 0;font-size:12px;border-bottom:1px solid rgba(255,255,255,.04)}
+.h-log-change:last-child{border-bottom:none}
+.h-log-field{color:#a0a0c0;flex-shrink:0}
+.h-log-diff{color:#e8e8f0;text-align:right}
+.h-log-diff .old{color:#ef4444;text-decoration:line-through;margin-right:4px}
+.h-log-diff .new{color:#22c55e}
+.h-loading{text-align:center;padding:20px;color:#555570;font-size:13px}
 </style>
 </head>
 <body>
 <div class="toast" id="toast"></div>
 <div class="hdr"><div class="hdr-in"><span class="logo">每日打卡</span><div class="dt-row"><input type="date" id="pD"><input type="time" id="pT" step="60"></div></div></div>
-<div class="tabs"><button class="tbtn am" id="t0" type="button">🌅 早上</button><button class="tbtn" id="t1" type="button">🌞 中午</button><button class="tbtn" id="t2" type="button">🌙 晚上</button></div>
+<div class="tabs"><button class="tbtn am" id="t0" type="button">🌅 早上</button><button class="tbtn" id="t1" type="button">🌞 中午</button><button class="tbtn" id="t2" type="button">🌙 晚上</button><button class="tbtn" id="t3" type="button">📊 历史</button></div>
 <div class="prog"><div class="pbar"><div class="pfill" id="pf" style="width: 0%;"></div></div><div class="ptx"><span id="pl">已完成 0/20 项</span><span id="pp">0%</span></div></div>
 <div class="wrap">
 <div class="pnl vis" id="s0"><div class="shd"><div class="sico sico-m">🌅</div><div class="stt">早上</div></div><div class="stk">
@@ -125,6 +149,28 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
   <div class="cg cg2"><label class="cw"><input type="checkbox" class="chk"><div class="cf"><div class="cm"><svg viewBox="0 0 16 16"><polyline points="3.5 8.5 6.5 11.5 12.5 4.5"></polyline></svg></div><span class="ct">脸部擦药</span></div></label><label class="cw"><input type="checkbox" class="chk"><div class="cf"><div class="cm"><svg viewBox="0 0 16 16"><polyline points="3.5 8.5 6.5 11.5 12.5 4.5"></polyline></svg></div><span class="ct">手部擦药</span></div></label></div>
   <div class="ic"><div class="il">😴 睡觉时间</div><input type="time" id="sleepTime" step="60" class="tfd"></div>
 </div></div>
+<div class="pnl" id="s3">
+  <div class="shd"><div class="sico" style="background:rgba(34,197,94,.15)">📊</div><div class="stt">历史记录</div></div>
+  <div class="stk">
+    <div class="ic">
+      <div class="il">📅 查询范围</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <button class="hq-btn hq-sel" data-range="week" type="button">本周</button>
+        <button class="hq-btn" data-range="month" type="button">本月</button>
+        <button class="hq-btn" data-range="quarter" type="button">本季</button>
+        <button class="hq-btn" data-range="year" type="button">本年</button>
+      </div>
+    </div>
+    <div class="ic" id="hStats" style="display:none">
+      <div class="il">📈 统计概览</div>
+      <div id="hStatsBody"></div>
+    </div>
+    <div class="ic" id="hList" style="display:none">
+      <div class="il">📋 打卡记录</div>
+      <div id="hListBody"></div>
+    </div>
+  </div>
+</div>
 </div>
 <div class="bot"><div class="bi"><button class="bn bs" id="btnR" type="button">↺ 重置</button><button class="bn bp" id="btnS" type="button">📸 生成截图</button></div></div>
 <script>
@@ -135,14 +181,15 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
   ge('pD').value=now.getFullYear()+'-'+pad(now.getMonth()+1)+'-'+pad(now.getDate());
   ge('pT').value=pad(now.getHours())+':'+pad(now.getMinutes());
   function getCurDT(){var d=ge('pD').value,t=ge('pT').value;if(d&&t)return new Date(d+'T'+t);return new Date();}
-  var tbs=[ge('t0'),ge('t1'),ge('t2')],pns=[ge('s0'),ge('s1'),ge('s2')],tcls=['am','pm','em'];
+  var tbs=[ge('t0'),ge('t1'),ge('t2'),ge('t3')],pns=[ge('s0'),ge('s1'),ge('s2'),ge('s3')],tcls=['am','pm','em','ht'];
 
   // Tab切换：用position:absolute移出屏幕（不是display:none）
   function doTab(idx){
-    for(var i=0;i<3;i++){tbs[i].className='tbtn';pns[i].className='pnl';}
+    for(var i=0;i<4;i++){tbs[i].className='tbtn';pns[i].className='pnl';}
     tbs[idx].className='tbtn '+tcls[idx];pns[idx].className='pnl vis';
+    if(idx===3)loadHistory();
   }
-  tbs[0].onclick=function(){doTab(0);};tbs[1].onclick=function(){doTab(1);};tbs[2].onclick=function(){doTab(2);};
+  tbs[0].onclick=function(){doTab(0);};tbs[1].onclick=function(){doTab(1);};tbs[2].onclick=function(){doTab(2);};tbs[3].onclick=function(){doTab(3);};
 
   var chks=document.querySelectorAll('.chk');
   function updP(){var total=chks.length,done=0;for(var i=0;i<total;i++){if(chks[i].checked)done++;}var pct=total>0?Math.round(done/total*100):0;ge('pf').style.width=pct+'%';ge('pl').textContent='已完成 '+done+'/'+total+' 项';ge('pp').textContent=pct+'%';}
@@ -521,6 +568,265 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
     mask.appendChild(box);
     document.body.appendChild(mask);
   }
+
+  // ══════════════════════════════════════
+  // API 配置（部署后替换为你的实际值）
+  // ══════════════════════════════════════
+  var API_BASE='https://daily-checkin.daily-checkin.workers.dev';
+  var AUTH_TOKEN='my-secret-2026';
+
+  function apiCall(method,path,body){
+    if(!API_BASE)return Promise.resolve(null);
+    var opts={method:method,headers:{'Content-Type':'application/json','Authorization':'Bearer '+AUTH_TOKEN}};
+    if(body)opts.body=JSON.stringify(body);
+    return fetch(API_BASE+path,opts).then(function(r){return r.json();}).catch(function(e){console.error('API错误:',e);return null;});
+  }
+
+  // ══ 收集当前页面数据为 API 提交格式 ══
+  function collectData(){
+    var d=ge('pD').value;
+    var cl=[];for(var j=0;j<chks.length;j++)cl.push(chks[j].checked);
+    var meals={
+      breakfast:{price:fdata.breakfastPrice||'',food:fdata.breakfastFood||'',home:fdata.breakfastHome==='1'},
+      lunch:{price:fdata.lunchPrice||'',food:fdata.lunchFood||'',home:fdata.lunchHome==='1'},
+      dinner:{price:fdata.dinnerPrice||'',food:fdata.dinnerFood||'',home:fdata.dinnerHome==='1'}
+    };
+    var bP=parseFloat(fdata.breakfastPrice)||0,lP=parseFloat(fdata.lunchPrice)||0,dP=parseFloat(fdata.dinnerPrice)||0;
+    var total=chks.length,dn=0;for(var j=0;j<total;j++){if(chks[j].checked)dn++;}
+    var reasons=fdata._reasons||{};
+    return {
+      date:d,wake_time:fdata.wakeTime||'',sleep_time:fdata.sleepTime||'',
+      checklist:JSON.stringify(cl),meals:JSON.stringify(meals),reasons:JSON.stringify(reasons),
+      total:total,done:dn,pct:total>0?Math.round(dn/total*100):0,spend:bP+lP+dP
+    };
+  }
+
+  // ══ 截图后同步到云端 ══
+  function syncToCloud(editReason){
+    var data=collectData();
+    if(editReason)data.edit_reason=editReason;
+    apiCall('POST','/api/checkin',data).then(function(res){
+      if(res&&res.ok){
+        if(res.logged)toast('已保存并记录修改日志 ✓');
+        else toast('已保存到云端 ✓');
+      }
+    });
+  }
+
+  // ══ 从云端加载当日数据 ══
+  function loadFromCloud(){
+    var d=ge('pD').value;
+    if(!API_BASE||!d)return;
+    apiCall('GET','/api/checkin?date='+d).then(function(res){
+      if(!res||!res.data)return;
+      var r=res.data;
+      // 恢复 checklist
+      try{
+        var cl=JSON.parse(r.checklist||'[]');
+        for(var j=0;j<chks.length&&j<cl.length;j++)chks[j].checked=!!cl[j];
+      }catch(e){}
+      // 恢复字段
+      if(r.wake_time){ge('wakeTime').value=r.wake_time;fdata.wakeTime=r.wake_time;}
+      if(r.sleep_time){ge('sleepTime').value=r.sleep_time;fdata.sleepTime=r.sleep_time;}
+      // 恢复餐饮
+      try{
+        var m=JSON.parse(r.meals||'{}');
+        if(m.breakfast){
+          if(m.breakfast.price){ge('breakfastPrice').value=m.breakfast.price;fdata.breakfastPrice=m.breakfast.price;}
+          if(m.breakfast.food){ge('breakfastFood').value=m.breakfast.food;fdata.breakfastFood=m.breakfast.food;}
+          if(m.breakfast.home){ge('breakfastHome').checked=true;fdata.breakfastHome='1';}
+        }
+        if(m.lunch){
+          if(m.lunch.price){ge('lunchPrice').value=m.lunch.price;fdata.lunchPrice=m.lunch.price;}
+          if(m.lunch.food){ge('lunchFood').value=m.lunch.food;fdata.lunchFood=m.lunch.food;}
+          if(m.lunch.home){ge('lunchHome').checked=true;fdata.lunchHome='1';}
+        }
+        if(m.dinner){
+          if(m.dinner.price){ge('dinnerPrice').value=m.dinner.price;fdata.dinnerPrice=m.dinner.price;}
+          if(m.dinner.food){ge('dinnerFood').value=m.dinner.food;fdata.dinnerFood=m.dinner.food;}
+          if(m.dinner.home){ge('dinnerHome').checked=true;fdata.dinnerHome='1';}
+        }
+      }catch(e){}
+      // 恢复 reasons
+      try{var rs=JSON.parse(r.reasons||'{}');if(rs&&Object.keys(rs).length)fdata._reasons=rs;}catch(e){}
+      updP();spw('breakfastPrice','w0');spw('lunchPrice','w1');spw('dinnerPrice','w2');
+    });
+  }
+
+  // ══ 判断是否在修改历史记录 ══
+  function isEditingHistory(){
+    var d=ge('pD').value;if(!d)return false;
+    var checkinDate=new Date(d+'T00:00:00');
+    var tomorrow=new Date(checkinDate.getTime()+86400000);
+    return new Date()>=tomorrow;
+  }
+
+  // ══ 历史面板逻辑 ══
+  var hRange='week';
+  function getDateRange(range){
+    var now=new Date(),y=now.getFullYear(),m=now.getMonth(),d=now.getDate();
+    var day=now.getDay()||7;// 周一=1
+    var from,to;
+    if(range==='week'){from=new Date(y,m,d-day+1);to=new Date(y,m,d-day+7);}
+    else if(range==='month'){from=new Date(y,m,1);to=new Date(y,m+1,0);}
+    else if(range==='quarter'){var q=Math.floor(m/3)*3;from=new Date(y,q,1);to=new Date(y,q+3,0);}
+    else{from=new Date(y,0,1);to=new Date(y,11,31);}
+    return {from:fmt(from),to:fmt(to)};
+    function fmt(dt){return dt.getFullYear()+'-'+pad(dt.getMonth()+1)+'-'+pad(dt.getDate());}
+  }
+
+  function loadHistory(){
+    if(!API_BASE){ge('hStatsBody').innerHTML='<div class="h-loading">请先配置 API 地址</div>';ge('hStats').style.display='';return;}
+    var r=getDateRange(hRange);
+    ge('hStatsBody').innerHTML='<div class="h-loading">加载中...</div>';
+    ge('hListBody').innerHTML='<div class="h-loading">加载中...</div>';
+    ge('hStats').style.display='';ge('hList').style.display='';
+
+    // 并行请求 stats 和 range
+    Promise.all([
+      apiCall('GET','/api/checkin/stats?from='+r.from+'&to='+r.to),
+      apiCall('GET','/api/checkin/range?from='+r.from+'&to='+r.to)
+    ]).then(function(arr){
+      var stats=arr[0],range=arr[1];
+      renderStats(stats);
+      renderList(range?range.data:[]);
+    });
+  }
+
+  function renderStats(s){
+    if(!s){ge('hStatsBody').innerHTML='<div class="h-loading">加载失败</div>';return;}
+    var pctColor=s.avg_pct>=80?'#22c55e':s.avg_pct>=50?'#f59e0b':'#ef4444';
+    ge('hStatsBody').innerHTML=
+      '<div class="h-stat-grid">'+
+      '<div class="h-stat-card"><div class="h-stat-val" style="color:'+pctColor+'">'+Math.round(s.avg_pct||0)+'%</div><div class="h-stat-lbl">平均完成率</div></div>'+
+      '<div class="h-stat-card"><div class="h-stat-val">'+(s.checked_days||0)+'/'+(s.total_days||0)+'</div><div class="h-stat-lbl">打卡天数</div></div>'+
+      '<div class="h-stat-card"><div class="h-stat-val" style="color:#f59e0b">¥'+Math.round(s.avg_spend||0)+'</div><div class="h-stat-lbl">日均消费</div></div>'+
+      '<div class="h-stat-card"><div class="h-stat-val" style="color:#f59e0b">¥'+Math.round(s.total_spend||0)+'</div><div class="h-stat-lbl">总消费</div></div>'+
+      '</div>'+
+      (s.best_day?'<div style="margin-top:8px;font-size:12px;color:#8888a8">🏆 最佳: '+s.best_day.date+' ('+s.best_day.pct+'%)'+
+      (s.worst_day?' · 💪 加油: '+s.worst_day.date+' ('+s.worst_day.pct+'%)':'')+
+      (s.modified_count?' · ✏️ 修改过'+s.modified_count+'天':'')+'</div>':'');
+  }
+
+  function renderList(data){
+    if(!data||!data.length){ge('hListBody').innerHTML='<div class="h-loading">暂无记录</div>';return;}
+    var wks=['日','一','二','三','四','五','六'];
+    var html='';
+    for(var i=0;i<data.length;i++){
+      var r=data[i];
+      var dt=new Date(r.date+'T00:00:00');
+      var pctColor=r.pct>=80?'#22c55e':r.pct>=50?'#f59e0b':'#ef4444';
+      html+='<div class="h-day" data-date="'+r.date+'">'+
+        '<div class="h-day-top">'+
+        '<span class="h-day-date">'+(dt.getMonth()+1)+'/'+dt.getDate()+' 周'+wks[dt.getDay()]+'</span>'+
+        '<span class="h-day-pct" style="color:'+pctColor+'">'+r.pct+'%</span>'+
+        '</div><div class="h-day-bot">'+
+        '<span>'+r.done+'/'+r.total+'项</span>'+
+        '<span>¥'+Math.round(r.spend||0)+'</span>'+
+        (r.is_modified?'<span class="h-day-edit" data-date="'+r.date+'">✏️ 已修改(v'+r.version+')</span>':'')+
+        '</div></div>';
+    }
+    ge('hListBody').innerHTML=html;
+
+    // 绑定"已修改"标签点击
+    var editBtns=ge('hListBody').querySelectorAll('.h-day-edit');
+    for(var i=0;i<editBtns.length;i++){
+      editBtns[i].onclick=function(e){
+        e.stopPropagation();
+        showEditLog(this.getAttribute('data-date'));
+      };
+    }
+  }
+
+  // ══ 显示修改日志弹窗 ══
+  function showEditLog(date){
+    var mask=document.createElement('div');mask.className='reason-mask';
+    var box=document.createElement('div');box.className='reason-box';
+    box.innerHTML='<div class="reason-title">📋 '+date+' 修改记录</div><div class="h-loading">加载中...</div>';
+    var closeBtn=document.createElement('button');closeBtn.className='reason-btn reason-btn-cancel';closeBtn.textContent='关闭';closeBtn.style.marginTop='12px';closeBtn.style.width='100%';
+    closeBtn.onclick=function(){document.body.removeChild(mask);};
+    box.appendChild(closeBtn);
+    mask.appendChild(box);document.body.appendChild(mask);
+
+    apiCall('GET','/api/checkin/log?date='+date).then(function(res){
+      var logs=(res&&res.data)||[];
+      if(!logs.length){box.querySelector('.h-loading').textContent='无修改记录';return;}
+      var html='';
+      for(var i=0;i<logs.length;i++){
+        var l=logs[i];
+        var changes=[];try{changes=JSON.parse(l.change_summary||'[]');}catch(e){}
+        html+='<div class="h-log-item"><div class="h-log-hd"><span>第'+l.version+'次修改</span><span>'+l.edited_at+'</span></div>';
+        if(l.edit_reason)html+='<div class="h-log-reason">💬 '+l.edit_reason+'</div>';
+        for(var j=0;j<changes.length;j++){
+          var c=changes[j];
+          html+='<div class="h-log-change"><span class="h-log-field">'+c.label+'</span><span class="h-log-diff"><span class="old">'+c.old+'</span>→ <span class="new">'+c.new+'</span></span></div>';
+        }
+        html+='</div>';
+      }
+      box.querySelector('.h-loading').outerHTML=html;
+    });
+  }
+
+  // ══ 历史范围切换按钮 ══
+  var hqBtns=document.querySelectorAll('.hq-btn');
+  for(var i=0;i<hqBtns.length;i++){
+    hqBtns[i].onclick=function(){
+      for(var j=0;j<hqBtns.length;j++)hqBtns[j].classList.remove('hq-sel');
+      this.classList.add('hq-sel');
+      hRange=this.getAttribute('data-range');
+      loadHistory();
+    };
+  }
+
+  // ══ 截图后同步到云端（挂载到截图流程）══
+  var _origBtnSClick2=ge('btnS').onclick;
+  ge('btnS').onclick=function(){
+    var self=this;
+    if(isEditingHistory()&&API_BASE){
+      // 隔天修改，弹窗填原因
+      showEditReasonModal(function(reason){
+        // 先执行原有截图流程
+        _origBtnSClick2.call(self);
+        // 然后同步
+        syncToCloud(reason);
+      });
+    }else{
+      _origBtnSClick2.call(self);
+      syncToCloud();
+    }
+  };
+
+  function showEditReasonModal(onDone){
+    var mask=document.createElement('div');mask.className='reason-mask';
+    var box=document.createElement('div');box.className='reason-box';
+    box.innerHTML='<div class="reason-title">⚠️ 你正在修改历史记录<br><span style="font-size:13px;font-weight:400;color:#8888a8">本次修改将被记录日志</span></div>';
+    var quickReasons=['记错了','漏记了','补充信息'];
+    var qk=document.createElement('div');qk.className='reason-qk';qk.style.marginBottom='8px';
+    var inp=document.createElement('input');inp.className='reason-input';inp.placeholder='修改原因（选填）';
+    var chosen='';
+    for(var q=0;q<quickReasons.length;q++){
+      (function(r){
+        var btn=document.createElement('span');btn.className='reason-qk-btn';btn.textContent=r;
+        btn.onclick=function(){
+          var sibs=qk.querySelectorAll('.reason-qk-btn');for(var x=0;x<sibs.length;x++)sibs[x].classList.remove('sel');
+          btn.classList.add('sel');inp.value=r;chosen=r;
+        };
+        qk.appendChild(btn);
+      })(quickReasons[q]);
+    }
+    inp.oninput=function(){chosen=inp.value;var sibs=qk.querySelectorAll('.reason-qk-btn');for(var x=0;x<sibs.length;x++)sibs[x].classList.remove('sel');};
+    box.appendChild(qk);box.appendChild(inp);
+    var btns=document.createElement('div');btns.className='reason-btns';
+    var cancelBtn=document.createElement('button');cancelBtn.className='reason-btn reason-btn-cancel';cancelBtn.textContent='取消';
+    cancelBtn.onclick=function(){document.body.removeChild(mask);};
+    var okBtn=document.createElement('button');okBtn.className='reason-btn reason-btn-ok';okBtn.textContent='确认修改';
+    okBtn.onclick=function(){document.body.removeChild(mask);onDone(chosen);};
+    btns.appendChild(cancelBtn);btns.appendChild(okBtn);box.appendChild(btns);
+    mask.appendChild(box);document.body.appendChild(mask);
+  }
+
+  // ══ 页面加载时尝试从云端恢复 ══
+  setTimeout(function(){loadFromCloud();},100);
 
   ld();updP();spw('breakfastPrice','w0');spw('lunchPrice','w1');spw('dinnerPrice','w2');
 })();
