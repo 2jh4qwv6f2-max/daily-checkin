@@ -338,7 +338,7 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
   </div>
 </div>
 </div>
-<div class="bot"><div class="bi"><button class="bn bs" id="btnR" type="button">↺ 重置</button><button class="bn bp" id="btnS" type="button">📸 生成截图</button></div></div>
+<div class="bot" id="botBar"><div class="bi"><button class="bn bs" id="btnR" type="button">↺ 重置</button><button class="bn bp" id="btnS" type="button">📸 生成截图</button></div></div>
 <script>
 (function(){
   function pad(n){return n<10?'0'+n:''+n;}
@@ -353,6 +353,8 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
   function doTab(idx){
     for(var i=0;i<5;i++){tbs[i].className='tbtn';pns[i].className='pnl';}
     tbs[idx].className='tbtn '+tcls[idx];pns[idx].className='pnl vis';
+    // 历史(3)和管理(4)面板隐藏底部按钮
+    ge('botBar').style.display=(idx>=3)?'none':'';
     if(idx===3)loadHistory();
     if(idx===4)loadAdminUsers();
   }
@@ -1349,11 +1351,21 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
       var checklist=[];try{checklist=JSON.parse(r.checklist||'[]');}catch(e){}
       var reasons={};try{reasons=JSON.parse(r.reasons||'{}');}catch(e){}
 
-      // 获取打卡项名称（与主界面一致）
+      // 从实际 DOM 读取每个时段的打卡项名称
+      function getSecItems(secId){
+        var sec=ge(secId);if(!sec)return[];
+        var lbs=sec.querySelectorAll('label');
+        var arr=[];
+        for(var k=0;k<lbs.length;k++){
+          var tx=lbs[k].querySelector('.tx')||lbs[k].querySelector('.ct');
+          if(tx&&lbs[k].querySelector('.chk'))arr.push(tx.textContent);
+        }
+        return arr;
+      }
       var itemNames=[
-        {sec:'morning',items:['刷牙','洗脸','洗头','脸部擦药','手部擦药','换干净衣服','整理发型','整理衣服','餐后漱口']},
-        {sec:'noon',items:['餐后漱口','午休','整理发型','整理衣服']},
-        {sec:'evening',items:['餐后漱口','洗澡','洗头','洗脚','睡前刷牙','脸部擦药','手部擦药']}
+        {sec:'morning',items:getSecItems('s0')},
+        {sec:'noon',items:getSecItems('s1')},
+        {sec:'evening',items:getSecItems('s2')}
       ];
 
       var html='<div class="detail-title">'+dateLabel+'</div>';
@@ -1390,7 +1402,7 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
 
         // 餐饮信息
         var meal=meals[mealKeys[si]];
-        if(meal){
+        if(meal&&(meal.food||meal.price)){
           var foodTxt=meal.food||'未记录';
           if(meal.home)foodTxt='🏠 '+foodTxt;
           html+='<div class="detail-meal"><span class="detail-meal-icon">'+mealIcons[si]+'</span><span class="detail-meal-info">'+mealNames[si]+': '+foodTxt+'</span>';
@@ -1398,11 +1410,12 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
           html+='</div>';
         }
 
-        // 打卡项
+        // 打卡项（严格布尔判断）
         var secItems=itemNames[si].items;
         html+='<div class="detail-tags">';
         for(var j=0;j<secItems.length;j++){
-          var isDone=idx<checklist.length?checklist[idx]:false;
+          var raw=idx<checklist.length?checklist[idx]:false;
+          var isDone=(raw===true||raw==='true'||raw===1||raw==='1');
           html+='<span class="detail-tag '+(isDone?'done':'undone')+'">'+(isDone?'✓':'○')+' '+secItems[j]+'</span>';
           idx++;
         }
