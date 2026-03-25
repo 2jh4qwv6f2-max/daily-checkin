@@ -183,13 +183,100 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
 .manage-add-btn:active{opacity:.7}
 .manage-close{width:100%;padding:12px;border:none;border-radius:14px;background:#1c1c2e;color:#8888a8;border:1px solid rgba(255,255,255,.06);font-size:15px;font-weight:600;font-family:inherit;-webkit-appearance:none}
 .manage-close:active{opacity:.7}
-.manage-hint{font-size:12px;color:#555570;text-align:center;margin-bottom:12px}
+/* ── 登录注册界面 ── */
+.auth-screen{position:fixed;top:0;left:0;right:0;bottom:0;background:#0a0a0f;z-index:500;display:flex;align-items:center;justify-content:center;padding:16px}
+.auth-box{width:100%;max-width:380px}
+.auth-logo{text-align:center;margin-bottom:32px}
+.auth-logo-icon{width:64px;height:64px;border-radius:18px;background:linear-gradient(135deg,#6366f1,#8b5cf6);display:inline-flex;align-items:center;justify-content:center;font-size:32px;margin-bottom:12px}
+.auth-logo-text{font-size:22px;font-weight:800;color:#c084fc}
+.auth-form{background:#1a1a2e;border-radius:20px;border:1px solid rgba(255,255,255,.08);padding:24px}
+.auth-title{font-size:17px;font-weight:700;color:#e8e8f0;margin-bottom:16px;text-align:center}
+.auth-field{margin-bottom:12px}
+.auth-field label{display:block;font-size:13px;color:#8888a8;margin-bottom:4px;font-weight:500}
+.auth-field input{width:100%;padding:12px 14px;border-radius:12px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04);color:#e8e8f0;font-size:15px;font-family:inherit;outline:none;-webkit-appearance:none}
+.auth-field input:focus{border-color:#6366f1}
+.auth-field input::placeholder{color:#555570}
+.auth-btn{width:100%;padding:14px;border:none;border-radius:14px;font-size:15px;font-weight:600;font-family:inherit;-webkit-appearance:none;margin-top:8px;cursor:pointer}
+.auth-btn-primary{background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff}
+.auth-btn-primary:active{opacity:.8}
+.auth-btn-secondary{background:transparent;color:#8888a8;margin-top:12px}
+.auth-error{color:#ef4444;font-size:13px;text-align:center;margin-top:8px;min-height:18px}
+.auth-success{color:#22c55e;font-size:13px;text-align:center;margin-top:8px}
+.auth-pending{text-align:center;padding:40px 20px}
+.auth-pending-icon{font-size:48px;margin-bottom:16px}
+.auth-pending-title{font-size:18px;font-weight:700;color:#e8e8f0;margin-bottom:8px}
+.auth-pending-desc{font-size:14px;color:#8888a8;line-height:1.6}
+
+/* ── 管理面板 ── */
+.admin-user{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:12px;margin-bottom:8px}
+.admin-user-top{display:flex;justify-content:space-between;align-items:center}
+.admin-user-name{font-size:14px;font-weight:600;color:#e8e8f0}
+.admin-user-status{font-size:12px;font-weight:600;padding:2px 8px;border-radius:6px}
+.admin-user-status.pending{background:rgba(245,158,11,.15);color:#f59e0b}
+.admin-user-status.approved{background:rgba(34,197,94,.15);color:#22c55e}
+.admin-user-status.rejected{background:rgba(239,68,68,.15);color:#ef4444}
+.admin-user-meta{font-size:12px;color:#8888a8;margin-top:4px}
+.admin-user-actions{display:flex;gap:6px;margin-top:8px}
+.admin-btn{padding:8px 16px;border:none;border-radius:8px;font-size:13px;font-weight:600;font-family:inherit;-webkit-appearance:none;cursor:pointer}
+.admin-btn-approve{background:rgba(34,197,94,.2);color:#22c55e}
+.admin-btn-reject{background:rgba(239,68,68,.2);color:#ef4444}
+.admin-btn:active{opacity:.7}
+
+/* ── 用户菜单 ── */
+.user-menu-btn{font-size:13px;color:#a0a0c0;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);border-radius:8px;padding:4px 10px;cursor:pointer;-webkit-user-select:none;user-select:none;font-family:inherit;-webkit-appearance:none}
+.user-menu-btn:active{background:rgba(99,102,241,.2)}
+.user-menu-mask{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.85);z-index:300;display:flex;align-items:center;justify-content:center;padding:16px}
+.user-menu-box{background:#1a1a2e;border-radius:20px;border:1px solid rgba(255,255,255,.08);width:100%;max-width:380px;padding:20px}
+.user-menu-item{display:flex;align-items:center;gap:10px;padding:14px 12px;border-radius:12px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);margin-bottom:8px;cursor:pointer;-webkit-user-select:none;user-select:none;color:#e8e8f0;font-size:14px;font-weight:500}
+.user-menu-item:active{background:rgba(99,102,241,.15)}
+.user-menu-item.danger{color:#ef4444}
+.device-item{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:10px;margin-bottom:6px}
+.device-info{font-size:13px;color:#c0c0d8}
+.device-meta{font-size:11px;color:#8888a8;margin-top:2px}
+.device-del{color:#ef4444;font-size:12px;cursor:pointer;padding:4px 8px}
 </style>
 </head>
 <body>
+<!-- 登录/注册界面 -->
+<div class="auth-screen" id="authScreen">
+  <div class="auth-box">
+    <div class="auth-logo"><div class="auth-logo-icon">✓</div><div class="auth-logo-text">每日打卡</div></div>
+    <!-- 登录表单 -->
+    <div class="auth-form" id="loginForm">
+      <div class="auth-title">登录</div>
+      <div class="auth-field"><label>用户名</label><input type="text" id="loginUser" placeholder="请输入用户名" autocomplete="username"></div>
+      <div class="auth-field"><label>密码</label><input type="password" id="loginPass" placeholder="请输入密码" autocomplete="current-password"></div>
+      <div class="auth-error" id="loginError"></div>
+      <button class="auth-btn auth-btn-primary" id="loginBtn">登录</button>
+      <button class="auth-btn auth-btn-secondary" id="showRegister">没有账号？注册</button>
+    </div>
+    <!-- 注册表单 -->
+    <div class="auth-form" id="registerForm" style="display:none">
+      <div class="auth-title">注册</div>
+      <div class="auth-field"><label>用户名</label><input type="text" id="regUser" placeholder="2-20个字符" autocomplete="username"></div>
+      <div class="auth-field"><label>密码</label><input type="password" id="regPass" placeholder="至少6个字符" autocomplete="new-password"></div>
+      <div class="auth-field"><label>确认密码</label><input type="password" id="regPass2" placeholder="再次输入密码" autocomplete="new-password"></div>
+      <div class="auth-error" id="regError"></div>
+      <button class="auth-btn auth-btn-primary" id="regBtn">注册</button>
+      <button class="auth-btn auth-btn-secondary" id="showLogin">已有账号？登录</button>
+    </div>
+    <!-- 待审批状态 -->
+    <div id="pendingScreen" style="display:none">
+      <div class="auth-form">
+        <div class="auth-pending">
+          <div class="auth-pending-icon">⏳</div>
+          <div class="auth-pending-title">等待审批</div>
+          <div class="auth-pending-desc">你的账号已注册成功<br>请等待管理员批准后即可使用</div>
+        </div>
+        <button class="auth-btn auth-btn-secondary" id="pendingRefresh">刷新状态</button>
+        <button class="auth-btn auth-btn-secondary" id="pendingLogout" style="color:#ef4444">退出登录</button>
+      </div>
+    </div>
+  </div>
+</div>
 <div class="toast" id="toast"></div>
-<div class="hdr"><div class="hdr-in"><span class="logo">每日打卡</span><div class="dt-row"><input type="date" id="pD"><input type="time" id="pT" step="60"></div></div></div>
-<div class="tabs"><button class="tbtn am" id="t0" type="button">🌅 早上</button><button class="tbtn" id="t1" type="button">🌞 中午</button><button class="tbtn" id="t2" type="button">🌙 晚上</button><button class="tbtn" id="t3" type="button">📊 历史</button></div>
+<div class="hdr"><div class="hdr-in"><span class="logo">每日打卡</span><div class="dt-row"><button class="user-menu-btn" id="userMenuBtn" type="button">👤</button><input type="date" id="pD"><input type="time" id="pT" step="60"></div></div></div>
+<div class="tabs"><button class="tbtn am" id="t0" type="button">🌅 早上</button><button class="tbtn" id="t1" type="button">🌞 中午</button><button class="tbtn" id="t2" type="button">🌙 晚上</button><button class="tbtn" id="t3" type="button">📊 历史</button><button class="tbtn" id="t4" type="button" style="display:none">👑 管理</button></div>
 <div class="prog"><div class="pbar"><div class="pfill" id="pf" style="width: 0%;"></div></div><div class="ptx"><span id="pl">已完成 0/20 项</span><span id="pp">0%</span></div></div>
 <div class="wrap">
 <div class="pnl vis" id="s0"><div class="shd"><div class="sico sico-m">🌅</div><div class="stt">早上</div></div><div class="stk">
@@ -241,6 +328,15 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
     </div>
   </div>
 </div>
+<div class="pnl" id="s4">
+  <div class="shd"><div class="sico" style="background:rgba(245,158,11,.15)">👑</div><div class="stt">用户管理</div></div>
+  <div class="stk">
+    <div class="ic">
+      <div class="il">👥 用户列表</div>
+      <div id="adminUserList"><div class="h-loading">加载中...</div></div>
+    </div>
+  </div>
+</div>
 </div>
 <div class="bot"><div class="bi"><button class="bn bs" id="btnR" type="button">↺ 重置</button><button class="bn bp" id="btnS" type="button">📸 生成截图</button></div></div>
 <script>
@@ -251,15 +347,16 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
   ge('pD').value=now.getFullYear()+'-'+pad(now.getMonth()+1)+'-'+pad(now.getDate());
   ge('pT').value=pad(now.getHours())+':'+pad(now.getMinutes());
   function getCurDT(){var d=ge('pD').value,t=ge('pT').value;if(d&&t)return new Date(d+'T'+t);return new Date();}
-  var tbs=[ge('t0'),ge('t1'),ge('t2'),ge('t3')],pns=[ge('s0'),ge('s1'),ge('s2'),ge('s3')],tcls=['am','pm','em','ht'];
+  var tbs=[ge('t0'),ge('t1'),ge('t2'),ge('t3'),ge('t4')],pns=[ge('s0'),ge('s1'),ge('s2'),ge('s3'),ge('s4')],tcls=['am','pm','em','ht','ht'];
 
   // Tab切换：用position:absolute移出屏幕（不是display:none）
   function doTab(idx){
-    for(var i=0;i<4;i++){tbs[i].className='tbtn';pns[i].className='pnl';}
+    for(var i=0;i<5;i++){tbs[i].className='tbtn';pns[i].className='pnl';}
     tbs[idx].className='tbtn '+tcls[idx];pns[idx].className='pnl vis';
     if(idx===3)loadHistory();
+    if(idx===4)loadAdminUsers();
   }
-  tbs[0].onclick=function(){doTab(0);};tbs[1].onclick=function(){doTab(1);};tbs[2].onclick=function(){doTab(2);};tbs[3].onclick=function(){doTab(3);};
+  tbs[0].onclick=function(){doTab(0);};tbs[1].onclick=function(){doTab(1);};tbs[2].onclick=function(){doTab(2);};tbs[3].onclick=function(){doTab(3);};tbs[4].onclick=function(){doTab(4);};
 
   var chks=document.querySelectorAll('.chk');
   function updP(){var total=chks.length,done=0;for(var i=0;i<total;i++){if(chks[i].checked)done++;}var pct=total>0?Math.round(done/total*100):0;ge('pf').style.width=pct+'%';ge('pl').textContent='已完成 '+done+'/'+total+' 项';ge('pp').textContent=pct+'%';}
@@ -640,22 +737,285 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
   }
 
   // ══════════════════════════════════════
-  // API 配置（部署后替换为你的实际值）
+  // API 配置 + 用户认证系统
   // ══════════════════════════════════════
   var API_BASE='https://daily-checkin.daily-checkin.workers.dev';
-  var AUTH_TOKEN='my-secret-2026';
+  var SESSION_TOKEN='';
+  var CURRENT_USER=null;
 
   function apiCall(method,path,body){
     if(!API_BASE)return Promise.resolve(null);
-    var opts={method:method,headers:{'Content-Type':'application/json','Authorization':'Bearer '+AUTH_TOKEN}};
+    var opts={method:method,headers:{'Content-Type':'application/json'}};
+    if(SESSION_TOKEN)opts.headers['Authorization']='Bearer '+SESSION_TOKEN;
     if(body)opts.body=JSON.stringify(body);
     return fetch(API_BASE+path,opts).then(function(r){
-      if(!r.ok)throw new Error('HTTP '+r.status);
+      if(r.status===401){
+        // 会话过期，回到登录页
+        SESSION_TOKEN='';CURRENT_USER=null;
+        try{localStorage.removeItem('session_token');}catch(e){}
+        showAuthScreen();
+        return null;
+      }
       return r.json();
     }).catch(function(e){
       console.error('API错误:',e);
       toast('网络错误，请检查连接');
       return null;
+    });
+  }
+
+  // ══ 认证流程 ══
+  function showAuthScreen(){
+    ge('authScreen').style.display='flex';
+    ge('loginForm').style.display='';
+    ge('registerForm').style.display='none';
+    ge('pendingScreen').style.display='none';
+  }
+  function hideAuthScreen(){ge('authScreen').style.display='none';}
+  function showPendingScreen(){
+    ge('loginForm').style.display='none';
+    ge('registerForm').style.display='none';
+    ge('pendingScreen').style.display='';
+  }
+
+  // 登录
+  ge('loginBtn').onclick=function(){
+    var u=ge('loginUser').value.trim(),p=ge('loginPass').value;
+    if(!u||!p){ge('loginError').textContent='请输入用户名和密码';return;}
+    ge('loginBtn').textContent='登录中...';ge('loginBtn').disabled=true;
+    apiCall('POST','/api/auth/login',{username:u,password:p}).then(function(res){
+      ge('loginBtn').textContent='登录';ge('loginBtn').disabled=false;
+      if(!res){return;}
+      if(res.error){ge('loginError').textContent=res.error;return;}
+      SESSION_TOKEN=res.token;CURRENT_USER=res.user;
+      try{localStorage.setItem('session_token',res.token);}catch(e){}
+      if(res.user.status!=='approved'){showPendingScreen();return;}
+      onLoginSuccess();
+    });
+  };
+  ge('loginPass').onkeydown=function(e){if(e.key==='Enter')ge('loginBtn').click();};
+
+  // 注册
+  ge('regBtn').onclick=function(){
+    var u=ge('regUser').value.trim(),p=ge('regPass').value,p2=ge('regPass2').value;
+    if(!u||!p){ge('regError').textContent='请输入用户名和密码';return;}
+    if(p!==p2){ge('regError').textContent='两次密码不一致';return;}
+    ge('regBtn').textContent='注册中...';ge('regBtn').disabled=true;
+    apiCall('POST','/api/auth/register',{username:u,password:p}).then(function(res){
+      ge('regBtn').textContent='注册';ge('regBtn').disabled=false;
+      if(!res){return;}
+      if(res.error){ge('regError').textContent=res.error;return;}
+      if(res.token){
+        // 第一个用户，自动登录
+        SESSION_TOKEN=res.token;CURRENT_USER=res.user;
+        try{localStorage.setItem('session_token',res.token);}catch(e){}
+        onLoginSuccess();
+      }else{
+        // 需要审批
+        showPendingScreen();
+      }
+    });
+  };
+  ge('regPass2').onkeydown=function(e){if(e.key==='Enter')ge('regBtn').click();};
+
+  // 切换登录/注册
+  ge('showRegister').onclick=function(){ge('loginForm').style.display='none';ge('registerForm').style.display='';ge('regError').textContent='';};
+  ge('showLogin').onclick=function(){ge('registerForm').style.display='none';ge('loginForm').style.display='';ge('loginError').textContent='';};
+
+  // 待审批刷新
+  ge('pendingRefresh').onclick=function(){
+    apiCall('GET','/api/auth/me').then(function(res){
+      if(res&&res.user){
+        CURRENT_USER=res.user;
+        if(res.user.status==='approved')onLoginSuccess();
+        else toast('仍在等待审批');
+      }
+    });
+  };
+  ge('pendingLogout').onclick=function(){doLogout();};
+
+  // 登录成功
+  function onLoginSuccess(){
+    hideAuthScreen();
+    ge('userMenuBtn').textContent='👤 '+CURRENT_USER.username;
+    // 管理员显示管理tab
+    if(CURRENT_USER.role==='admin')ge('t4').style.display='';
+    else ge('t4').style.display='none';
+    // 加载数据
+    loadFromCloud();
+    loadTagsFromCloud();
+    // 检查设备是否已信任
+    tryDeviceToken();
+  }
+
+  // 登出
+  function doLogout(){
+    apiCall('POST','/api/auth/logout');
+    SESSION_TOKEN='';CURRENT_USER=null;
+    try{localStorage.removeItem('session_token');}catch(e){}
+    showAuthScreen();
+  }
+
+  // 设备信任token
+  function tryDeviceToken(){
+    try{
+      var dt=localStorage.getItem('device_token');
+      if(!dt)return;
+      // 已经登录了就不需要设备token
+    }catch(e){}
+  }
+
+  // 页面加载时尝试恢复会话
+  (function(){
+    // 先尝试设备token
+    var dt=null;
+    try{dt=localStorage.getItem('device_token');}catch(e){}
+    var st=null;
+    try{st=localStorage.getItem('session_token');}catch(e){}
+
+    if(st){
+      SESSION_TOKEN=st;
+      apiCall('GET','/api/auth/me').then(function(res){
+        if(res&&res.user){
+          CURRENT_USER=res.user;
+          if(res.user.status==='approved')onLoginSuccess();
+          else{showAuthScreen();showPendingScreen();}
+        }else if(dt){
+          // session过期，尝试设备token
+          loginWithDevice(dt);
+        }else{
+          showAuthScreen();
+        }
+      });
+    }else if(dt){
+      loginWithDevice(dt);
+    }else{
+      showAuthScreen();
+    }
+
+    function loginWithDevice(token){
+      apiCall('POST','/api/auth/device-login',{device_token:token}).then(function(res){
+        if(res&&res.token){
+          SESSION_TOKEN=res.token;CURRENT_USER=res.user;
+          try{localStorage.setItem('session_token',res.token);}catch(e){}
+          if(res.user.status==='approved')onLoginSuccess();
+          else{showAuthScreen();showPendingScreen();}
+        }else{
+          try{localStorage.removeItem('device_token');}catch(e){}
+          showAuthScreen();
+        }
+      });
+    }
+  })();
+
+  // ══ 用户菜单 ══
+  ge('userMenuBtn').onclick=function(){
+    var mask=document.createElement('div');mask.className='user-menu-mask';
+    var box=document.createElement('div');box.className='user-menu-box';
+    var html='<div style="text-align:center;margin-bottom:16px"><div style="font-size:16px;font-weight:700;color:#e8e8f0">'+((CURRENT_USER&&CURRENT_USER.username)||'')+'</div><div style="font-size:12px;color:#8888a8;margin-top:4px">'+(CURRENT_USER&&CURRENT_USER.role==='admin'?'👑 管理员':'普通用户')+'</div></div>';
+    html+='<div class="user-menu-item" id="umTrust">🔒 信任此设备</div>';
+    html+='<div class="user-menu-item" id="umDevices">📱 管理信任设备</div>';
+    html+='<div class="user-menu-item" id="umChangePw">🔑 修改密码</div>';
+    html+='<div class="user-menu-item danger" id="umLogout">退出登录</div>';
+    html+='<button class="manage-close" style="margin-top:12px" id="umClose">关闭</button>';
+    box.innerHTML=html;
+    mask.appendChild(box);document.body.appendChild(mask);
+    mask.onclick=function(e){if(e.target===mask)document.body.removeChild(mask);};
+    ge('umClose').onclick=function(){document.body.removeChild(mask);};
+    ge('umLogout').onclick=function(){document.body.removeChild(mask);doLogout();};
+    ge('umTrust').onclick=function(){
+      document.body.removeChild(mask);
+      var name=prompt('给这台设备起个名字（如：我的iPhone）','');
+      if(name===null)return;
+      apiCall('POST','/api/auth/trust-device',{device_name:name||'未命名设备'}).then(function(res){
+        if(res&&res.device_token){
+          try{localStorage.setItem('device_token',res.device_token);}catch(e){}
+          toast('设备已信任，下次可免密登录 ✓');
+        }else{toast(res&&res.error||'操作失败');}
+      });
+    };
+    ge('umDevices').onclick=function(){document.body.removeChild(mask);showDeviceManager();};
+    ge('umChangePw').onclick=function(){document.body.removeChild(mask);showChangePw();};
+  };
+
+  // 信任设备管理弹窗
+  function showDeviceManager(){
+    var mask=document.createElement('div');mask.className='manage-mask';
+    var box=document.createElement('div');box.className='manage-box';
+    box.innerHTML='<div class="manage-title">📱 信任设备</div><div id="devList" class="h-loading">加载中...</div><button class="manage-close" id="devClose" style="margin-top:12px">关闭</button>';
+    mask.appendChild(box);document.body.appendChild(mask);
+    mask.onclick=function(e){if(e.target===mask)document.body.removeChild(mask);};
+    ge('devClose').onclick=function(){document.body.removeChild(mask);};
+    apiCall('GET','/api/auth/devices').then(function(res){
+      var list=(res&&res.data)||[];
+      if(!list.length){ge('devList').innerHTML='<div style="text-align:center;color:#555570;font-size:13px;padding:16px">暂无信任设备</div>';return;}
+      var html='';
+      for(var i=0;i<list.length;i++){
+        html+='<div class="device-item"><div><div class="device-info">'+list[i].device_name+'</div><div class="device-meta">添加于 '+list[i].created_at+'</div></div><span class="device-del" data-did="'+list[i].id+'">移除</span></div>';
+      }
+      ge('devList').innerHTML=html;
+      ge('devList').querySelectorAll('.device-del').forEach(function(btn){
+        btn.onclick=function(){
+          var did=btn.getAttribute('data-did');
+          apiCall('POST','/api/auth/remove-device',{device_id:parseInt(did)}).then(function(r){
+            if(r&&r.ok){btn.closest('.device-item').remove();toast('已移除');}
+          });
+        };
+      });
+    });
+  }
+
+  // 修改密码弹窗
+  function showChangePw(){
+    var mask=document.createElement('div');mask.className='manage-mask';
+    var box=document.createElement('div');box.className='manage-box';
+    box.innerHTML='<div class="manage-title">🔑 修改密码</div><div class="auth-field"><label>旧密码</label><input type="password" id="cpOld" placeholder="请输入旧密码"></div><div class="auth-field"><label>新密码</label><input type="password" id="cpNew" placeholder="至少6个字符"></div><div class="auth-error" id="cpError"></div><button class="auth-btn auth-btn-primary" id="cpBtn" style="margin-top:12px">确认修改</button><button class="manage-close" id="cpClose" style="margin-top:8px">取消</button>';
+    mask.appendChild(box);document.body.appendChild(mask);
+    mask.onclick=function(e){if(e.target===mask)document.body.removeChild(mask);};
+    ge('cpClose').onclick=function(){document.body.removeChild(mask);};
+    ge('cpBtn').onclick=function(){
+      var o=ge('cpOld').value,n=ge('cpNew').value;
+      if(!o||!n){ge('cpError').textContent='请填写完整';return;}
+      apiCall('POST','/api/auth/change-password',{old_password:o,new_password:n}).then(function(res){
+        if(res&&res.ok){document.body.removeChild(mask);toast('密码已修改 ✓');}
+        else{ge('cpError').textContent=(res&&res.error)||'修改失败';}
+      });
+    };
+  }
+
+  // ══ 管理员：加载用户列表 ══
+  function loadAdminUsers(){
+    if(!CURRENT_USER||CURRENT_USER.role!=='admin')return;
+    ge('adminUserList').innerHTML='<div class="h-loading">加载中...</div>';
+    apiCall('GET','/api/admin/users').then(function(res){
+      var users=(res&&res.data)||[];
+      if(!users.length){ge('adminUserList').innerHTML='<div class="h-loading">暂无用户</div>';return;}
+      var html='';
+      for(var i=0;i<users.length;i++){
+        var u=users[i];
+        var sc=u.status==='pending'?'pending':u.status==='approved'?'approved':'rejected';
+        var sl=u.status==='pending'?'待审批':u.status==='approved'?'已批准':'已拒绝';
+        html+='<div class="admin-user"><div class="admin-user-top"><span class="admin-user-name">'+(u.role==='admin'?'👑 ':'')+u.username+'</span><span class="admin-user-status '+sc+'">'+sl+'</span></div><div class="admin-user-meta">注册于 '+u.created_at+'</div>';
+        if(u.status==='pending'){
+          html+='<div class="admin-user-actions"><button class="admin-btn admin-btn-approve" data-uid="'+u.id+'">✓ 批准</button><button class="admin-btn admin-btn-reject" data-uid="'+u.id+'">✕ 拒绝</button></div>';
+        }
+        html+='</div>';
+      }
+      ge('adminUserList').innerHTML=html;
+      ge('adminUserList').querySelectorAll('.admin-btn-approve').forEach(function(btn){
+        btn.onclick=function(){
+          apiCall('POST','/api/admin/approve',{user_id:parseInt(btn.getAttribute('data-uid'))}).then(function(r){
+            if(r&&r.ok){toast('已批准');loadAdminUsers();}
+          });
+        };
+      });
+      ge('adminUserList').querySelectorAll('.admin-btn-reject').forEach(function(btn){
+        btn.onclick=function(){
+          apiCall('POST','/api/admin/reject',{user_id:parseInt(btn.getAttribute('data-uid'))}).then(function(r){
+            if(r&&r.ok){toast('已拒绝');loadAdminUsers();}
+          });
+        };
+      });
     });
   }
 
@@ -958,8 +1318,7 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
     mask.appendChild(box);document.body.appendChild(mask);
   }
 
-  // ══ 页面加载时尝试从云端恢复 ══
-  setTimeout(function(){loadFromCloud();},100);
+  // ══ 页面加载时尝试从云端恢复（由 onLoginSuccess 触发）══
 
   // ══════════════════════════════════════
   // 功能1: 历史记录 - 点击日期查看打卡详情
@@ -1325,8 +1684,7 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
         if(_tagsCloud[gid])rebuildFoodTags(gid,fid);
       }
     }
-    // 200ms后从云端同步最新数据
-    setTimeout(loadTagsFromCloud,200);
+    // loadTagsFromCloud 由 onLoginSuccess 触发
   })();
 
   // 修改未完成原因弹窗，使其使用自定义标签 + 显示管理按钮
