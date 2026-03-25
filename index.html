@@ -154,11 +154,16 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
   <div class="stk">
     <div class="ic">
       <div class="il">📅 查询范围</div>
-      <div style="display:flex;gap:6px;flex-wrap:wrap">
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px">
         <button class="hq-btn hq-sel" data-range="week" type="button">本周</button>
         <button class="hq-btn" data-range="month" type="button">本月</button>
         <button class="hq-btn" data-range="quarter" type="button">本季</button>
         <button class="hq-btn" data-range="year" type="button">本年</button>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;margin-top:8px">
+        <span style="font-size:13px;color:#8888a8">指定日期:</span>
+        <input type="date" id="hDatePicker" style="padding:6px 8px;border:1px solid rgba(255,255,255,.1);border-radius:6px;background:rgba(255,255,255,.05);color:#e8e8f0;font-size:13px;font-family:inherit">
+        <button class="hq-btn" id="hDateQuery" type="button">查询</button>
       </div>
     </div>
     <div class="ic" id="hStats" style="display:none">
@@ -675,6 +680,47 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
     function fmt(dt){return dt.getFullYear()+'-'+pad(dt.getMonth()+1)+'-'+pad(dt.getDate());}
   }
 
+  // ══ 单日查询 ══
+  function querySingleDate(date){
+    if(!API_BASE){ge('hStatsBody').innerHTML='<div class="h-loading">请先配置 API 地址</div>';ge('hStats').style.display='';return;}
+    ge('hStatsBody').innerHTML='<div class="h-loading">加载中...</div>';
+    ge('hListBody').innerHTML='<div class="h-loading">加载中...</div>';
+    ge('hStats').style.display='';ge('hList').style.display='';
+
+    // 单日数据：同时请求 get 和 range（用同一天作为from/to）
+    Promise.all([
+      apiCall('GET','/api/checkin?date='+date),
+      apiCall('GET','/api/checkin/range?from='+date+'&to='+date)
+    ]).then(function(arr){
+      var single=arr[0],range=arr[1];
+      renderSingleStats(single,date);
+      renderList(range?range.data:[]);
+    });
+  }
+
+  function renderSingleStats(res,date){
+    if(!res||!res.data){
+      ge('hStatsBody').innerHTML='<div style="text-align:center;padding:20px;color:#555570;font-size:13px">'+date+' 暂无打卡记录</div>';
+      return;
+    }
+    var r=res.data;
+    var pctColor=r.pct>=80?'#22c55e':r.pct>=50?'#f59e0b':'#ef4444';
+    var dt=new Date(date+'T00:00:00');
+    var wks=['日','一','二','三','四','五','六'];
+    ge('hStatsBody').innerHTML=
+      '<div style="text-align:center;margin-bottom:12px;font-size:15px;font-weight:600;color:#e8e8f0">'+
+      (dt.getMonth()+1)+'月'+dt.getDate()+'日 周'+wks[dt.getDay()]+'</div>'+
+      '<div class="h-stat-grid">'+
+      '<div class="h-stat-card"><div class="h-stat-val" style="color:'+pctColor+'">'+r.pct+'%</div><div class="h-stat-lbl">完成率</div></div>'+
+      '<div class="h-stat-card"><div class="h-stat-val">'+r.done+'/'+r.total+'</div><div class="h-stat-lbl">完成项目</div></div>'+
+      '<div class="h-stat-card"><div class="h-stat-val" style="color:#f59e0b">¥'+Math.round(r.spend||0)+'</div><div class="h-stat-lbl">消费金额</div></div>'+
+      '<div class="h-stat-card"><div class="h-stat-val" style="color:'+(r.is_modified?'#f59e0b':'#22c55e')+'">'+(r.is_modified?'v'+r.version:'原始')+'</div><div class="h-stat-lbl">记录版本</div></div>'+
+      '</div>'+
+      (r.wake_time||r.sleep_time?'<div style="margin-top:8px;font-size:12px;color:#8888a8;text-align:center">':'')+
+      (r.wake_time?'🌅 '+r.wake_time:'')+(r.wake_time&&r.sleep_time?' · ':'')+(r.sleep_time?'😴 '+r.sleep_time:'')+
+      (r.wake_time||r.sleep_time?'</div>':'');
+  }
+
   function loadHistory(){
     if(!API_BASE){ge('hStatsBody').innerHTML='<div class="h-loading">请先配置 API 地址</div>';ge('hStats').style.display='';return;}
     var r=getDateRange(hRange);
@@ -771,12 +817,22 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
   var hqBtns=document.querySelectorAll('.hq-btn');
   for(var i=0;i<hqBtns.length;i++){
     hqBtns[i].onclick=function(){
+      if(this.id==='hDateQuery')return;// 日期查询按钮单独处理
       for(var j=0;j<hqBtns.length;j++)hqBtns[j].classList.remove('hq-sel');
       this.classList.add('hq-sel');
       hRange=this.getAttribute('data-range');
       loadHistory();
     };
   }
+
+  // ══ 日期查询按钮 ══
+  document.getElementById('hDateQuery').onclick=function(){
+    var date=document.getElementById('hDatePicker').value;
+    if(!date){toast('请选择日期');return;}
+    // 清除范围按钮选中状态
+    for(var j=0;j<hqBtns.length;j++)hqBtns[j].classList.remove('hq-sel');
+    querySingleDate(date);
+  };
 
   // ══ 截图后同步到云端（挂载到截图流程）══
   var _origBtnSClick2=ge('btnS').onclick;
