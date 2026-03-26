@@ -179,6 +179,8 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
 .manage-add-input::placeholder{color:#555570}
 .manage-add-btn{padding:10px 16px;border:none;border-radius:10px;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;font-size:14px;font-weight:600;font-family:inherit;-webkit-appearance:none;white-space:nowrap}
 .manage-add-btn:active{opacity:.7}
+.manage-item{display:inline-flex;align-items:center;gap:4px;padding:4px 8px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);border-radius:8px;font-size:13px;color:#c0c0d8;cursor:grab}
+.drag-handle{font-size:14px;color:#555570;cursor:grab;padding-right:2px;-webkit-user-select:none;user-select:none}
 .manage-close{width:100%;padding:12px;border:none;border-radius:14px;background:#1c1c2e;color:#8888a8;border:1px solid rgba(255,255,255,.06);font-size:15px;font-weight:600;font-family:inherit;-webkit-appearance:none}
 .manage-close:active{opacity:.7}
 /* ── 登录注册界面 ── */
@@ -243,7 +245,7 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
 .device-info{font-size:13px;color:#c0c0d8}
 .device-meta{font-size:11px;color:#8888a8;margin-top:2px}
 .device-del{color:#ef4444;font-size:12px;cursor:pointer;padding:4px 8px}
-.qk-mgr-btn{padding:4px 10px;border-radius:7px;background:rgba(99,102,241,.15);border:1px solid rgba(99,102,241,.3);color:#a5b4fc;font-size:12px;cursor:pointer;font-family:inherit;font-weight:500;-webkit-appearance:none}
+.qk-mgr-btn{padding:2px 8px;border-radius:6px;background:rgba(99,102,241,.15);border:1px solid rgba(99,102,241,.3);color:#a5b4fc;font-size:11px;cursor:pointer;font-family:inherit;font-weight:500;-webkit-appearance:none;line-height:1.6}
 .qk-mgr-btn:active{background:rgba(99,102,241,.3)}
 </style>
 </head>
@@ -350,13 +352,13 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
   <label><input type="checkbox" class="chk"><div class="rw"><div class="bx"><svg viewBox="0 0 16 16"><polyline points="3.5 8.5 6.5 11.5 12.5 4.5"></polyline></svg></div><span class="tx">餐后漱口</span></div></label>
 </div></div>
 <div class="pnl" id="s1"><div class="shd"><div class="sico sico-n">🌞</div><div class="stt">中午</div></div><div class="stk">
-  <div class="ic"><div class="il">🍜 午餐</div><div class="ir"><div class="pw" id="w1"><input type="number" inputmode="decimal" pattern="[0-9]*" placeholder="¥ 价格" id="lunchPrice"><span class="pu">元</span></div><div class="fd-wrap"><input class="fd" type="text" placeholder="吃了什么" id="lunchFood"><span class="fd-clear" data-for="lunchFood" data-tags="lcTags">✕</span></div></div><div class="qk-home-row"><label class="qk-home-label"><input type="checkbox" id="lunchHome" class="qk-home-cb"><span class="qk-home-tag">🏠 在家吃</span></label></div><div class="qk-tags" id="lcTags"><span class="qk-tag" data-v="米饭">米饭</span><span class="qk-tag" data-v="鸡肉">鸡肉</span><span class="qk-tag" data-v="猪肉">猪肉</span><span class="qk-tag" data-v="牛肉">牛肉</span><span class="qk-tag" data-v="鱼肉">鱼肉</span><span class="qk-tag" data-v="米粉">米粉</span><span class="qk-tag" data-v="米线">米线</span><span class="qk-tag" data-v="面线">面线</span><span class="qk-tag" data-v="面条">面条</span><span class="qk-tag" data-v="麻辣烫">麻辣烫</span></div></div>
+  <div class="ic"><div class="il">🍜 午餐</div><div class="ir"><div class="pw" id="w1"><input type="number" inputmode="decimal" pattern="[0-9]*" placeholder="¥ 价格" id="lunchPrice"><span class="pu">元</span></div><div class="fd-wrap"><input class="fd" type="text" placeholder="吃了什么" id="lunchFood"><span class="fd-clear" data-for="lunchFood" data-tags="lcTags">✕</span></div></div><div class="qk-home-row"><label class="qk-home-label"><input type="checkbox" id="lunchHome" class="qk-home-cb"><span class="qk-home-tag">🏠 在家吃</span></label></div><div class="qk-tags" id="lcTags"><span class="qk-tag" data-v="米饭">米饭</span><span class="qk-tag" data-v="鸡肉">鸡肉</span><span class="qk-tag" data-v="猪肉">猪肉</span><span class="qk-tag" data-v="牛肉">牛肉</span><span class="qk-tag" data-v="鱼肉">鱼肉</span><span class="qk-tag" data-v="米粉">米粉</span><span class="qk-tag" data-v="米线">米线</span><span class="qk-tag" data-v="面线">面线</span><span class="qk-tag" data-v="面条">面条</span><span class="qk-tag" data-v="麻辣烫">麻辣烫</span></div><button id="btnMgrLc" type="button" class="qk-mgr-btn">设置</button></div>
   <label><input type="checkbox" class="chk"><div class="rw"><div class="bx"><svg viewBox="0 0 16 16"><polyline points="3.5 8.5 6.5 11.5 12.5 4.5"></polyline></svg></div><span class="tx">餐后漱口</span></div></label>
   <label><input type="checkbox" class="chk"><div class="rw"><div class="bx"><svg viewBox="0 0 16 16"><polyline points="3.5 8.5 6.5 11.5 12.5 4.5"></polyline></svg></div><span class="tx">午休</span></div></label>
   <div class="cg cg2"><label class="cw"><input type="checkbox" class="chk"><div class="cf"><div class="cm"><svg viewBox="0 0 16 16"><polyline points="3.5 8.5 6.5 11.5 12.5 4.5"></polyline></svg></div><span class="ct">整理发型</span></div></label><label class="cw"><input type="checkbox" class="chk"><div class="cf"><div class="cm"><svg viewBox="0 0 16 16"><polyline points="3.5 8.5 6.5 11.5 12.5 4.5"></polyline></svg></div><span class="ct">整理衣服</span></div></label></div>
 </div></div>
 <div class="pnl" id="s2"><div class="shd"><div class="sico sico-e">🌙</div><div class="stt">晚上</div></div><div class="stk">
-  <div class="ic"><div class="il">🍲 晚餐</div><div class="ir"><div class="pw" id="w2"><input type="number" inputmode="decimal" pattern="[0-9]*" placeholder="¥ 价格" id="dinnerPrice"><span class="pu">元</span></div><div class="fd-wrap"><input class="fd" type="text" placeholder="吃了什么" id="dinnerFood"><span class="fd-clear" data-for="dinnerFood" data-tags="dnTags">✕</span></div></div><div class="qk-home-row"><label class="qk-home-label"><input type="checkbox" id="dinnerHome" class="qk-home-cb"><span class="qk-home-tag">🏠 在家吃</span></label></div><div class="qk-tags" id="dnTags"><span class="qk-tag" data-v="米饭">米饭</span><span class="qk-tag" data-v="鸡肉">鸡肉</span><span class="qk-tag" data-v="猪肉">猪肉</span><span class="qk-tag" data-v="牛肉">牛肉</span><span class="qk-tag" data-v="鱼肉">鱼肉</span><span class="qk-tag" data-v="米粉">米粉</span><span class="qk-tag" data-v="米线">米线</span><span class="qk-tag" data-v="面线">面线</span><span class="qk-tag" data-v="面条">面条</span><span class="qk-tag" data-v="麻辣烫">麻辣烫</span></div></div>
+  <div class="ic"><div class="il">🍲 晚餐</div><div class="ir"><div class="pw" id="w2"><input type="number" inputmode="decimal" pattern="[0-9]*" placeholder="¥ 价格" id="dinnerPrice"><span class="pu">元</span></div><div class="fd-wrap"><input class="fd" type="text" placeholder="吃了什么" id="dinnerFood"><span class="fd-clear" data-for="dinnerFood" data-tags="dnTags">✕</span></div></div><div class="qk-home-row"><label class="qk-home-label"><input type="checkbox" id="dinnerHome" class="qk-home-cb"><span class="qk-home-tag">🏠 在家吃</span></label></div><div class="qk-tags" id="dnTags"><span class="qk-tag" data-v="米饭">米饭</span><span class="qk-tag" data-v="鸡肉">鸡肉</span><span class="qk-tag" data-v="猪肉">猪肉</span><span class="qk-tag" data-v="牛肉">牛肉</span><span class="qk-tag" data-v="鱼肉">鱼肉</span><span class="qk-tag" data-v="米粉">米粉</span><span class="qk-tag" data-v="米线">米线</span><span class="qk-tag" data-v="面线">面线</span><span class="qk-tag" data-v="面条">面条</span><span class="qk-tag" data-v="麻辣烫">麻辣烫</span></div><button id="btnMgrDn" type="button" class="qk-mgr-btn">设置</button></div>
   <label><input type="checkbox" class="chk"><div class="rw"><div class="bx"><svg viewBox="0 0 16 16"><polyline points="3.5 8.5 6.5 11.5 12.5 4.5"></polyline></svg></div><span class="tx">餐后漱口</span></div></label>
   <div class="cg"><label class="cw"><input type="checkbox" class="chk"><div class="cf"><div class="cm"><svg viewBox="0 0 16 16"><polyline points="3.5 8.5 6.5 11.5 12.5 4.5"></polyline></svg></div><span class="ct">洗澡</span></div></label><label class="cw"><input type="checkbox" class="chk"><div class="cf"><div class="cm"><svg viewBox="0 0 16 16"><polyline points="3.5 8.5 6.5 11.5 12.5 4.5"></polyline></svg></div><span class="ct">洗头</span></div></label><label class="cw"><input type="checkbox" class="chk"><div class="cf"><div class="cm"><svg viewBox="0 0 16 16"><polyline points="3.5 8.5 6.5 11.5 12.5 4.5"></polyline></svg></div><span class="ct">洗脚</span></div></label></div>
   <label><input type="checkbox" class="chk"><div class="rw"><div class="bx"><svg viewBox="0 0 16 16"><polyline points="3.5 8.5 6.5 11.5 12.5 4.5"></polyline></svg></div><span class="tx">睡前刷牙</span></div></label>
@@ -558,6 +560,10 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
   ge('btnR').onclick=function(){
     if(!confirm('确定要重置所有打卡记录吗？'))return;
     doReset();
+    // 重置后恢复日期到今天、时间到当前时间
+    var n=new Date();
+    ge('pD').value=todayStr;
+    ge('pT').value=pad(n.getHours())+':'+pad(n.getMinutes());
     toast('已重置 ✓');
   };
 
@@ -797,12 +803,10 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
   initQkTags('lcTags','lunchFood');
   initQkTags('dnTags','dinnerFood');
 
-  // 早餐设置按钮：完全仿照个人中心 ge('userMenuBtn').onclick 写法
-  ge('btnMgrBf').onclick=function(){
-    showTagManager('bfTags','早餐',function(){
-      rebuildFoodTags('bfTags','breakfastFood');
-    });
-  };
+  // 食物设置按钮绑定
+  ge('btnMgrBf').onclick=function(){showTagManager('bfTags','早餐',function(){rebuildFoodTags('bfTags','breakfastFood');});};
+  ge('btnMgrLc').onclick=function(){showTagManager('lcTags','午餐',function(){rebuildFoodTags('lcTags','lunchFood');});};
+  ge('btnMgrDn').onclick=function(){showTagManager('dnTags','晚餐',function(){rebuildFoodTags('dnTags','dinnerFood');});};
 
   // ══ 食物输入清空按钮 ══
   document.querySelectorAll('.fd-clear').forEach(function(btn){
@@ -917,6 +921,33 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
             };
             qkDiv.appendChild(btn);
           })(quickReasons[q],sec.key,sec.items,qk,inp);
+        }
+        // 原因设置按钮
+        var rk='';
+        if(sec.key==='morning')rk='reasonMorning';
+        else if(sec.key==='noon')rk='reasonNoon';
+        else if(sec.key==='evening')rk='reasonEvening';
+        if(rk){
+          var mgrBtn=document.createElement('button');
+          mgrBtn.type='button';mgrBtn.className='qk-mgr-btn';mgrBtn.textContent='设置';
+          (function(rk,qkRef,inpRef,secKey,secItems){
+            mgrBtn.onclick=function(){
+              showTagManager(rk,tagGroupConfig[rk].label,function(){
+                // 刷新快速按钮
+                var newTags=getTagList(rk);
+                qkRef.innerHTML='';
+                for(var q=0;q<newTags.length;q++){
+                  (function(reason){
+                    var btn=document.createElement('span');btn.className='reason-qk-btn';btn.textContent=reason;
+                    btn.onclick=function(){btn.classList.toggle('sel');updateReasonFromQk(secKey,secItems,qkRef,inpRef);};
+                    qkRef.appendChild(btn);
+                  })(newTags[q]);
+                }
+                qkRef.appendChild(mgrBtn);
+              });
+            };
+          })(rk,qk,inp,sec.key,sec.items);
+          qk.appendChild(mgrBtn);
         }
         secDiv.appendChild(qk);
         inp.oninput=function(){
@@ -2247,7 +2278,7 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
       c.appendChild(span);
     }
     // 设置按钮在容器外部，不需要重新插入，只确保 onclick 仍然有效
-    var btnId={bfTags:'btnMgrBf'}[containerId];
+    var btnId={bfTags:'btnMgrBf',lcTags:'btnMgrLc',dnTags:'btnMgrDn'}[containerId];
     if(btnId){
       var existingBtn=ge(btnId);
       if(existingBtn){
@@ -2274,7 +2305,9 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
       html+='<div class="manage-hint">点击 ✕ 可删除选项，输入框添加新选项</div>';
       html+='<div class="manage-list" id="mgrList">';
       for(var i=0;i<currentTags.length;i++){
-        html+='<span class="manage-item" data-idx="'+i+'">'+currentTags[i]+'<span class="del" data-idx="'+i+'">✕</span></span>';
+        html+='<span class="manage-item" draggable="true" data-idx="'+i+'">'+
+          '<span class="drag-handle">⠿</span>'+currentTags[i]+
+          '<span class="del" data-idx="'+i+'">✕</span></span>';
       }
       if(!currentTags.length)html+='<span style="color:#555570;font-size:13px">暂无选项</span>';
       html+='</div>';
@@ -2290,6 +2323,31 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
           currentTags.splice(idx,1);
           render();
         };
+      });
+
+      // 拖拽排序
+      var dragSrc=null;
+      box.querySelectorAll('.manage-item').forEach(function(item){
+        item.addEventListener('dragstart',function(e){
+          dragSrc=item;
+          e.dataTransfer.effectAllowed='move';
+          item.style.opacity='0.4';
+        });
+        item.addEventListener('dragend',function(){item.style.opacity='';});
+        item.addEventListener('dragover',function(e){e.preventDefault();e.dataTransfer.dropEffect='move';return false;});
+        item.addEventListener('dragenter',function(){item.style.background='rgba(99,102,241,.15)';});
+        item.addEventListener('dragleave',function(){item.style.background='';});
+        item.addEventListener('drop',function(e){
+          e.stopPropagation();e.preventDefault();
+          item.style.background='';
+          if(dragSrc===item)return;
+          var fromIdx=parseInt(dragSrc.getAttribute('data-idx'));
+          var toIdx=parseInt(item.getAttribute('data-idx'));
+          var moved=currentTags.splice(fromIdx,1)[0];
+          currentTags.splice(toIdx,0,moved);
+          render();
+          return false;
+        });
       });
 
       // 绑定添加（用 box.querySelector 而不是 ge()，因为此时 box 可能还未插入 document）
