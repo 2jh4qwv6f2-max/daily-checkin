@@ -2233,9 +2233,9 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
         };
       });
 
-      // 绑定添加
-      ge('mgrAdd').onclick=function(){
-        var inp=ge('mgrInput');
+      // 绑定添加（用 box.querySelector 而不是 ge()，因为此时 box 可能还未插入 document）
+      box.querySelector('#mgrAdd').onclick=function(){
+        var inp=box.querySelector('#mgrInput');
         var val=inp.value.trim();
         if(!val){toast('请输入选项名称');return;}
         if(currentTags.indexOf(val)>=0){toast('该选项已存在');return;}
@@ -2243,10 +2243,10 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
         currentTags.push(val);
         render();
       };
-      ge('mgrInput').onkeydown=function(e){if(e.key==='Enter'){ge('mgrAdd').click();e.preventDefault();}};
+      box.querySelector('#mgrInput').onkeydown=function(e){if(e.key==='Enter'){box.querySelector('#mgrAdd').click();e.preventDefault();}};
 
-      // 绑定关闭（保存到云端）
-      ge('mgrClose').onclick=function(){
+      // 绑定关闭
+      box.querySelector('#mgrClose').onclick=function(){
         saveTagToCloud(groupId,currentTags);
         document.body.removeChild(mask);
         if(onSave)onSave();
