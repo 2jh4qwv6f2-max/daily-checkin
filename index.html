@@ -246,7 +246,7 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
 .device-info{font-size:13px;color:#c0c0d8}
 .device-meta{font-size:11px;color:#8888a8;margin-top:2px}
 .device-del{color:#ef4444;font-size:12px;cursor:pointer;padding:4px 8px}
-.qk-mgr-btn{display:inline-block;width:auto;padding:5px 10px;border-radius:8px;background:rgba(99,102,241,.15);border:1px solid rgba(99,102,241,.3);color:#a5b4fc;font-size:12px;cursor:pointer;font-family:inherit;font-weight:500;-webkit-appearance:none;flex-shrink:0}
+.qk-mgr-btn{display:inline-block;width:auto;align-self:flex-start;padding:5px 10px;border-radius:8px;background:rgba(99,102,241,.15);border:1px solid rgba(99,102,241,.3);color:#a5b4fc;font-size:12px;cursor:pointer;font-family:inherit;font-weight:500;-webkit-appearance:none}
 .qk-mgr-btn:active{background:rgba(99,102,241,.3)}
 </style>
 </head>
@@ -425,6 +425,22 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
     var badge=ge('modifiedBadge');if(badge){badge.style.display='none';badge.innerHTML='';}
   });
   ge('pT').value=pad(now.getHours())+':'+pad(now.getMinutes());
+
+  // 监听日期/时间被原生控件清空的情况（如 iOS 还原按钮），自动恢复默认值
+  ge('pD').addEventListener('input',function(){
+    if(!ge('pD').value){
+      todayStr=getTodayStr();
+      ge('pD').value=todayStr;
+      ge('pD').max=todayStr;
+    }
+  });
+  ge('pT').addEventListener('input',function(){
+    if(!ge('pT').value){
+      var n=new Date();
+      ge('pT').value=pad(n.getHours())+':'+pad(n.getMinutes());
+    }
+  });
+
   function getCurDT(){var d=ge('pD').value,t=ge('pT').value;if(d&&t)return new Date(d+'T'+t);return new Date();}
   var tbs=[ge('t0'),ge('t1'),ge('t2'),ge('t3'),ge('t4')],pns=[ge('s0'),ge('s1'),ge('s2'),ge('s3'),ge('s4')],tcls=['am','pm','em','ht','ht'];
 
