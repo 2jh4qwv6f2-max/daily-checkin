@@ -1477,7 +1477,11 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
         }
         html+='<div class="detail-tags">';
         var items=grouped[sk];
-        for(var j=0;j<items.length;j++) html+='<span class="detail-tag '+(items[j].done?'done':'undone')+'">'+(items[j].done?'✓':'○')+' '+items[j].name+'</span>';
+        if(!items.length||checklist.length===0){
+          html+='<span style="font-size:12px;color:#555570;padding:4px 0;display:block">⚠️ 该记录的打卡明细数据缺失（旧版本数据）</span>';
+        }else{
+          for(var j=0;j<items.length;j++) html+='<span class="detail-tag '+(items[j].done?'done':'undone')+'">'+(items[j].done?'✓':'○')+' '+items[j].name+'</span>';
+        }
         html+='</div>';
         var sr=reasons[sk];
         var srText='';
@@ -1838,12 +1842,13 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
       var checklist=[];try{checklist=JSON.parse(r.checklist||'[]');}catch(e){}
       var reasons={};try{reasons=JSON.parse(r.reasons||'{}');}catch(e){}
 
-      // 按时段分组
+      // 按时段分组（checklist 为空时标记为数据缺失）
       var grouped={morning:[],noon:[],evening:[]};
+      var checklistMissing=checklist.length===0;
       for(var i=0;i<ALL_ITEMS.length;i++){
-        var raw=i<checklist.length?checklist[i]:false;
+        var raw=checklistMissing?null:(i<checklist.length?checklist[i]:false);
         var isDone=(raw===true||raw===1);
-        grouped[ALL_ITEMS[i].sec].push({name:ALL_ITEMS[i].name,done:isDone});
+        grouped[ALL_ITEMS[i].sec].push({name:ALL_ITEMS[i].name,done:isDone,missing:checklistMissing});
       }
 
       var html='<div class="detail-title">'+dateLabel+'</div>';
@@ -1886,8 +1891,12 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
 
         var items=grouped[sk];
         html+='<div class="detail-tags">';
-        for(var j=0;j<items.length;j++){
-          html+='<span class="detail-tag '+(items[j].done?'done':'undone')+'">'+(items[j].done?'✓':'○')+' '+items[j].name+'</span>';
+        if(checklistMissing){
+          html+='<span style="font-size:12px;color:#555570;padding:4px 0;display:block">⚠️ 该记录的打卡明细数据缺失（旧版本数据），仅保留了统计数字</span>';
+        }else{
+          for(var j=0;j<items.length;j++){
+            html+='<span class="detail-tag '+(items[j].done?'done':'undone')+'">'+(items[j].done?'✓':'○')+' '+items[j].name+'</span>';
+          }
         }
         html+='</div>';
 
