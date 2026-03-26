@@ -406,7 +406,12 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
   function pad(n){return n<10?'0'+n:''+n;}
   function ge(id){return document.getElementById(id);}
   var now=new Date();
-  ge('pD').value=now.getFullYear()+'-'+pad(now.getMonth()+1)+'-'+pad(now.getDate());
+  var todayStr=now.getFullYear()+'-'+pad(now.getMonth()+1)+'-'+pad(now.getDate());
+  ge('pD').value=todayStr;
+  ge('pD').max=todayStr; // 禁止选择未来日期
+  ge('pD').addEventListener('change',function(){
+    if(ge('pD').value>todayStr){ge('pD').value=todayStr;toast('不能选择未来日期');}
+  });
   ge('pT').value=pad(now.getHours())+':'+pad(now.getMinutes());
   function getCurDT(){var d=ge('pD').value,t=ge('pT').value;if(d&&t)return new Date(d+'T'+t);return new Date();}
   var tbs=[ge('t0'),ge('t1'),ge('t2'),ge('t3'),ge('t4')],pns=[ge('s0'),ge('s1'),ge('s2'),ge('s3'),ge('s4')],tcls=['am','pm','em','ht','ht'];
@@ -723,8 +728,19 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
       }
       if(items.length)unchecked.push({sec:secNames[si],key:secKeys[si],cls:secCls[si],items:items,qk:secQkReasons[si]});
     }
-    if(unchecked.length===0){_origBtnSClick();return;}
-    showReasonModal(unchecked,function(){_origBtnSClick();});
+    if(unchecked.length===0){
+      // 无未完成项：直接截图后同步
+      _origBtnSClick();
+      if(API_BASE)syncToCloud(_pendingEditReason||undefined);
+      _pendingEditReason=null;
+      return;
+    }
+    // 有未完成项：弹原因弹窗，填完后截图，截图后同步（此时 fdata._reasons 已写入）
+    showReasonModal(unchecked,function(){
+      _origBtnSClick();
+      if(API_BASE)syncToCloud(_pendingEditReason||undefined);
+      _pendingEditReason=null;
+    });
   };
 
   function showReasonModal(unchecked,onDone){
@@ -1749,21 +1765,19 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
     querySingleDate(date);
   };
 
-  // ══ 截图后同步到云端（挂载到截图流程）══
+  // ══ 截图同步：通过 _pendingEditReason 传递隔天修改原因 ══
+  var _pendingEditReason=null;
   var _origBtnSClick2=ge('btnS').onclick;
   ge('btnS').onclick=function(){
     var self=this;
     if(isEditingHistory()&&API_BASE){
-      // 隔天修改，弹窗填原因
-      showEditReasonModal(function(reason){
-        // 先执行原有截图流程
+      showEditReasonModal(function(editReason){
+        _pendingEditReason=editReason;
         _origBtnSClick2.call(self);
-        // 然后同步
-        syncToCloud(reason);
       });
     }else{
+      _pendingEditReason=null;
       _origBtnSClick2.call(self);
-      syncToCloud();
     }
   };
 
@@ -2088,20 +2102,9 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
     }
     // 重新绑定快速标签逻辑
     initQkTags(containerId,foodInputId);
-    // 重建DOM后重新直接绑定设置按钮（事件委托是备份，直接绑定更可靠）
+    // 重建DOM后确保新按钮没有 onclick（统一由事件委托处理）
     var newMgrBtn=c.querySelector('.qk-manage-btn');
-    if(newMgrBtn){
-      var gid=newMgrBtn.getAttribute('data-manage');
-      var cfg=tagGroupConfig[gid];
-      if(cfg){
-        newMgrBtn.ontouchend=newMgrBtn.onclick=function(e){
-          e.stopPropagation();e.preventDefault();
-          showTagManager(gid,cfg.label,function(){
-            if(cfg.foodInput)rebuildFoodTags(gid,cfg.foodInput);
-          });
-        };
-      }
-    }
+    if(newMgrBtn){newMgrBtn.onclick=null;newMgrBtn.ontouchend=null;}
   }
 
   // 标签管理弹窗
@@ -2168,12 +2171,10 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
     reasonEvening:{label:'晚上未完成原因'}
   };
 
-  // 用事件委托确保管理按钮始终可点击（无论DOM如何重建）
-  // 只在按钮没有自己的 onclick 时才通过委托触发（避免重复）
+  // 用事件委托处理所有管理按钮点击（无论初始还是重建后的按钮）
   document.addEventListener('click',function(e){
     var btn=e.target.closest('.qk-manage-btn');
     if(!btn)return;
-    if(btn.onclick)return; // 已有直接绑定，跳过委托
     e.stopPropagation();
     e.preventDefault();
     var groupId=btn.getAttribute('data-manage');
@@ -2184,23 +2185,7 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
     });
   });
 
-  // 直接绑定初始按钮（双保险）
-  // 注意：只用 click，不用 ontouchend，避免触屏设备重复触发
-  function directBindMgr(id){
-    var el=ge(id);if(!el)return;
-    el.onclick=function(e){
-      e.stopPropagation();e.preventDefault();
-      var groupId=this.getAttribute('data-manage');
-      var cfg=tagGroupConfig[groupId];
-      if(!cfg)return;
-      showTagManager(groupId,cfg.label,function(){
-        if(cfg.foodInput)rebuildFoodTags(groupId,cfg.foodInput);
-      });
-    };
-  }
-  directBindMgr('mgrBf');
-  directBindMgr('mgrLc');
-  directBindMgr('mgrDn');
+  // 事件委托已统一处理所有 .qk-manage-btn，无需直接绑定
 
   // 页面加载：先从本地缓存恢复（秒开），再从云端同步
   (function(){
