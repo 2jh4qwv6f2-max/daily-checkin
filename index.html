@@ -2196,9 +2196,18 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
       span.textContent=tags[i];
       c.appendChild(span);
     }
-    if(manageBtn)c.appendChild(manageBtn);
-    else{
-
+    // 如果容器对应的设置按钮存在，重新插入并绑定 onclick
+    var btnId={bfTags:'btnMgrBf'}[containerId];
+    if(btnId){
+      var existingBtn=ge(btnId);
+      if(existingBtn){
+        c.appendChild(existingBtn);
+        existingBtn.onclick=function(){
+          showTagManager(containerId,tagGroupConfig[containerId].label,function(){
+            rebuildFoodTags(containerId,foodInputId);
+          });
+        };
+      }
     }
     // 重新绑定快速标签逻辑
     initQkTags(containerId,foodInputId);
