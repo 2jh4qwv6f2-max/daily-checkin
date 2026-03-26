@@ -169,6 +169,7 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
 .manage-mask{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.85);z-index:300;display:flex;align-items:center;justify-content:center;padding:16px}
 .manage-box{background:#1a1a2e;border-radius:20px;border:1px solid rgba(255,255,255,.08);width:100%;max-width:440px;max-height:80vh;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:20px}
 .manage-title{font-size:17px;font-weight:700;color:#e8e8f0;margin-bottom:16px;text-align:center}
+.manage-hint{font-size:12px;color:#8888a8;margin-bottom:12px}
 .manage-list{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
 .manage-item{display:inline-flex;align-items:center;gap:4px;padding:5px 10px;border-radius:8px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);color:#a0a0c0;font-size:13px}
 .manage-item .del{color:#ef4444;font-size:11px;cursor:pointer;opacity:.6;margin-left:2px;font-weight:700}
@@ -245,7 +246,7 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
 .device-info{font-size:13px;color:#c0c0d8}
 .device-meta{font-size:11px;color:#8888a8;margin-top:2px}
 .device-del{color:#ef4444;font-size:12px;cursor:pointer;padding:4px 8px}
-.qk-mgr-btn{display:inline-block;width:auto;padding:2px 8px;border-radius:6px;background:rgba(99,102,241,.15);border:1px solid rgba(99,102,241,.3);color:#a5b4fc;font-size:11px;cursor:pointer;font-family:inherit;font-weight:500;-webkit-appearance:none;line-height:1.6;flex-shrink:0}
+.qk-mgr-btn{display:inline-block;width:auto;padding:5px 10px;border-radius:8px;background:rgba(99,102,241,.15);border:1px solid rgba(99,102,241,.3);color:#a5b4fc;font-size:12px;cursor:pointer;font-family:inherit;font-weight:500;-webkit-appearance:none;flex-shrink:0}
 .qk-mgr-btn:active{background:rgba(99,102,241,.3)}
 </style>
 </head>
@@ -559,20 +560,19 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
     for(var j=0;j<fids.length;j++){var el=ge(fids[j]);if(el){if(el.type==='checkbox'){el.checked=false;}else{el.value='';}}}
     fdata={};
     document.querySelectorAll('.qk-tag.sel').forEach(function(t){t.classList.remove('sel');});
-    // 重置快速标签的点击顺序
     ['bfTags','lcTags','dnTags'].forEach(function(tid){var c=ge(tid);if(c&&c._qkReset)c._qkReset();});
     try{localStorage.removeItem(skey());}catch(e){}
-    updP();spw('breakfastPrice','w0');spw('lunchPrice','w1');spw('dinnerPrice','w2');
-  }
-  ge('btnR').onclick=function(){
-    if(!confirm('确定要重置所有打卡记录吗？'))return;
-    doReset();
-    // 重置后恢复日期到今天、时间到当前时间
+    // 重置后恢复右上角日期到今天、时间到当前时间（手动和自动重置都走这里）
     var n=new Date();
     todayStr=getTodayStr();
     ge('pD').value=todayStr;
     ge('pD').max=todayStr;
     ge('pT').value=pad(n.getHours())+':'+pad(n.getMinutes());
+    updP();spw('breakfastPrice','w0');spw('lunchPrice','w1');spw('dinnerPrice','w2');
+  }
+  ge('btnR').onclick=function(){
+    if(!confirm('确定要重置所有打卡记录吗？'))return;
+    doReset();
     toast('已重置 ✓');
   };
 
@@ -2309,43 +2309,15 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
     var currentTags=getTagList(groupId);
     var originalTags=currentTags.slice(); // 记录初始状态，用于判断是否有修改
 
-    function render(){
-      var html='<div class="manage-title">⚙ 管理「'+groupLabel+'」快速选项</div>';
-      html+='<div class="manage-hint">点击 ✕ 可删除选项，输入框添加新选项</div>';
-      html+='<div class="manage-list" id="mgrList">';
-      for(var i=0;i<currentTags.length;i++){
-        html+='<span class="manage-item" draggable="true" data-idx="'+i+'">'+
-          '<span class="drag-handle">⠿</span>'+currentTags[i]+
-          '<span class="del" data-idx="'+i+'">✕</span></span>';
-      }
-      if(!currentTags.length)html+='<span style="color:#555570;font-size:13px">暂无选项</span>';
-      html+='</div>';
-      html+='<div class="manage-add-row"><input class="manage-add-input" id="mgrInput" placeholder="输入新选项名称" maxlength="20"><button class="manage-add-btn" id="mgrAdd">+ 添加</button></div>';
-      html+='<div style="display:flex;gap:8px;margin-top:4px">'
-        +'<button class="manage-close" id="mgrSave" style="flex:1;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;border:none">保存</button>'
-        +'<button class="manage-close" id="mgrCancel" style="flex:1">取消</button>'
-        +'</div>';
-      box.innerHTML=html;
-
-      // 绑定删除
-      box.querySelectorAll('.del').forEach(function(d){
-        d.onclick=function(e){
-          e.stopPropagation();
-          var idx=parseInt(d.getAttribute('data-idx'));
-          currentTags.splice(idx,1);
-          render();
-        };
-      });
-
-      // 拖拽排序（touch 事件，兼容 iOS/Android）
-      var dragSrcIdx=null,dragClone=null;
+    // 拖拽状态（在 render 外声明，render 重建 DOM 后重新绑定）
+    var dragSrcIdx=null,dragClone=null;
+    function bindDrag(){
       function getItemAtPoint(x,y){
         var items=box.querySelectorAll('.manage-item');
         for(var i=0;i<items.length;i++){
           var r=items[i].getBoundingClientRect();
           if(x>=r.left&&x<=r.right&&y>=r.top&&y<=r.bottom)return items[i];
-        }
-        return null;
+        }return null;
       }
       box.querySelectorAll('.drag-handle').forEach(function(handle){
         handle.addEventListener('touchstart',function(e){
@@ -2353,7 +2325,6 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
           var item=handle.closest('.manage-item');
           dragSrcIdx=parseInt(item.getAttribute('data-idx'));
           item.style.opacity='0.4';
-          // 创建拖拽占位克隆
           dragClone=item.cloneNode(true);
           dragClone.style.cssText='position:fixed;z-index:9999;pointer-events:none;opacity:0.85;background:#2a2a4a;border:1px solid #6366f1;border-radius:8px;padding:4px 8px;font-size:13px;color:#e8e8f0;';
           document.body.appendChild(dragClone);
@@ -2363,7 +2334,6 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
           if(dragSrcIdx===null)return;
           var t=e.touches[0];
           if(dragClone){dragClone.style.left=(t.clientX-40)+'px';dragClone.style.top=(t.clientY-20)+'px';}
-          // 高亮目标
           box.querySelectorAll('.manage-item').forEach(function(i){i.style.background='';});
           var target=getItemAtPoint(t.clientX,t.clientY);
           if(target&&parseInt(target.getAttribute('data-idx'))!==dragSrcIdx)
@@ -2386,6 +2356,37 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
           dragSrcIdx=null;
         });
       });
+    }
+
+    function render(){
+      var html='<div class="manage-title">⚙ 管理「'+groupLabel+'」快速选项</div>';
+      html+='<div class="manage-hint">拖动 ⠿ 可排序，点 ✕ 删除</div>';
+      html+='<div class="manage-list" id="mgrList">';
+      for(var i=0;i<currentTags.length;i++){
+        html+='<span class="manage-item" draggable="true" data-idx="'+i+'">'+
+          '<span class="drag-handle">⠿</span>'+currentTags[i]+
+          '<span class="del" data-idx="'+i+'">✕</span></span>';
+      }
+      if(!currentTags.length)html+='<span style="color:#555570;font-size:13px">暂无选项</span>';
+      html+='</div>';
+      html+='<div class="manage-add-row"><input class="manage-add-input" id="mgrInput" placeholder="输入新选项名称" maxlength="20"><button class="manage-add-btn" id="mgrAdd">+ 添加</button></div>';
+      html+='<div style="display:flex;gap:8px;margin-top:4px">'
+        +'<button class="manage-close" id="mgrCancel" style="flex:1">取消</button>'
+        +'<button class="manage-close" id="mgrSave" style="flex:1;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;border:none">保存</button>'
+        +'</div>';
+      box.innerHTML=html;
+
+      // 绑定删除
+      box.querySelectorAll('.del').forEach(function(d){
+        d.onclick=function(e){
+          e.stopPropagation();
+          var idx=parseInt(d.getAttribute('data-idx'));
+          currentTags.splice(idx,1);
+          render();
+        };
+      });
+
+      bindDrag(); // render 后重新绑定拖拽
 
       // 绑定添加（用 box.querySelector 而不是 ge()，因为此时 box 可能还未插入 document）
       box.querySelector('#mgrAdd').onclick=function(){
