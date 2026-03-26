@@ -166,8 +166,8 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
 .pwa-arrow{color:#555570;font-size:20px}
 
 /* ── 快速标签管理 ── */
-.qk-manage-btn{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:7px;background:rgba(255,255,255,.06);border:1px dashed rgba(255,255,255,.15);color:#555570;font-size:14px;cursor:pointer;-webkit-user-select:none;user-select:none;transition:all .15s;flex-shrink:0;line-height:1}
-.qk-manage-btn:active{background:rgba(99,102,241,.2);color:#a5b4fc}
+.qk-manage-btn{display:inline-flex;align-items:center;justify-content:center;padding:5px 8px;border-radius:7px;background:rgba(99,102,241,.15);border:1px solid rgba(99,102,241,.3);color:#a5b4fc;font-size:12px;cursor:pointer;-webkit-user-select:none;user-select:none;transition:all .15s;flex-shrink:0;line-height:1;font-weight:500}
+.qk-manage-btn:active{background:rgba(99,102,241,.3)}
 .manage-mask{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.85);z-index:300;display:flex;align-items:center;justify-content:center;padding:16px}
 .manage-box{background:#1a1a2e;border-radius:20px;border:1px solid rgba(255,255,255,.08);width:100%;max-width:440px;max-height:80vh;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:20px}
 .manage-title{font-size:17px;font-weight:700;color:#e8e8f0;margin-bottom:16px;text-align:center}
@@ -284,17 +284,17 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
   <div class="cg"><label class="cw"><input type="checkbox" class="chk"><div class="cf"><div class="cm"><svg viewBox="0 0 16 16"><polyline points="3.5 8.5 6.5 11.5 12.5 4.5"></polyline></svg></div><span class="ct">刷牙</span></div></label><label class="cw"><input type="checkbox" class="chk"><div class="cf"><div class="cm"><svg viewBox="0 0 16 16"><polyline points="3.5 8.5 6.5 11.5 12.5 4.5"></polyline></svg></div><span class="ct">洗脸</span></div></label><label class="cw"><input type="checkbox" class="chk"><div class="cf"><div class="cm"><svg viewBox="0 0 16 16"><polyline points="3.5 8.5 6.5 11.5 12.5 4.5"></polyline></svg></div><span class="ct">洗头</span></div></label></div>
   <div class="cg cg2"><label class="cw"><input type="checkbox" class="chk"><div class="cf"><div class="cm"><svg viewBox="0 0 16 16"><polyline points="3.5 8.5 6.5 11.5 12.5 4.5"></polyline></svg></div><span class="ct">脸部擦药</span></div></label><label class="cw"><input type="checkbox" class="chk"><div class="cf"><div class="cm"><svg viewBox="0 0 16 16"><polyline points="3.5 8.5 6.5 11.5 12.5 4.5"></polyline></svg></div><span class="ct">手部擦药</span></div></label></div>
   <div class="cg"><label class="cw"><input type="checkbox" class="chk"><div class="cf"><div class="cm"><svg viewBox="0 0 16 16"><polyline points="3.5 8.5 6.5 11.5 12.5 4.5"></polyline></svg></div><span class="ct">换干净衣服</span></div></label><label class="cw"><input type="checkbox" class="chk"><div class="cf"><div class="cm"><svg viewBox="0 0 16 16"><polyline points="3.5 8.5 6.5 11.5 12.5 4.5"></polyline></svg></div><span class="ct">整理发型</span></div></label><label class="cw"><input type="checkbox" class="chk"><div class="cf"><div class="cm"><svg viewBox="0 0 16 16"><polyline points="3.5 8.5 6.5 11.5 12.5 4.5"></polyline></svg></div><span class="ct">整理衣服</span></div></label></div>
-  <div class="ic"><div class="il">🍳 早餐</div><div class="ir"><div class="pw" id="w0"><input type="number" inputmode="decimal" pattern="[0-9]*" placeholder="¥ 价格" id="breakfastPrice"><span class="pu">元</span></div><div class="fd-wrap"><input class="fd" type="text" placeholder="吃了什么" id="breakfastFood"><span class="fd-clear" data-for="breakfastFood" data-tags="bfTags">✕</span></div></div><div class="qk-home-row"><label class="qk-home-label"><input type="checkbox" id="breakfastHome" class="qk-home-cb"><span class="qk-home-tag">🏠 在家吃</span></label></div><div class="qk-tags" id="bfTags"><span class="qk-tag" data-v="包子">包子</span><span class="qk-tag" data-v="馒头">馒头</span><span class="qk-tag" data-v="豆浆">豆浆</span><span class="qk-tag" data-v="油条">油条</span><span class="qk-tag" data-v="稀饭">稀饭</span><span class="qk-tag" data-v="鸡蛋">鸡蛋</span><span class="qk-tag" data-v="茶叶蛋">茶叶蛋</span><span class="qk-tag" data-v="青菜">青菜</span><span class="qk-tag" data-v="米粉">米粉</span><span class="qk-tag" data-v="面线">面线</span><span class="qk-tag" data-v="米线">米线</span><span class="qk-tag" data-v="面条">面条</span><span class="qk-manage-btn" data-manage="bfTags" title="管理标签">⚙</span></div></div>
+  <div class="ic"><div class="il">🍳 早餐</div><div class="ir"><div class="pw" id="w0"><input type="number" inputmode="decimal" pattern="[0-9]*" placeholder="¥ 价格" id="breakfastPrice"><span class="pu">元</span></div><div class="fd-wrap"><input class="fd" type="text" placeholder="吃了什么" id="breakfastFood"><span class="fd-clear" data-for="breakfastFood" data-tags="bfTags">✕</span></div></div><div class="qk-home-row"><label class="qk-home-label"><input type="checkbox" id="breakfastHome" class="qk-home-cb"><span class="qk-home-tag">🏠 在家吃</span></label></div><div class="qk-tags" id="bfTags"><span class="qk-tag" data-v="包子">包子</span><span class="qk-tag" data-v="馒头">馒头</span><span class="qk-tag" data-v="豆浆">豆浆</span><span class="qk-tag" data-v="油条">油条</span><span class="qk-tag" data-v="稀饭">稀饭</span><span class="qk-tag" data-v="鸡蛋">鸡蛋</span><span class="qk-tag" data-v="茶叶蛋">茶叶蛋</span><span class="qk-tag" data-v="青菜">青菜</span><span class="qk-tag" data-v="米粉">米粉</span><span class="qk-tag" data-v="面线">面线</span><span class="qk-tag" data-v="米线">米线</span><span class="qk-tag" data-v="面条">面条</span><span class="qk-manage-btn" id="mgrBf" data-manage="bfTags">设置</span></div></div>
   <label><input type="checkbox" class="chk"><div class="rw"><div class="bx"><svg viewBox="0 0 16 16"><polyline points="3.5 8.5 6.5 11.5 12.5 4.5"></polyline></svg></div><span class="tx">餐后漱口</span></div></label>
 </div></div>
 <div class="pnl" id="s1"><div class="shd"><div class="sico sico-n">🌞</div><div class="stt">中午</div></div><div class="stk">
-  <div class="ic"><div class="il">🍜 午餐</div><div class="ir"><div class="pw" id="w1"><input type="number" inputmode="decimal" pattern="[0-9]*" placeholder="¥ 价格" id="lunchPrice"><span class="pu">元</span></div><div class="fd-wrap"><input class="fd" type="text" placeholder="吃了什么" id="lunchFood"><span class="fd-clear" data-for="lunchFood" data-tags="lcTags">✕</span></div></div><div class="qk-home-row"><label class="qk-home-label"><input type="checkbox" id="lunchHome" class="qk-home-cb"><span class="qk-home-tag">🏠 在家吃</span></label></div><div class="qk-tags" id="lcTags"><span class="qk-tag" data-v="米饭">米饭</span><span class="qk-tag" data-v="鸡肉">鸡肉</span><span class="qk-tag" data-v="猪肉">猪肉</span><span class="qk-tag" data-v="牛肉">牛肉</span><span class="qk-tag" data-v="鱼肉">鱼肉</span><span class="qk-tag" data-v="米粉">米粉</span><span class="qk-tag" data-v="米线">米线</span><span class="qk-tag" data-v="面线">面线</span><span class="qk-tag" data-v="面条">面条</span><span class="qk-tag" data-v="麻辣烫">麻辣烫</span><span class="qk-manage-btn" data-manage="lcTags" title="管理标签">⚙</span></div></div>
+  <div class="ic"><div class="il">🍜 午餐</div><div class="ir"><div class="pw" id="w1"><input type="number" inputmode="decimal" pattern="[0-9]*" placeholder="¥ 价格" id="lunchPrice"><span class="pu">元</span></div><div class="fd-wrap"><input class="fd" type="text" placeholder="吃了什么" id="lunchFood"><span class="fd-clear" data-for="lunchFood" data-tags="lcTags">✕</span></div></div><div class="qk-home-row"><label class="qk-home-label"><input type="checkbox" id="lunchHome" class="qk-home-cb"><span class="qk-home-tag">🏠 在家吃</span></label></div><div class="qk-tags" id="lcTags"><span class="qk-tag" data-v="米饭">米饭</span><span class="qk-tag" data-v="鸡肉">鸡肉</span><span class="qk-tag" data-v="猪肉">猪肉</span><span class="qk-tag" data-v="牛肉">牛肉</span><span class="qk-tag" data-v="鱼肉">鱼肉</span><span class="qk-tag" data-v="米粉">米粉</span><span class="qk-tag" data-v="米线">米线</span><span class="qk-tag" data-v="面线">面线</span><span class="qk-tag" data-v="面条">面条</span><span class="qk-tag" data-v="麻辣烫">麻辣烫</span><span class="qk-manage-btn" id="mgrLc" data-manage="lcTags">设置</span></div></div>
   <label><input type="checkbox" class="chk"><div class="rw"><div class="bx"><svg viewBox="0 0 16 16"><polyline points="3.5 8.5 6.5 11.5 12.5 4.5"></polyline></svg></div><span class="tx">餐后漱口</span></div></label>
   <label><input type="checkbox" class="chk"><div class="rw"><div class="bx"><svg viewBox="0 0 16 16"><polyline points="3.5 8.5 6.5 11.5 12.5 4.5"></polyline></svg></div><span class="tx">午休</span></div></label>
   <div class="cg cg2"><label class="cw"><input type="checkbox" class="chk"><div class="cf"><div class="cm"><svg viewBox="0 0 16 16"><polyline points="3.5 8.5 6.5 11.5 12.5 4.5"></polyline></svg></div><span class="ct">整理发型</span></div></label><label class="cw"><input type="checkbox" class="chk"><div class="cf"><div class="cm"><svg viewBox="0 0 16 16"><polyline points="3.5 8.5 6.5 11.5 12.5 4.5"></polyline></svg></div><span class="ct">整理衣服</span></div></label></div>
 </div></div>
 <div class="pnl" id="s2"><div class="shd"><div class="sico sico-e">🌙</div><div class="stt">晚上</div></div><div class="stk">
-  <div class="ic"><div class="il">🍲 晚餐</div><div class="ir"><div class="pw" id="w2"><input type="number" inputmode="decimal" pattern="[0-9]*" placeholder="¥ 价格" id="dinnerPrice"><span class="pu">元</span></div><div class="fd-wrap"><input class="fd" type="text" placeholder="吃了什么" id="dinnerFood"><span class="fd-clear" data-for="dinnerFood" data-tags="dnTags">✕</span></div></div><div class="qk-home-row"><label class="qk-home-label"><input type="checkbox" id="dinnerHome" class="qk-home-cb"><span class="qk-home-tag">🏠 在家吃</span></label></div><div class="qk-tags" id="dnTags"><span class="qk-tag" data-v="米饭">米饭</span><span class="qk-tag" data-v="鸡肉">鸡肉</span><span class="qk-tag" data-v="猪肉">猪肉</span><span class="qk-tag" data-v="牛肉">牛肉</span><span class="qk-tag" data-v="鱼肉">鱼肉</span><span class="qk-tag" data-v="米粉">米粉</span><span class="qk-tag" data-v="米线">米线</span><span class="qk-tag" data-v="面线">面线</span><span class="qk-tag" data-v="面条">面条</span><span class="qk-tag" data-v="麻辣烫">麻辣烫</span><span class="qk-manage-btn" data-manage="dnTags" title="管理标签">⚙</span></div></div>
+  <div class="ic"><div class="il">🍲 晚餐</div><div class="ir"><div class="pw" id="w2"><input type="number" inputmode="decimal" pattern="[0-9]*" placeholder="¥ 价格" id="dinnerPrice"><span class="pu">元</span></div><div class="fd-wrap"><input class="fd" type="text" placeholder="吃了什么" id="dinnerFood"><span class="fd-clear" data-for="dinnerFood" data-tags="dnTags">✕</span></div></div><div class="qk-home-row"><label class="qk-home-label"><input type="checkbox" id="dinnerHome" class="qk-home-cb"><span class="qk-home-tag">🏠 在家吃</span></label></div><div class="qk-tags" id="dnTags"><span class="qk-tag" data-v="米饭">米饭</span><span class="qk-tag" data-v="鸡肉">鸡肉</span><span class="qk-tag" data-v="猪肉">猪肉</span><span class="qk-tag" data-v="牛肉">牛肉</span><span class="qk-tag" data-v="鱼肉">鱼肉</span><span class="qk-tag" data-v="米粉">米粉</span><span class="qk-tag" data-v="米线">米线</span><span class="qk-tag" data-v="面线">面线</span><span class="qk-tag" data-v="面条">面条</span><span class="qk-tag" data-v="麻辣烫">麻辣烫</span><span class="qk-manage-btn" id="mgrDn" data-manage="dnTags">设置</span></div></div>
   <label><input type="checkbox" class="chk"><div class="rw"><div class="bx"><svg viewBox="0 0 16 16"><polyline points="3.5 8.5 6.5 11.5 12.5 4.5"></polyline></svg></div><span class="tx">餐后漱口</span></div></label>
   <div class="cg"><label class="cw"><input type="checkbox" class="chk"><div class="cf"><div class="cm"><svg viewBox="0 0 16 16"><polyline points="3.5 8.5 6.5 11.5 12.5 4.5"></polyline></svg></div><span class="ct">洗澡</span></div></label><label class="cw"><input type="checkbox" class="chk"><div class="cf"><div class="cm"><svg viewBox="0 0 16 16"><polyline points="3.5 8.5 6.5 11.5 12.5 4.5"></polyline></svg></div><span class="ct">洗头</span></div></label><label class="cw"><input type="checkbox" class="chk"><div class="cf"><div class="cm"><svg viewBox="0 0 16 16"><polyline points="3.5 8.5 6.5 11.5 12.5 4.5"></polyline></svg></div><span class="ct">洗脚</span></div></label></div>
   <label><input type="checkbox" class="chk"><div class="rw"><div class="bx"><svg viewBox="0 0 16 16"><polyline points="3.5 8.5 6.5 11.5 12.5 4.5"></polyline></svg></div><span class="tx">睡前刷牙</span></div></label>
@@ -998,10 +998,14 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
         var sc=u.status==='pending'?'pending':u.status==='approved'?'approved':'rejected';
         var sl=u.status==='pending'?'待审批':u.status==='approved'?'已批准':'已拒绝';
         html+='<div class="admin-user"><div class="admin-user-top"><span class="admin-user-name">'+(u.role==='admin'?'👑 ':'')+u.username+'</span><span class="admin-user-status '+sc+'">'+sl+'</span></div><div class="admin-user-meta">注册于 '+u.created_at+'</div>';
+        html+='<div class="admin-user-actions">';
         if(u.status==='pending'){
-          html+='<div class="admin-user-actions"><button class="admin-btn admin-btn-approve" data-uid="'+u.id+'">✓ 批准</button><button class="admin-btn admin-btn-reject" data-uid="'+u.id+'">✕ 拒绝</button></div>';
+          html+='<button class="admin-btn admin-btn-approve" data-uid="'+u.id+'">✓ 批准</button><button class="admin-btn admin-btn-reject" data-uid="'+u.id+'">✕ 拒绝</button>';
         }
-        html+='</div>';
+        if(u.status==='approved'){
+          html+='<button class="admin-btn" style="background:rgba(99,102,241,.2);color:#a5b4fc" data-view-uid="'+u.id+'" data-view-name="'+u.username+'">📊 查看记录</button>';
+        }
+        html+='</div></div>';
       }
       ge('adminUserList').innerHTML=html;
       ge('adminUserList').querySelectorAll('.admin-btn-approve').forEach(function(btn){
@@ -1018,6 +1022,181 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
           });
         };
       });
+      ge('adminUserList').querySelectorAll('[data-view-uid]').forEach(function(btn){
+        btn.onclick=function(){
+          var uid=parseInt(btn.getAttribute('data-view-uid'));
+          var uname=btn.getAttribute('data-view-name');
+          showAdminUserData(uid,uname);
+        };
+      });
+    });
+  }
+
+  // ══ 管理员查看用户打卡记录弹窗 ══
+  function showAdminUserData(userId,username){
+    var mask=document.createElement('div');mask.className='detail-mask';
+    var box=document.createElement('div');box.className='detail-box';
+    box.style.maxHeight='90vh';
+
+    // 范围选择
+    var html='<div class="detail-title">📊 '+username+' 的打卡记录</div>';
+    html+='<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px">';
+    html+='<button class="hq-btn hq-sel" data-ar="week">本周</button>';
+    html+='<button class="hq-btn" data-ar="month">本月</button>';
+    html+='<button class="hq-btn" data-ar="quarter">本季</button>';
+    html+='<button class="hq-btn" data-ar="year">本年</button>';
+    html+='</div>';
+    html+='<div id="adStatsBox"></div>';
+    html+='<div id="adListBox" style="margin-top:10px"></div>';
+    html+='<button class="manage-close" id="adClose" style="margin-top:12px">关闭</button>';
+    box.innerHTML=html;
+    mask.appendChild(box);document.body.appendChild(mask);
+    mask.onclick=function(e){if(e.target===mask)document.body.removeChild(mask);};
+    box.querySelector('#adClose').onclick=function(){document.body.removeChild(mask);};
+
+    function loadRange(range){
+      var now=new Date(),y=now.getFullYear(),m=now.getMonth(),d=now.getDate();
+      var day=now.getDay()||7;
+      var from,to;
+      if(range==='week'){from=new Date(y,m,d-day+1);to=new Date(y,m,d-day+7);}
+      else if(range==='month'){from=new Date(y,m,1);to=new Date(y,m+1,0);}
+      else if(range==='quarter'){var q=Math.floor(m/3)*3;from=new Date(y,q,1);to=new Date(y,q+3,0);}
+      else{from=new Date(y,0,1);to=new Date(y,11,31);}
+      function fmt(dt){return dt.getFullYear()+'-'+String(dt.getMonth()+1).padStart(2,'0')+'-'+String(dt.getDate()).padStart(2,'0');}
+      var f=fmt(from),t=fmt(to);
+
+      box.querySelector('#adStatsBox').innerHTML='<div class="h-loading">加载中...</div>';
+      box.querySelector('#adListBox').innerHTML='';
+
+      Promise.all([
+        apiCall('GET','/api/admin/checkin/stats?user_id='+userId+'&from='+f+'&to='+t),
+        apiCall('GET','/api/admin/checkin/range?user_id='+userId+'&from='+f+'&to='+t)
+      ]).then(function(arr){
+        var stats=arr[0],range=arr[1];
+        // 渲染统计
+        if(stats){
+          var pctColor=(stats.avg_pct||0)>=80?'#22c55e':(stats.avg_pct||0)>=50?'#f59e0b':'#ef4444';
+          box.querySelector('#adStatsBox').innerHTML=
+            '<div class="h-stat-grid">'+
+            '<div class="h-stat-card"><div class="h-stat-val" style="color:'+pctColor+'">'+Math.round(stats.avg_pct||0)+'%</div><div class="h-stat-lbl">平均完成率</div></div>'+
+            '<div class="h-stat-card"><div class="h-stat-val">'+(stats.checked_days||0)+'/'+(stats.total_days||0)+'</div><div class="h-stat-lbl">打卡天数</div></div>'+
+            '<div class="h-stat-card"><div class="h-stat-val" style="color:#f59e0b">¥'+Math.round(stats.avg_spend||0)+'</div><div class="h-stat-lbl">日均消费</div></div>'+
+            '<div class="h-stat-card"><div class="h-stat-val" style="color:#f59e0b">¥'+Math.round(stats.total_spend||0)+'</div><div class="h-stat-lbl">总消费</div></div>'+
+            '</div>';
+        }else{
+          box.querySelector('#adStatsBox').innerHTML='<div class="h-loading">加载失败</div>';
+        }
+        // 渲染列表
+        var data=(range&&range.data)||[];
+        if(!data.length){box.querySelector('#adListBox').innerHTML='<div class="h-loading">暂无记录</div>';return;}
+        var wks=['日','一','二','三','四','五','六'];
+        var lhtml='';
+        for(var i=0;i<data.length;i++){
+          var r=data[i];
+          var dtt=new Date(r.date+'T00:00:00');
+          var pc=r.pct>=80?'#22c55e':r.pct>=50?'#f59e0b':'#ef4444';
+          lhtml+='<div class="h-day" data-adate="'+r.date+'" data-auid="'+userId+'">';
+          lhtml+='<div class="h-day-top"><span class="h-day-date">'+(dtt.getMonth()+1)+'/'+dtt.getDate()+' 周'+wks[dtt.getDay()]+'</span>';
+          lhtml+='<span class="h-day-pct" style="color:'+pc+'">'+r.pct+'%</span></div>';
+          lhtml+='<div class="h-day-bot"><span>'+r.done+'/'+r.total+'项</span><span>¥'+Math.round(r.spend||0)+'</span></div></div>';
+        }
+        box.querySelector('#adListBox').innerHTML=lhtml;
+        // 点击日期查看详情
+        box.querySelectorAll('[data-adate]').forEach(function(el){
+          el.onclick=function(){
+            var dd=el.getAttribute('data-adate');
+            var uu=parseInt(el.getAttribute('data-auid'));
+            showAdminCheckinDetail(uu,username,dd);
+          };
+        });
+      });
+    }
+
+    // 绑定范围按钮
+    box.querySelectorAll('[data-ar]').forEach(function(btn){
+      btn.onclick=function(){
+        box.querySelectorAll('[data-ar]').forEach(function(b){b.classList.remove('hq-sel');});
+        btn.classList.add('hq-sel');
+        loadRange(btn.getAttribute('data-ar'));
+      };
+    });
+
+    loadRange('week');
+  }
+
+  // ══ 管理员查看用户某日打卡详情 ══
+  function showAdminCheckinDetail(userId,username,date){
+    var mask2=document.createElement('div');mask2.className='detail-mask';mask2.style.zIndex='310';
+    var box2=document.createElement('div');box2.className='detail-box';
+    box2.innerHTML='<div class="detail-title">加载中...</div>';
+    var closeBtn2=document.createElement('button');closeBtn2.className='reason-btn reason-btn-cancel';closeBtn2.textContent='关闭';closeBtn2.style.marginTop='12px';closeBtn2.style.width='100%';
+    closeBtn2.onclick=function(){document.body.removeChild(mask2);};
+    box2.appendChild(closeBtn2);
+    mask2.appendChild(box2);document.body.appendChild(mask2);
+    mask2.onclick=function(e){if(e.target===mask2)document.body.removeChild(mask2);};
+
+    apiCall('GET','/api/admin/checkin?user_id='+userId+'&date='+date).then(function(res){
+      if(!res||!res.data){box2.querySelector('.detail-title').textContent=date+' 暂无记录';return;}
+      var r=res.data;
+      var dt=new Date(date+'T00:00:00');
+      var wks=['日','一','二','三','四','五','六'];
+      var dateLabel=username+' · '+(dt.getMonth()+1)+'月'+dt.getDate()+'日 周'+wks[dt.getDay()];
+      var pctColor=r.pct>=80?'#22c55e':r.pct>=50?'#f59e0b':'#ef4444';
+
+      var meals={};try{meals=JSON.parse(r.meals||'{}');}catch(e){}
+      var checklist=[];try{checklist=JSON.parse(r.checklist||'[]');}catch(e){}
+      var reasons={};try{reasons=JSON.parse(r.reasons||'{}');}catch(e){}
+
+      // 用全局 ALL_ITEMS 映射
+      var grouped={morning:[],noon:[],evening:[]};
+      for(var i=0;i<ALL_ITEMS.length;i++){
+        var raw=i<checklist.length?checklist[i]:false;
+        grouped[ALL_ITEMS[i].sec].push({name:ALL_ITEMS[i].name,done:raw===true||raw===1});
+      }
+
+      var html='<div class="detail-title">'+dateLabel+'</div>';
+      html+='<div class="detail-sub">'+(r.is_modified?'✏️ 已修改 v'+r.version:'原始记录')+'</div>';
+
+      if(r.wake_time||r.sleep_time){
+        html+='<div class="detail-time-row">';
+        if(r.wake_time)html+='<div class="detail-time-chip">🌅 '+r.wake_time+'</div>';
+        if(r.sleep_time)html+='<div class="detail-time-chip">😴 '+r.sleep_time+'</div>';
+        html+='</div>';
+      }
+
+      html+='<div class="detail-summary">';
+      html+='<div class="detail-summary-card"><div class="detail-summary-val" style="color:'+pctColor+'">'+r.pct+'%</div><div class="detail-summary-lbl">完成率</div></div>';
+      html+='<div class="detail-summary-card"><div class="detail-summary-val">'+r.done+'/'+r.total+'</div><div class="detail-summary-lbl">完成项</div></div>';
+      html+='<div class="detail-summary-card"><div class="detail-summary-val" style="color:#f59e0b">¥'+Math.round(r.spend||0)+'</div><div class="detail-summary-lbl">消费</div></div>';
+      html+='</div>';
+
+      var secColors=['#f59e0b','#06b6d4','#8b5cf6'];
+      var secLabels=['🌅 早上','🌞 中午','🌙 晚上'];
+      var secKeys=['morning','noon','evening'];
+      var mealKeys=['breakfast','lunch','dinner'];
+      var mealIcons=['🍳','🍜','🍲'];
+      var mealNms=['早餐','午餐','晚餐'];
+
+      for(var si=0;si<3;si++){
+        var sk=secKeys[si];
+        html+='<div class="detail-sec"><div class="detail-sec-hd" style="color:'+secColors[si]+'">'+secLabels[si]+'</div>';
+        var meal=meals[mealKeys[si]];
+        if(meal&&(meal.food||meal.price)){
+          var ft=meal.food||'未记录';if(meal.home)ft='🏠 '+ft;
+          html+='<div class="detail-meal"><span class="detail-meal-icon">'+mealIcons[si]+'</span><span class="detail-meal-info">'+mealNms[si]+': '+ft+'</span>';
+          if(meal.price)html+='<span class="detail-meal-price">¥'+meal.price+'</span>';
+          html+='</div>';
+        }
+        html+='<div class="detail-tags">';
+        var items=grouped[sk];
+        for(var j=0;j<items.length;j++) html+='<span class="detail-tag '+(items[j].done?'done':'undone')+'">'+(items[j].done?'✓':'○')+' '+items[j].name+'</span>';
+        html+='</div>';
+        var sr=reasons[sk];
+        if(sr&&sr.reason)html+='<div class="detail-reason">💬 '+sr.reason+'</div>';
+        html+='</div>';
+      }
+
+      box2.querySelector('.detail-title').outerHTML=html;
     });
   }
 
@@ -1325,6 +1504,22 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
   // ══════════════════════════════════════
   // 功能1: 历史记录 - 点击日期查看打卡详情
   // ══════════════════════════════════════
+  // 构建全局打卡项映射（和 chks 完全同源同序）
+  var ALL_ITEMS=[];
+  (function(){
+    var secIds=['s0','s1','s2'];
+    var secKeys=['morning','noon','evening'];
+    for(var si=0;si<3;si++){
+      var sec=ge(secIds[si]);if(!sec)continue;
+      var labels=sec.querySelectorAll('label');
+      for(var k=0;k<labels.length;k++){
+        var cb=labels[k].querySelector('.chk');
+        var tx=labels[k].querySelector('.tx')||labels[k].querySelector('.ct');
+        if(cb&&tx)ALL_ITEMS.push({name:tx.textContent,sec:secKeys[si],secIdx:si});
+      }
+    }
+  })();
+
   function showCheckinDetail(date){
     var mask=document.createElement('div');mask.className='detail-mask';
     var box=document.createElement('div');box.className='detail-box';
@@ -1346,32 +1541,21 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
       var dateLabel=(dt.getMonth()+1)+'月'+dt.getDate()+'日 周'+wks[dt.getDay()];
       var pctColor=r.pct>=80?'#22c55e':r.pct>=50?'#f59e0b':'#ef4444';
 
-      // 解析数据
       var meals={};try{meals=JSON.parse(r.meals||'{}');}catch(e){}
       var checklist=[];try{checklist=JSON.parse(r.checklist||'[]');}catch(e){}
       var reasons={};try{reasons=JSON.parse(r.reasons||'{}');}catch(e){}
 
-      // 从实际 DOM 读取每个时段的打卡项名称
-      function getSecItems(secId){
-        var sec=ge(secId);if(!sec)return[];
-        var lbs=sec.querySelectorAll('label');
-        var arr=[];
-        for(var k=0;k<lbs.length;k++){
-          var tx=lbs[k].querySelector('.tx')||lbs[k].querySelector('.ct');
-          if(tx&&lbs[k].querySelector('.chk'))arr.push(tx.textContent);
-        }
-        return arr;
+      // 按时段分组
+      var grouped={morning:[],noon:[],evening:[]};
+      for(var i=0;i<ALL_ITEMS.length;i++){
+        var raw=i<checklist.length?checklist[i]:false;
+        var isDone=(raw===true||raw===1);
+        grouped[ALL_ITEMS[i].sec].push({name:ALL_ITEMS[i].name,done:isDone});
       }
-      var itemNames=[
-        {sec:'morning',items:getSecItems('s0')},
-        {sec:'noon',items:getSecItems('s1')},
-        {sec:'evening',items:getSecItems('s2')}
-      ];
 
       var html='<div class="detail-title">'+dateLabel+'</div>';
       html+='<div class="detail-sub">'+(r.is_modified?'✏️ 已修改 v'+r.version:'原始记录')+'</div>';
 
-      // 时间卡片
       if(r.wake_time||r.sleep_time){
         html+='<div class="detail-time-row">';
         if(r.wake_time)html+='<div class="detail-time-chip">🌅 起床 '+r.wake_time+'</div>';
@@ -1379,7 +1563,6 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
         html+='</div>';
       }
 
-      // 统计概览
       html+='<div class="detail-summary">';
       html+='<div class="detail-summary-card"><div class="detail-summary-val" style="color:'+pctColor+'">'+r.pct+'%</div><div class="detail-summary-lbl">完成率</div></div>';
       html+='<div class="detail-summary-card"><div class="detail-summary-val">'+r.done+'/'+r.total+'</div><div class="detail-summary-lbl">完成项</div></div>';
@@ -1387,20 +1570,18 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
       html+='<div class="detail-summary-card"><div class="detail-summary-val" style="color:#a78bfa">'+(r.wake_time&&r.sleep_time?calcHours(r.wake_time,r.sleep_time):'-')+'</div><div class="detail-summary-lbl">清醒时长</div></div>';
       html+='</div>';
 
-      // 三时段详情
       var secColors=['#f59e0b','#06b6d4','#8b5cf6'];
-      var secNames=['🌅 早上','🌞 中午','🌙 晚上'];
+      var secLabels=['🌅 早上','🌞 中午','🌙 晚上'];
       var secKeys=['morning','noon','evening'];
       var mealKeys=['breakfast','lunch','dinner'];
       var mealIcons=['🍳','🍜','🍲'];
       var mealNames=['早餐','午餐','晚餐'];
-      var idx=0;
 
       for(var si=0;si<3;si++){
+        var sk=secKeys[si];
         html+='<div class="detail-sec">';
-        html+='<div class="detail-sec-hd" style="color:'+secColors[si]+'">'+secNames[si]+'</div>';
+        html+='<div class="detail-sec-hd" style="color:'+secColors[si]+'">'+secLabels[si]+'</div>';
 
-        // 餐饮信息
         var meal=meals[mealKeys[si]];
         if(meal&&(meal.food||meal.price)){
           var foodTxt=meal.food||'未记录';
@@ -1410,26 +1591,20 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
           html+='</div>';
         }
 
-        // 打卡项（严格布尔判断）
-        var secItems=itemNames[si].items;
+        var items=grouped[sk];
         html+='<div class="detail-tags">';
-        for(var j=0;j<secItems.length;j++){
-          var raw=idx<checklist.length?checklist[idx]:false;
-          var isDone=(raw===true||raw==='true'||raw===1||raw==='1');
-          html+='<span class="detail-tag '+(isDone?'done':'undone')+'">'+(isDone?'✓':'○')+' '+secItems[j]+'</span>';
-          idx++;
+        for(var j=0;j<items.length;j++){
+          html+='<span class="detail-tag '+(items[j].done?'done':'undone')+'">'+(items[j].done?'✓':'○')+' '+items[j].name+'</span>';
         }
         html+='</div>';
 
-        // 未完成原因
-        var secReason=reasons[secKeys[si]];
+        var secReason=reasons[sk];
         if(secReason&&secReason.reason){
           html+='<div class="detail-reason">💬 '+secReason.reason+'</div>';
         }
         html+='</div>';
       }
 
-      // 移除加载文字，填充内容
       var oldContent=box.querySelector('.detail-title');
       oldContent.outerHTML=html;
     });
@@ -1602,7 +1777,7 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
     }
     if(manageBtn)c.appendChild(manageBtn);
     else{
-      var mb=document.createElement('span');mb.className='qk-manage-btn';mb.setAttribute('data-manage',containerId);mb.title='管理标签';mb.textContent='⚙';
+      var mb=document.createElement('span');mb.className='qk-manage-btn';mb.setAttribute('data-manage',containerId);mb.textContent='设置';
       c.appendChild(mb);
     }
     // 重新绑定快速标签逻辑
@@ -1678,6 +1853,7 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
     var btn=e.target.closest('.qk-manage-btn');
     if(!btn)return;
     e.stopPropagation();
+    e.preventDefault();
     var groupId=btn.getAttribute('data-manage');
     var cfg=tagGroupConfig[groupId];
     if(!cfg)return;
@@ -1685,6 +1861,23 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
       if(cfg.foodInput)rebuildFoodTags(groupId,cfg.foodInput);
     });
   });
+
+  // 直接绑定初始按钮（双保险）
+  function directBindMgr(id){
+    var el=ge(id);if(!el)return;
+    el.ontouchend=el.onclick=function(e){
+      e.stopPropagation();e.preventDefault();
+      var groupId=this.getAttribute('data-manage');
+      var cfg=tagGroupConfig[groupId];
+      if(!cfg)return;
+      showTagManager(groupId,cfg.label,function(){
+        if(cfg.foodInput)rebuildFoodTags(groupId,cfg.foodInput);
+      });
+    };
+  }
+  directBindMgr('mgrBf');
+  directBindMgr('mgrLc');
+  directBindMgr('mgrDn');
 
   // 页面加载：先从本地缓存恢复（秒开），再从云端同步
   (function(){
@@ -1725,7 +1918,7 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
           var mb=document.createElement('span');
           mb.className='qk-manage-btn';
           mb.style.cssText='display:inline-flex;margin-top:0;vertical-align:middle;';
-          mb.textContent='⚙';
+          mb.textContent='设置';
           mb.title='管理选项';
           (function(rk,secLabel){
             mb.onclick=function(e){
@@ -1739,7 +1932,7 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
                   btn.onclick=function(){this.classList.toggle('sel');};
                   qk.appendChild(btn);
                 }
-                var mb2=document.createElement('span');mb2.className='qk-manage-btn';mb2.style.cssText='display:inline-flex;margin-top:0;vertical-align:middle;';mb2.textContent='⚙';mb2.title='管理选项';
+                var mb2=document.createElement('span');mb2.className='qk-manage-btn';mb2.style.cssText='display:inline-flex;margin-top:0;vertical-align:middle;';mb2.textContent='设置';mb2.title='管理选项';
                 mb2.onclick=mb.onclick;
                 qk.appendChild(mb2);
               });
