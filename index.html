@@ -266,6 +266,19 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
         <button class="auth-btn auth-btn-secondary" id="showRegister" style="flex:1;margin-top:0;font-size:13px">注册账号</button>
       </div>
     </div>
+    <!-- 两步验证码表单（密码登录后跳到此步） -->
+    <div class="auth-form" id="twoFaForm" style="display:none">
+      <div class="auth-title">🔐 两步验证</div>
+      <div style="background:rgba(99,102,241,.08);border:1px solid rgba(99,102,241,.2);border-radius:12px;padding:12px 14px;margin-bottom:16px">
+        <div style="font-size:13px;color:#a0a0c8;line-height:1.6">验证码已发送至</div>
+        <div style="font-size:15px;color:#a78bfa;font-weight:600;margin-top:2px" id="tfaEmailHint"></div>
+      </div>
+      <div class="auth-field"><label>验证码</label><input type="text" id="tfaCode" placeholder="请输入6位验证码" maxlength="6" autocomplete="one-time-code" inputmode="numeric"></div>
+      <div class="auth-error" id="tfaError"></div>
+      <button class="auth-btn auth-btn-primary" id="tfaVerifyBtn">验证并登录</button>
+      <button class="auth-btn auth-btn-secondary" id="tfaResendBtn" style="color:#a78bfa;margin-top:4px">重新发送验证码</button>
+      <button class="auth-btn auth-btn-secondary" id="tfaBack" style="margin-top:4px;font-size:13px">← 重新输入密码</button>
+    </div>
     <!-- 邮箱验证码登录表单 -->
     <div class="auth-form" id="emailLoginForm" style="display:none">
       <div class="auth-title">邮箱登录</div>
@@ -304,7 +317,7 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
       <div class="auth-field"><label>用户名</label><input type="text" id="regUser" placeholder="2-20个字符" autocomplete="username"></div>
       <div class="auth-field"><label>密码</label><input type="password" id="regPass" placeholder="至少6个字符" autocomplete="new-password"></div>
       <div class="auth-field"><label>确认密码</label><input type="password" id="regPass2" placeholder="再次输入密码" autocomplete="new-password"></div>
-      <div class="auth-field"><label>邮箱（可选，用于验证码登录和找回密码）</label><input type="email" id="regEmail" placeholder="建议填写" autocomplete="email"></div>
+      <div class="auth-field"><label>邮箱 <span style="color:#ef4444">*</span> <span style="color:#555570;font-weight:400">（用于两步验证和找回密码）</span></label><input type="email" id="regEmail" placeholder="请输入邮箱（必填）" autocomplete="email"></div>
       <div class="auth-error" id="regError"></div>
       <button class="auth-btn auth-btn-primary" id="regBtn">注册</button>
       <button class="auth-btn auth-btn-secondary" id="showLogin">已有账号？登录</button>
@@ -816,7 +829,9 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
   }
 
   // ══ 认证流程 ══
-  var AUTH_FORMS=['loginForm','emailLoginForm','forgotForm','registerForm'];
+  var AUTH_FORMS=['loginForm','twoFaForm','emailLoginForm','forgotForm','registerForm'];
+  var _preToken=''; // 两步验证中间态
+
   function showAuthScreen(formId){
     ge('authScreen').style.display='flex';
     ge('pendingScreen').style.display='none';
@@ -828,25 +843,65 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
     ge('pendingScreen').style.display='';
   }
 
-  // 登录
+  // ── 登录第一步：提交密码 ──
   ge('loginBtn').onclick=function(){
     var u=ge('loginUser').value.trim(),p=ge('loginPass').value;
     if(!u||!p){ge('loginError').textContent='请输入用户名和密码';return;}
-    ge('loginBtn').textContent='登录中...';ge('loginBtn').disabled=true;
+    ge('loginBtn').textContent='验证中...';ge('loginBtn').disabled=true;
     apiCall('POST','/api/auth/login',{username:u,password:p}).then(function(res){
       ge('loginBtn').textContent='登录';ge('loginBtn').disabled=false;
       if(!res){return;}
       if(res.error){ge('loginError').textContent=res.error;return;}
-      SESSION_TOKEN=res.token;CURRENT_USER=res.user;
-      try{localStorage.setItem('session_token',res.token);}catch(e){}
-      if(res.user.status!=='approved'){showPendingScreen();return;}
-      onLoginSuccess();
+      if(res.warn_no_email){
+        // 老账号无邮箱，直接登录（兼容），提示绑定
+        SESSION_TOKEN=res.token;CURRENT_USER=res.user;
+        try{localStorage.setItem('session_token',res.token);}catch(e){}
+        if(res.user.status!=='approved'){showPendingScreen();return;}
+        onLoginSuccess();
+        setTimeout(function(){toast('⚠️ 你尚未绑定邮箱，建议在个人中心绑定以启用两步验证');},800);
+        return;
+      }
+      if(res.needs_2fa){
+        _preToken=res.pre_token;
+        ge('tfaEmailHint').textContent=res.email_hint;
+        ge('tfaCode').value='';ge('tfaError').textContent='';
+        showAuthScreen('twoFaForm');
+        setTimeout(function(){ge('tfaCode').focus();},100);
+        return;
+      }
     });
   };
   ge('loginPass').onkeydown=function(e){if(e.key==='Enter')ge('loginBtn').click();};
 
+  // ── 登录第二步：两步验证码 ──
+  ge('tfaVerifyBtn').onclick=function(){
+    var code=ge('tfaCode').value.trim();
+    if(!code){ge('tfaError').textContent='请输入验证码';return;}
+    ge('tfaVerifyBtn').textContent='验证中...';ge('tfaVerifyBtn').disabled=true;
+    var dt=null;try{dt=localStorage.getItem('device_token');}catch(e){}
+    apiCall('POST','/api/auth/login-verify',{pre_token:_preToken,code:code,device_token:dt}).then(function(res){
+      ge('tfaVerifyBtn').textContent='验证并登录';ge('tfaVerifyBtn').disabled=false;
+      if(!res||res.error){ge('tfaError').textContent=(res&&res.error)||'验证失败';return;}
+      SESSION_TOKEN=res.token;CURRENT_USER=res.user;
+      try{localStorage.setItem('session_token',res.token);}catch(e){}
+      _preToken='';
+      if(res.user.status!=='approved'){showPendingScreen();return;}
+      onLoginSuccess(res.is_new_device);
+    });
+  };
+  ge('tfaCode').onkeydown=function(e){if(e.key==='Enter')ge('tfaVerifyBtn').click();};
+  ge('tfaBack').onclick=function(){_preToken='';showAuthScreen('loginForm');};
+  ge('tfaResendBtn').onclick=function(){
+    if(!_preToken){ge('tfaError').textContent='请重新输入密码登录';return;}
+    ge('tfaResendBtn').disabled=true;
+    apiCall('POST','/api/auth/login-verify-resend',{pre_token:_preToken}).then(function(res){
+      if(!res||res.error){ge('tfaError').textContent=(res&&res.error)||'发送失败';ge('tfaResendBtn').disabled=false;return;}
+      toast('验证码已重新发送 ✓');
+      startCodeTimer(ge('tfaResendBtn'),60,function(){ge('tfaResendBtn').textContent='重新发送验证码';});
+    });
+  };
+
   // ── 邮箱验证码登录 ──
-  var elCodeTimer=0;
   ge('showEmailLogin').onclick=function(){showAuthScreen('emailLoginForm');ge('elError').textContent='';};
   ge('elBack').onclick=function(){showAuthScreen('loginForm');};
   ge('elSendBtn').onclick=function(){
@@ -855,26 +910,26 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
     ge('elSendBtn').disabled=true;
     apiCall('POST','/api/auth/send-code',{email:email,purpose:'login'}).then(function(res){
       if(!res||res.error){ge('elError').textContent=(res&&res.error)||'发送失败';ge('elSendBtn').disabled=false;return;}
-      toast('验证码已发送 ✓');startCodeTimer(ge('elSendBtn'),elCodeTimer=60);
+      toast('验证码已发送 ✓');startCodeTimer(ge('elSendBtn'),60);
     });
   };
   ge('elLoginBtn').onclick=function(){
     var email=ge('elEmail').value.trim(),code=ge('elCode').value.trim();
     if(!email||!code){ge('elError').textContent='请填写邮箱和验证码';return;}
     ge('elLoginBtn').textContent='验证中...';ge('elLoginBtn').disabled=true;
-    apiCall('POST','/api/auth/email-login',{email:email,code:code}).then(function(res){
+    var dt=null;try{dt=localStorage.getItem('device_token');}catch(e){}
+    apiCall('POST','/api/auth/email-login',{email:email,code:code,device_token:dt}).then(function(res){
       ge('elLoginBtn').textContent='验证码登录';ge('elLoginBtn').disabled=false;
       if(!res||res.error){ge('elError').textContent=(res&&res.error)||'登录失败';return;}
       SESSION_TOKEN=res.token;CURRENT_USER=res.user;
       try{localStorage.setItem('session_token',res.token);}catch(e){}
       if(res.user.status!=='approved'){showPendingScreen();return;}
-      onLoginSuccess();
+      onLoginSuccess(res.is_new_device);
     });
   };
   ge('elCode').onkeydown=function(e){if(e.key==='Enter')ge('elLoginBtn').click();};
 
   // ── 找回密码 ──
-  var fpCodeTimer=0;
   ge('showForgot').onclick=function(){showAuthScreen('forgotForm');ge('fpError').textContent='';};
   ge('fpBack').onclick=function(){showAuthScreen('loginForm');};
   ge('fpSendBtn').onclick=function(){
@@ -883,7 +938,7 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
     ge('fpSendBtn').disabled=true;
     apiCall('POST','/api/auth/send-code',{email:email,purpose:'reset'}).then(function(res){
       if(!res||res.error){ge('fpError').textContent=(res&&res.error)||'发送失败';ge('fpSendBtn').disabled=false;return;}
-      toast('验证码已发送 ✓');startCodeTimer(ge('fpSendBtn'),fpCodeTimer=60);
+      toast('验证码已发送 ✓');startCodeTimer(ge('fpSendBtn'),60);
     });
   };
   ge('fpSubmitBtn').onclick=function(){
@@ -900,20 +955,21 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
     });
   };
 
-  // ── 注册 ──
+  // ── 注册（邮箱必填） ──
   ge('regBtn').onclick=function(){
     var u=ge('regUser').value.trim(),p=ge('regPass').value,p2=ge('regPass2').value,em=ge('regEmail').value.trim();
     if(!u||!p){ge('regError').textContent='请输入用户名和密码';return;}
+    if(!em){ge('regError').textContent='请输入邮箱';return;}
     if(p!==p2){ge('regError').textContent='两次密码不一致';return;}
     ge('regBtn').textContent='注册中...';ge('regBtn').disabled=true;
-    apiCall('POST','/api/auth/register',{username:u,password:p,email:em||undefined}).then(function(res){
+    apiCall('POST','/api/auth/register',{username:u,password:p,email:em}).then(function(res){
       ge('regBtn').textContent='注册';ge('regBtn').disabled=false;
       if(!res){return;}
       if(res.error){ge('regError').textContent=res.error;return;}
       if(res.token){
         SESSION_TOKEN=res.token;CURRENT_USER=res.user;
         try{localStorage.setItem('session_token',res.token);}catch(e){}
-        onLoginSuccess();
+        onLoginSuccess(false); // 注册后首次登录不弹信任设备（刚注册就信任）
       }else{
         showPendingScreen();
       }
@@ -925,14 +981,19 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
   ge('showRegister').onclick=function(){showAuthScreen('registerForm');ge('regError').textContent='';};
   ge('showLogin').onclick=function(){showAuthScreen('loginForm');ge('loginError').textContent='';};
 
-  // 验证码倒计时工具
-  function startCodeTimer(btn,secs){
+  // 验证码倒计时工具（可选回调，用于重置按钮文字）
+  function startCodeTimer(btn,secs,onDone){
     var left=secs;
     btn.disabled=true;
     var iv=setInterval(function(){
       left--;
       btn.textContent=left+'s后重发';
-      if(left<=0){clearInterval(iv);btn.disabled=false;btn.textContent='发送验证码';}
+      if(left<=0){
+        clearInterval(iv);
+        btn.disabled=false;
+        btn.textContent='发送验证码';
+        if(onDone)onDone();
+      }
     },1000);
   }
 
@@ -941,7 +1002,7 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
     apiCall('GET','/api/auth/me').then(function(res){
       if(res&&res.user){
         CURRENT_USER=res.user;
-        if(res.user.status==='approved')onLoginSuccess();
+        if(res.user.status==='approved')onLoginSuccess(false);
         else toast('仍在等待审批');
       }
     });
@@ -949,17 +1010,57 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
   ge('pendingLogout').onclick=function(){doLogout();};
 
   // 登录成功
-  function onLoginSuccess(){
+  function onLoginSuccess(isNewDevice){
     hideAuthScreen();
     ge('userMenuBtn').textContent='👤 '+CURRENT_USER.username;
-    // 管理员显示管理tab
     if(CURRENT_USER.role==='admin')ge('t4').style.display='';
     else ge('t4').style.display='none';
-    // 加载数据
     loadFromCloud();
     loadTagsFromCloud();
-    // 检查设备是否已信任
-    tryDeviceToken();
+    // 新设备询问是否信任
+    if(isNewDevice){
+      setTimeout(function(){showTrustDevicePrompt();},400);
+    }
+  }
+
+  // 新设备信任提示弹窗
+  function showTrustDevicePrompt(){
+    var mask=document.createElement('div');mask.className='manage-mask';
+    var box=document.createElement('div');box.className='manage-box';
+    box.innerHTML=
+      '<div style="text-align:center;font-size:28px;margin-bottom:8px">🔒</div>'
+      +'<div class="manage-title" style="margin-bottom:8px">信任此设备？</div>'
+      +'<div style="font-size:14px;color:#c0c0d8;line-height:1.7;margin-bottom:12px">信任后，下次在此设备上可以<strong style=\'color:#a78bfa\'>免验证码直接登录</strong>，方便快捷。</div>'
+      +'<div style="background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.25);border-radius:10px;padding:10px 12px;margin-bottom:16px">'
+      +'<div style="font-size:12px;color:#f59e0b;line-height:1.6">⚠️ <strong>如果这是他人设备（公共电脑、朋友手机等），请不要点信任。</strong><br>误点了？可以在个人中心 → 管理信任设备 中删除。</div>'
+      +'</div>'
+      +'<div class="auth-field"><label>给这台设备起个名字</label><input type="text" id="trustDevName" placeholder="例如：我的iPhone、家里电脑" maxlength="30"></div>'
+      +'<button class="auth-btn auth-btn-primary" id="trustDevYes" style="margin-top:8px">信任此设备</button>'
+      +'<button class="auth-btn auth-btn-secondary" id="trustDevNo" style="margin-top:4px;font-size:13px">不是我的设备，跳过</button>';
+    mask.appendChild(box);document.body.appendChild(mask);
+    // 预填设备名
+    try{
+      var ua=navigator.userAgent;
+      var name='未命名设备';
+      if(/iPhone/.test(ua))name='我的iPhone';
+      else if(/iPad/.test(ua))name='我的iPad';
+      else if(/Android/.test(ua)&&/Mobile/.test(ua))name='我的Android手机';
+      else if(/Android/.test(ua))name='我的平板';
+      else if(/Mac/.test(ua))name='我的Mac';
+      else if(/Windows/.test(ua))name='我的电脑';
+      ge('trustDevName').value=name;
+    }catch(e){}
+    ge('trustDevYes').onclick=function(){
+      var name=ge('trustDevName').value.trim()||'未命名设备';
+      document.body.removeChild(mask);
+      apiCall('POST','/api/auth/trust-device',{device_name:name}).then(function(res){
+        if(res&&res.device_token){
+          try{localStorage.setItem('device_token',res.device_token);}catch(e){}
+          toast('✓ 已信任，下次可免验证码登录');
+        }
+      });
+    };
+    ge('trustDevNo').onclick=function(){document.body.removeChild(mask);};
   }
 
   // 登出
@@ -1012,7 +1113,7 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
         if(res&&res.token){
           SESSION_TOKEN=res.token;CURRENT_USER=res.user;
           try{localStorage.setItem('session_token',res.token);}catch(e){}
-          if(res.user.status==='approved')onLoginSuccess();
+          if(res.user.status==='approved')onLoginSuccess(false); // 设备token登录 = 已信任设备
           else{showAuthScreen();showPendingScreen();}
         }else{
           try{localStorage.removeItem('device_token');}catch(e){}
