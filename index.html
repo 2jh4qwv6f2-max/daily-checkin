@@ -202,6 +202,17 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
 .auth-btn-secondary{background:transparent;color:#8888a8;margin-top:12px}
 .auth-error{color:#ef4444;font-size:13px;text-align:center;margin-top:8px;min-height:18px}
 .auth-success{color:#22c55e;font-size:13px;text-align:center;margin-top:8px}
+.auth-divider{display:flex;align-items:center;gap:10px;margin:12px 0}
+.auth-divider-line{flex:1;height:1px;background:rgba(255,255,255,.08)}
+.auth-divider-text{font-size:12px;color:#555570;white-space:nowrap}
+.auth-link{text-align:center;margin-top:10px;font-size:13px;color:#6366f1;cursor:pointer;padding:4px}
+.auth-code-row{display:flex;gap:8px}
+.auth-code-row input{flex:1}
+.auth-code-btn{white-space:nowrap;padding:12px 14px;border:1px solid #6366f1;border-radius:12px;background:transparent;color:#6366f1;font-size:13px;font-weight:600;font-family:inherit;cursor:pointer;-webkit-appearance:none;flex-shrink:0}
+.auth-code-btn:disabled{opacity:.5;cursor:not-allowed}
+.auth-email-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(99,102,241,.15);border:1px solid rgba(99,102,241,.3);border-radius:8px;padding:6px 10px;font-size:12px;color:#a78bfa;margin-bottom:12px;width:100%;box-sizing:border-box}
+.auth-email-badge-icon{font-size:14px}
+.auth-email-none{font-size:12px;color:#555570;text-align:center;margin-bottom:12px;padding:8px;background:rgba(255,255,255,.03);border-radius:8px;border:1px dashed rgba(255,255,255,.08)}
 .auth-pending{text-align:center;padding:40px 20px}
 .auth-pending-icon{font-size:48px;margin-bottom:16px}
 .auth-pending-title{font-size:18px;font-weight:700;color:#e8e8f0;margin-bottom:8px}
@@ -241,14 +252,51 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
 <div class="auth-screen" id="authScreen">
   <div class="auth-box">
     <div class="auth-logo"><div class="auth-logo-icon">✓</div><div class="auth-logo-text">每日打卡</div></div>
-    <!-- 登录表单 -->
+    <!-- 账号密码登录表单 -->
     <div class="auth-form" id="loginForm">
       <div class="auth-title">登录</div>
       <div class="auth-field"><label>用户名</label><input type="text" id="loginUser" placeholder="请输入用户名" autocomplete="username"></div>
       <div class="auth-field"><label>密码</label><input type="password" id="loginPass" placeholder="请输入密码" autocomplete="current-password"></div>
       <div class="auth-error" id="loginError"></div>
       <button class="auth-btn auth-btn-primary" id="loginBtn">登录</button>
-      <button class="auth-btn auth-btn-secondary" id="showRegister">没有账号？注册</button>
+      <div class="auth-divider"><div class="auth-divider-line"></div><span class="auth-divider-text">其他方式</span><div class="auth-divider-line"></div></div>
+      <button class="auth-btn auth-btn-secondary" id="showEmailLogin" style="color:#a78bfa;border:1px solid rgba(167,139,250,.3);border-radius:14px;margin-top:0">📧 邮箱验证码登录</button>
+      <div style="display:flex;gap:8px;margin-top:4px">
+        <button class="auth-btn auth-btn-secondary" id="showForgot" style="flex:1;margin-top:0;font-size:13px">忘记密码？</button>
+        <button class="auth-btn auth-btn-secondary" id="showRegister" style="flex:1;margin-top:0;font-size:13px">注册账号</button>
+      </div>
+    </div>
+    <!-- 邮箱验证码登录表单 -->
+    <div class="auth-form" id="emailLoginForm" style="display:none">
+      <div class="auth-title">邮箱登录</div>
+      <div class="auth-field">
+        <label>邮箱地址</label>
+        <div class="auth-code-row">
+          <input type="email" id="elEmail" placeholder="请输入绑定的邮箱" autocomplete="email">
+          <button class="auth-code-btn" id="elSendBtn">发送验证码</button>
+        </div>
+      </div>
+      <div class="auth-field"><label>验证码</label><input type="text" id="elCode" placeholder="请输入6位验证码" maxlength="6" autocomplete="one-time-code"></div>
+      <div class="auth-error" id="elError"></div>
+      <button class="auth-btn auth-btn-primary" id="elLoginBtn">验证码登录</button>
+      <button class="auth-btn auth-btn-secondary" id="elBack">← 返回账号登录</button>
+    </div>
+    <!-- 找回密码表单 -->
+    <div class="auth-form" id="forgotForm" style="display:none">
+      <div class="auth-title">找回密码</div>
+      <div class="auth-field">
+        <label>绑定的邮箱</label>
+        <div class="auth-code-row">
+          <input type="email" id="fpEmail" placeholder="请输入绑定的邮箱" autocomplete="email">
+          <button class="auth-code-btn" id="fpSendBtn">发送验证码</button>
+        </div>
+      </div>
+      <div class="auth-field"><label>验证码</label><input type="text" id="fpCode" placeholder="请输入6位验证码" maxlength="6" autocomplete="one-time-code"></div>
+      <div class="auth-field"><label>新密码</label><input type="password" id="fpNewPass" placeholder="至少6个字符" autocomplete="new-password"></div>
+      <div class="auth-field"><label>确认新密码</label><input type="password" id="fpNewPass2" placeholder="再次输入新密码" autocomplete="new-password"></div>
+      <div class="auth-error" id="fpError"></div>
+      <button class="auth-btn auth-btn-primary" id="fpSubmitBtn">重置密码</button>
+      <button class="auth-btn auth-btn-secondary" id="fpBack">← 返回登录</button>
     </div>
     <!-- 注册表单 -->
     <div class="auth-form" id="registerForm" style="display:none">
@@ -256,6 +304,7 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
       <div class="auth-field"><label>用户名</label><input type="text" id="regUser" placeholder="2-20个字符" autocomplete="username"></div>
       <div class="auth-field"><label>密码</label><input type="password" id="regPass" placeholder="至少6个字符" autocomplete="new-password"></div>
       <div class="auth-field"><label>确认密码</label><input type="password" id="regPass2" placeholder="再次输入密码" autocomplete="new-password"></div>
+      <div class="auth-field"><label>邮箱（可选，用于验证码登录和找回密码）</label><input type="email" id="regEmail" placeholder="建议填写" autocomplete="email"></div>
       <div class="auth-error" id="regError"></div>
       <button class="auth-btn auth-btn-primary" id="regBtn">注册</button>
       <button class="auth-btn auth-btn-secondary" id="showLogin">已有账号？登录</button>
@@ -767,16 +816,15 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
   }
 
   // ══ 认证流程 ══
-  function showAuthScreen(){
+  var AUTH_FORMS=['loginForm','emailLoginForm','forgotForm','registerForm'];
+  function showAuthScreen(formId){
     ge('authScreen').style.display='flex';
-    ge('loginForm').style.display='';
-    ge('registerForm').style.display='none';
     ge('pendingScreen').style.display='none';
+    AUTH_FORMS.forEach(function(id){ge(id).style.display=id===(formId||'loginForm')?'':'none';});
   }
   function hideAuthScreen(){ge('authScreen').style.display='none';}
   function showPendingScreen(){
-    ge('loginForm').style.display='none';
-    ge('registerForm').style.display='none';
+    AUTH_FORMS.forEach(function(id){ge(id).style.display='none';});
     ge('pendingScreen').style.display='';
   }
 
@@ -797,23 +845,76 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
   };
   ge('loginPass').onkeydown=function(e){if(e.key==='Enter')ge('loginBtn').click();};
 
-  // 注册
+  // ── 邮箱验证码登录 ──
+  var elCodeTimer=0;
+  ge('showEmailLogin').onclick=function(){showAuthScreen('emailLoginForm');ge('elError').textContent='';};
+  ge('elBack').onclick=function(){showAuthScreen('loginForm');};
+  ge('elSendBtn').onclick=function(){
+    var email=ge('elEmail').value.trim();
+    if(!email){ge('elError').textContent='请输入邮箱';return;}
+    ge('elSendBtn').disabled=true;
+    apiCall('POST','/api/auth/send-code',{email:email,purpose:'login'}).then(function(res){
+      if(!res||res.error){ge('elError').textContent=(res&&res.error)||'发送失败';ge('elSendBtn').disabled=false;return;}
+      toast('验证码已发送 ✓');startCodeTimer(ge('elSendBtn'),elCodeTimer=60);
+    });
+  };
+  ge('elLoginBtn').onclick=function(){
+    var email=ge('elEmail').value.trim(),code=ge('elCode').value.trim();
+    if(!email||!code){ge('elError').textContent='请填写邮箱和验证码';return;}
+    ge('elLoginBtn').textContent='验证中...';ge('elLoginBtn').disabled=true;
+    apiCall('POST','/api/auth/email-login',{email:email,code:code}).then(function(res){
+      ge('elLoginBtn').textContent='验证码登录';ge('elLoginBtn').disabled=false;
+      if(!res||res.error){ge('elError').textContent=(res&&res.error)||'登录失败';return;}
+      SESSION_TOKEN=res.token;CURRENT_USER=res.user;
+      try{localStorage.setItem('session_token',res.token);}catch(e){}
+      if(res.user.status!=='approved'){showPendingScreen();return;}
+      onLoginSuccess();
+    });
+  };
+  ge('elCode').onkeydown=function(e){if(e.key==='Enter')ge('elLoginBtn').click();};
+
+  // ── 找回密码 ──
+  var fpCodeTimer=0;
+  ge('showForgot').onclick=function(){showAuthScreen('forgotForm');ge('fpError').textContent='';};
+  ge('fpBack').onclick=function(){showAuthScreen('loginForm');};
+  ge('fpSendBtn').onclick=function(){
+    var email=ge('fpEmail').value.trim();
+    if(!email){ge('fpError').textContent='请输入邮箱';return;}
+    ge('fpSendBtn').disabled=true;
+    apiCall('POST','/api/auth/send-code',{email:email,purpose:'reset'}).then(function(res){
+      if(!res||res.error){ge('fpError').textContent=(res&&res.error)||'发送失败';ge('fpSendBtn').disabled=false;return;}
+      toast('验证码已发送 ✓');startCodeTimer(ge('fpSendBtn'),fpCodeTimer=60);
+    });
+  };
+  ge('fpSubmitBtn').onclick=function(){
+    var email=ge('fpEmail').value.trim(),code=ge('fpCode').value.trim(),p=ge('fpNewPass').value,p2=ge('fpNewPass2').value;
+    if(!email||!code||!p){ge('fpError').textContent='请填写所有字段';return;}
+    if(p!==p2){ge('fpError').textContent='两次密码不一致';return;}
+    ge('fpSubmitBtn').textContent='重置中...';ge('fpSubmitBtn').disabled=true;
+    apiCall('POST','/api/auth/reset-password',{email:email,code:code,new_password:p}).then(function(res){
+      ge('fpSubmitBtn').textContent='重置密码';ge('fpSubmitBtn').disabled=false;
+      if(!res||res.error){ge('fpError').textContent=(res&&res.error)||'重置失败';return;}
+      toast('密码已重置，请登录 ✓');
+      ge('loginUser').value='';ge('loginPass').value='';
+      showAuthScreen('loginForm');
+    });
+  };
+
+  // ── 注册 ──
   ge('regBtn').onclick=function(){
-    var u=ge('regUser').value.trim(),p=ge('regPass').value,p2=ge('regPass2').value;
+    var u=ge('regUser').value.trim(),p=ge('regPass').value,p2=ge('regPass2').value,em=ge('regEmail').value.trim();
     if(!u||!p){ge('regError').textContent='请输入用户名和密码';return;}
     if(p!==p2){ge('regError').textContent='两次密码不一致';return;}
     ge('regBtn').textContent='注册中...';ge('regBtn').disabled=true;
-    apiCall('POST','/api/auth/register',{username:u,password:p}).then(function(res){
+    apiCall('POST','/api/auth/register',{username:u,password:p,email:em||undefined}).then(function(res){
       ge('regBtn').textContent='注册';ge('regBtn').disabled=false;
       if(!res){return;}
       if(res.error){ge('regError').textContent=res.error;return;}
       if(res.token){
-        // 第一个用户，自动登录
         SESSION_TOKEN=res.token;CURRENT_USER=res.user;
         try{localStorage.setItem('session_token',res.token);}catch(e){}
         onLoginSuccess();
       }else{
-        // 需要审批
         showPendingScreen();
       }
     });
@@ -821,8 +922,19 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
   ge('regPass2').onkeydown=function(e){if(e.key==='Enter')ge('regBtn').click();};
 
   // 切换登录/注册
-  ge('showRegister').onclick=function(){ge('loginForm').style.display='none';ge('registerForm').style.display='';ge('regError').textContent='';};
-  ge('showLogin').onclick=function(){ge('registerForm').style.display='none';ge('loginForm').style.display='';ge('loginError').textContent='';};
+  ge('showRegister').onclick=function(){showAuthScreen('registerForm');ge('regError').textContent='';};
+  ge('showLogin').onclick=function(){showAuthScreen('loginForm');ge('loginError').textContent='';};
+
+  // 验证码倒计时工具
+  function startCodeTimer(btn,secs){
+    var left=secs;
+    btn.disabled=true;
+    var iv=setInterval(function(){
+      left--;
+      btn.textContent=left+'s后重发';
+      if(left<=0){clearInterval(iv);btn.disabled=false;btn.textContent='发送验证码';}
+    },1000);
+  }
 
   // 待审批刷新
   ge('pendingRefresh').onclick=function(){
@@ -914,7 +1026,13 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
   ge('userMenuBtn').onclick=function(){
     var mask=document.createElement('div');mask.className='user-menu-mask';
     var box=document.createElement('div');box.className='user-menu-box';
-    var html='<div style="text-align:center;margin-bottom:16px"><div style="font-size:16px;font-weight:700;color:#e8e8f0">'+((CURRENT_USER&&CURRENT_USER.username)||'')+'</div><div style="font-size:12px;color:#8888a8;margin-top:4px">'+(CURRENT_USER&&CURRENT_USER.role==='admin'?'👑 管理员':'普通用户')+'</div></div>';
+    var emailBadge=CURRENT_USER&&CURRENT_USER.email
+      ?'<div class="auth-email-badge"><span class="auth-email-badge-icon">📧</span><span>'+CURRENT_USER.email+'</span></div>'
+      :'<div class="auth-email-none">未绑定邮箱</div>';
+    var html='<div style="text-align:center;margin-bottom:12px"><div style="font-size:16px;font-weight:700;color:#e8e8f0">'+((CURRENT_USER&&CURRENT_USER.username)||'')+'</div><div style="font-size:12px;color:#8888a8;margin-top:4px">'+(CURRENT_USER&&CURRENT_USER.role==='admin'?'👑 管理员':'普通用户')+'</div></div>';
+    html+=emailBadge;
+    html+='<div class="user-menu-item" id="umBindEmail">'+(CURRENT_USER&&CURRENT_USER.email?'📧 更换绑定邮箱':'📧 绑定邮箱')+'</div>';
+    if(CURRENT_USER&&CURRENT_USER.email)html+='<div class="user-menu-item" id="umUnbindEmail" style="color:#f59e0b">🔓 解绑邮箱</div>';
     html+='<div class="user-menu-item" id="umTrust">🔒 信任此设备</div>';
     html+='<div class="user-menu-item" id="umDevices">📱 管理信任设备</div>';
     html+='<div class="user-menu-item" id="umChangePw">🔑 修改密码</div>';
@@ -925,6 +1043,8 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
     mask.onclick=function(e){if(e.target===mask)document.body.removeChild(mask);};
     ge('umClose').onclick=function(){document.body.removeChild(mask);};
     ge('umLogout').onclick=function(){document.body.removeChild(mask);doLogout();};
+    ge('umBindEmail').onclick=function(){document.body.removeChild(mask);showBindEmail();};
+    if(ge('umUnbindEmail'))ge('umUnbindEmail').onclick=function(){document.body.removeChild(mask);showUnbindEmail();};
     ge('umTrust').onclick=function(){
       document.body.removeChild(mask);
       var name=prompt('给这台设备起个名字（如：我的iPhone）','');
@@ -981,6 +1101,72 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
       apiCall('POST','/api/auth/change-password',{old_password:o,new_password:n}).then(function(res){
         if(res&&res.ok){document.body.removeChild(mask);toast('密码已修改 ✓');}
         else{ge('cpError').textContent=(res&&res.error)||'修改失败';}
+      });
+    };
+  }
+
+  // 绑定邮箱弹窗
+  function showBindEmail(){
+    var bindTimer=0;
+    var mask=document.createElement('div');mask.className='manage-mask';
+    var box=document.createElement('div');box.className='manage-box';
+    var curEmail=CURRENT_USER&&CURRENT_USER.email;
+    box.innerHTML='<div class="manage-title">📧 '+(curEmail?'更换绑定邮箱':'绑定邮箱')+'</div>'
+      +(curEmail?'<div class="auth-email-badge"><span>当前绑定：'+curEmail+'</span></div>':'')
+      +'<div class="auth-field"><label>邮箱地址</label><div class="auth-code-row"><input type="email" id="beEmail" placeholder="请输入邮箱" autocomplete="email"><button class="auth-code-btn" id="beSendBtn">发送验证码</button></div></div>'
+      +'<div class="auth-field"><label>验证码</label><input type="text" id="beCode" placeholder="请输入6位验证码" maxlength="6"></div>'
+      +'<div class="auth-error" id="beError"></div>'
+      +'<button class="auth-btn auth-btn-primary" id="beConfirm" style="margin-top:12px">确认绑定</button>'
+      +'<button class="manage-close" id="beClose" style="margin-top:8px">取消</button>';
+    mask.appendChild(box);document.body.appendChild(mask);
+    mask.onclick=function(e){if(e.target===mask)document.body.removeChild(mask);};
+    ge('beClose').onclick=function(){document.body.removeChild(mask);};
+    ge('beSendBtn').onclick=function(){
+      var email=ge('beEmail').value.trim();
+      if(!email){ge('beError').textContent='请输入邮箱';return;}
+      ge('beSendBtn').disabled=true;
+      apiCall('POST','/api/auth/send-code',{email:email,purpose:'bind'}).then(function(res){
+        if(!res||res.error){ge('beError').textContent=(res&&res.error)||'发送失败';ge('beSendBtn').disabled=false;return;}
+        toast('验证码已发送 ✓');startCodeTimer(ge('beSendBtn'),60);
+      });
+    };
+    ge('beConfirm').onclick=function(){
+      var email=ge('beEmail').value.trim(),code=ge('beCode').value.trim();
+      if(!email||!code){ge('beError').textContent='请填写邮箱和验证码';return;}
+      ge('beConfirm').textContent='绑定中...';ge('beConfirm').disabled=true;
+      apiCall('POST','/api/auth/bind-email',{email:email,code:code}).then(function(res){
+        ge('beConfirm').textContent='确认绑定';ge('beConfirm').disabled=false;
+        if(!res||res.error){ge('beError').textContent=(res&&res.error)||'绑定失败';return;}
+        if(CURRENT_USER)CURRENT_USER.email=res.email;
+        document.body.removeChild(mask);
+        toast('邮箱绑定成功 ✓');
+      });
+    };
+  }
+
+  // 解绑邮箱弹窗
+  function showUnbindEmail(){
+    var mask=document.createElement('div');mask.className='manage-mask';
+    var box=document.createElement('div');box.className='manage-box';
+    box.innerHTML='<div class="manage-title">🔓 解绑邮箱</div>'
+      +'<div style="color:#8888a8;font-size:13px;text-align:center;margin-bottom:16px">解绑后将无法使用邮箱登录和找回密码</div>'
+      +'<div class="auth-field"><label>输入密码确认</label><input type="password" id="ubPass" placeholder="请输入当前密码"></div>'
+      +'<div class="auth-error" id="ubError"></div>'
+      +'<button class="auth-btn" id="ubConfirm" style="margin-top:12px;background:rgba(245,158,11,.2);color:#f59e0b;border-radius:14px">确认解绑</button>'
+      +'<button class="manage-close" id="ubClose" style="margin-top:8px">取消</button>';
+    mask.appendChild(box);document.body.appendChild(mask);
+    mask.onclick=function(e){if(e.target===mask)document.body.removeChild(mask);};
+    ge('ubClose').onclick=function(){document.body.removeChild(mask);};
+    ge('ubConfirm').onclick=function(){
+      var pw=ge('ubPass').value;
+      if(!pw){ge('ubError').textContent='请输入密码';return;}
+      ge('ubConfirm').textContent='解绑中...';ge('ubConfirm').disabled=true;
+      apiCall('POST','/api/auth/unbind-email',{password:pw}).then(function(res){
+        ge('ubConfirm').textContent='确认解绑';ge('ubConfirm').disabled=false;
+        if(!res||res.error){ge('ubError').textContent=(res&&res.error)||'解绑失败';return;}
+        if(CURRENT_USER)CURRENT_USER.email=null;
+        document.body.removeChild(mask);
+        toast('邮箱已解绑');
       });
     };
   }
