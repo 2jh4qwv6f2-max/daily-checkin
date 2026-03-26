@@ -1234,6 +1234,7 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
     ge('beConfirm').onclick=function(){
       var email=ge('beEmail').value.trim(),code=ge('beCode').value.trim();
       if(!email||!code){ge('beError').textContent='请填写邮箱和验证码';return;}
+      if(CURRENT_USER&&CURRENT_USER.email&&email===CURRENT_USER.email){ge('beError').textContent='新邮箱不能和当前绑定的邮箱相同';return;}
       ge('beConfirm').textContent='绑定中...';ge('beConfirm').disabled=true;
       apiCall('POST','/api/auth/bind-email',{email:email,code:code}).then(function(res){
         ge('beConfirm').textContent='确认绑定';ge('beConfirm').disabled=false;
@@ -1479,7 +1480,12 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
         for(var j=0;j<items.length;j++) html+='<span class="detail-tag '+(items[j].done?'done':'undone')+'">'+(items[j].done?'✓':'○')+' '+items[j].name+'</span>';
         html+='</div>';
         var sr=reasons[sk];
-        if(sr&&sr.reason)html+='<div class="detail-reason">💬 '+sr.reason+'</div>';
+        var srText='';
+        if(sr){
+          if(typeof sr==='string')srText=sr;
+          else if(sr.reason)srText=sr.reason;
+        }
+        if(srText)html+='<div class="detail-reason">💬 未完成原因：'+srText+'</div>';
         html+='</div>';
       }
 
@@ -1886,9 +1892,13 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
         html+='</div>';
 
         var secReason=reasons[sk];
-        if(secReason&&secReason.reason){
-          html+='<div class="detail-reason">💬 '+secReason.reason+'</div>';
+        // 兼容新格式 {reason:'xxx',items:[...]} 和旧格式 'xxx'（字符串）
+        var reasonText='';
+        if(secReason){
+          if(typeof secReason==='string')reasonText=secReason;
+          else if(secReason.reason)reasonText=secReason.reason;
         }
+        if(reasonText)html+='<div class="detail-reason">💬 未完成原因：'+reasonText+'</div>';
         html+='</div>';
       }
 
@@ -2069,6 +2079,20 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
     }
     // 重新绑定快速标签逻辑
     initQkTags(containerId,foodInputId);
+    // 重建DOM后重新直接绑定设置按钮（事件委托是备份，直接绑定更可靠）
+    var newMgrBtn=c.querySelector('.qk-manage-btn');
+    if(newMgrBtn){
+      var gid=newMgrBtn.getAttribute('data-manage');
+      var cfg=tagGroupConfig[gid];
+      if(cfg){
+        newMgrBtn.ontouchend=newMgrBtn.onclick=function(e){
+          e.stopPropagation();e.preventDefault();
+          showTagManager(gid,cfg.label,function(){
+            if(cfg.foodInput)rebuildFoodTags(gid,cfg.foodInput);
+          });
+        };
+      }
+    }
   }
 
   // 标签管理弹窗
@@ -2136,9 +2160,11 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
   };
 
   // 用事件委托确保管理按钮始终可点击（无论DOM如何重建）
+  // 只在按钮没有自己的 onclick 时才通过委托触发（避免重复）
   document.addEventListener('click',function(e){
     var btn=e.target.closest('.qk-manage-btn');
     if(!btn)return;
+    if(btn.onclick)return; // 已有直接绑定，跳过委托
     e.stopPropagation();
     e.preventDefault();
     var groupId=btn.getAttribute('data-manage');
@@ -2150,9 +2176,10 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
   });
 
   // 直接绑定初始按钮（双保险）
+  // 注意：只用 click，不用 ontouchend，避免触屏设备重复触发
   function directBindMgr(id){
     var el=ge(id);if(!el)return;
-    el.ontouchend=el.onclick=function(e){
+    el.onclick=function(e){
       e.stopPropagation();e.preventDefault();
       var groupId=this.getAttribute('data-manage');
       var cfg=tagGroupConfig[groupId];
