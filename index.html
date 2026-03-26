@@ -339,7 +339,7 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
 <div class="toast" id="toast"></div>
 <div class="hdr"><div class="hdr-in"><span class="logo">每日打卡</span><div class="dt-row"><button class="user-menu-btn" id="userMenuBtn" type="button">👤</button><input type="date" id="pD"><input type="time" id="pT" step="60"></div></div></div>
 <div class="tabs"><button class="tbtn am" id="t0" type="button">🌅 早上</button><button class="tbtn" id="t1" type="button">🌞 中午</button><button class="tbtn" id="t2" type="button">🌙 晚上</button><button class="tbtn" id="t3" type="button">📊 历史</button><button class="tbtn" id="t4" type="button" style="display:none">👑 管理</button></div>
-<div class="prog"><div class="pbar"><div class="pfill" id="pf" style="width: 0%;"></div></div><div class="ptx"><span id="pl">已完成 0/20 项</span><span id="pp">0%</span></div></div>
+<div class="prog"><div class="pbar"><div class="pfill" id="pf" style="width: 0%;"></div></div><div class="ptx"><span id="pl">已完成 0/20 项</span><span id="pp">0%</span></div><div id="modifiedBadge" style="display:none;margin-top:4px;text-align:right"></div></div>
 <div class="wrap">
 <div class="pnl vis" id="s0"><div class="shd"><div class="sico sico-m">🌅</div><div class="stt">早上</div></div><div class="stk">
   <div class="ic"><div class="il">⏰ 起床时间</div><input type="time" id="wakeTime" step="60" class="tfd"></div>
@@ -410,7 +410,9 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
   ge('pD').value=todayStr;
   ge('pD').max=todayStr; // 禁止选择未来日期
   ge('pD').addEventListener('change',function(){
-    if(ge('pD').value>todayStr){ge('pD').value=todayStr;toast('不能选择未来日期');}
+    if(ge('pD').value>todayStr){ge('pD').value=todayStr;toast('不能选择未来日期');return;}
+    // 切换日期时清除修改标记，等 loadFromCloud 重新加载
+    var badge=ge('modifiedBadge');if(badge){badge.style.display='none';badge.innerHTML='';}
   });
   ge('pT').value=pad(now.getHours())+':'+pad(now.getMinutes());
   function getCurDT(){var d=ge('pD').value,t=ge('pT').value;if(d&&t)return new Date(d+'T'+t);return new Date();}
@@ -428,6 +430,8 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
     if(idx===0||idx===1||idx===2)checkSectionLock(idx);
   }
   tbs[0].onclick=function(){doTab(0);};tbs[1].onclick=function(){doTab(1);};tbs[2].onclick=function(){doTab(2);};tbs[3].onclick=function(){doTab(3);};tbs[4].onclick=function(){doTab(4);};
+  // 页面加载时立刻检查所有时段锁定（防止首次加载就在解锁时段）
+  setTimeout(function(){checkSectionLock(0);checkSectionLock(1);checkSectionLock(2);},200);
 
   // 时段锁定配置：早上7:00，中午11:00，晚上17:00；历史日期不锁定
   var SECTION_LOCK=[
@@ -715,11 +719,14 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
     var c=ge(containerId);if(!c)return;
     var inp=ge(foodInputId);
     var tags=c.querySelectorAll('.qk-tag');
-    var order=[];// 记录点击顺序
+    var order=[];// 记录已选快速标签顺序
     function rebuildValue(){
-      var parts=[];
-      for(var j=0;j<order.length;j++)parts.push(order[j]);
-      inp.value=parts.join('+');
+      // 保留用户自定义内容（inp 里不属于任何快速标签的部分）
+      var allTagVals=Array.from(c.querySelectorAll('.qk-tag')).map(function(t){return t.getAttribute('data-v');});
+      var curParts=(inp.value||'').split('+').map(function(s){return s.trim();}).filter(Boolean);
+      var custom=curParts.filter(function(p){return allTagVals.indexOf(p)<0;});
+      var combined=custom.concat(order);
+      inp.value=combined.join('+');
       fdata[foodInputId]=inp.value;
       sav();
     }
@@ -1594,7 +1601,7 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
     var total=chks.length,dn=0;for(var j=0;j<total;j++){if(chks[j].checked)dn++;}
     var reasons=fdata._reasons||{};
     return {
-      date:d,wake_time:fdata.wakeTime||'',sleep_time:fdata.sleepTime||'',
+      date:d,wake_time:fdata.wakeTime||null,sleep_time:fdata.sleepTime||null,
       checklist:JSON.stringify(cl),meals:JSON.stringify(meals),reasons:JSON.stringify(reasons),
       total:total,done:dn,pct:total>0?Math.round(dn/total*100):0,spend:bP+lP+dP
     };
@@ -1603,6 +1610,10 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
   // ══ 截图后同步到云端 ══
   function syncToCloud(editReason){
     var data=collectData();
+    // 防止全空记录：至少要有一项完成或有时间/饮食数据才同步
+    var hasData=data.done>0||data.wake_time||data.sleep_time||
+      (data.meals&&data.meals!=='{"breakfast":{"price":"","food":"","home":false},"lunch":{"price":"","food":"","home":false},"dinner":{"price":"","food":"","home":false}}');
+    if(!hasData){toast('没有填写任何内容，不保存');return;}
     if(editReason)data.edit_reason=editReason;
     apiCall('POST','/api/checkin',data).then(function(res){
       if(res&&res.ok){
@@ -1649,6 +1660,19 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
       // 恢复 reasons
       try{var rs=JSON.parse(r.reasons||'{}');if(rs&&Object.keys(rs).length)fdata._reasons=rs;}catch(e){}
       updP();spw('breakfastPrice','w0');spw('lunchPrice','w1');spw('dinnerPrice','w2');
+      // 显示已修改标记
+      var badge=ge('modifiedBadge');
+      if(badge){
+        if(r.is_modified){
+          badge.style.display='';
+          badge.innerHTML='<span style="font-size:11px;color:#f59e0b;cursor:pointer" id="modifiedBadgeBtn">✏️ 此记录已修改过(v'+r.version+')，点击查看日志</span>';
+          var btn=ge('modifiedBadgeBtn');
+          if(btn)btn.onclick=function(){showEditLog(ge('pD').value);};
+        }else{
+          badge.style.display='none';
+          badge.innerHTML='';
+        }
+      }
     });
   }
 
@@ -1761,6 +1785,9 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
       var r=data[i];
       var dt=new Date(r.date+'T00:00:00');
       var pctColor=r.pct>=80?'#22c55e':r.pct>=50?'#f59e0b':'#ef4444';
+      // created_at 格式：'2026-03-26 05:01:51'，取时间部分
+      var checkinTime='';
+      if(r.created_at){var tp=r.created_at.split(' ');if(tp[1])checkinTime=tp[1].substring(0,8);}
       html+='<div class="h-day" data-date="'+r.date+'">'+
         '<div class="h-day-top">'+
         '<span class="h-day-date">'+(dt.getMonth()+1)+'/'+dt.getDate()+' 周'+wks[dt.getDay()]+'</span>'+
@@ -1768,6 +1795,7 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
         '</div><div class="h-day-bot">'+
         '<span>'+r.done+'/'+r.total+'项</span>'+
         '<span>¥'+Math.round(r.spend||0)+'</span>'+
+        (checkinTime?'<span style="color:#555570;font-size:11px">🕐 '+checkinTime+'</span>':'')+
         (r.is_modified?'<span class="h-day-edit" data-date="'+r.date+'">✏️ 已修改(v'+r.version+')</span>':'')+
         '</div></div>';
     }
@@ -2170,9 +2198,8 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
     }
     // 重新绑定快速标签逻辑
     initQkTags(containerId,foodInputId);
-    // 重建DOM后确保新按钮没有 onclick（统一由事件委托处理）
-    var newMgrBtn=c.querySelector('.qk-manage-btn');
-    if(newMgrBtn){newMgrBtn.onclick=null;newMgrBtn.ontouchend=null;}
+    // 重建DOM后重新绑定设置按钮
+    bindAllMgrBtns();
   }
 
   // 标签管理弹窗
@@ -2239,21 +2266,24 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
     reasonEvening:{label:'晚上未完成原因'}
   };
 
-  // 用事件委托处理所有管理按钮点击（无论初始还是重建后的按钮）
-  document.addEventListener('click',function(e){
-    var btn=e.target.closest('.qk-manage-btn');
-    if(!btn)return;
-    e.stopPropagation();
-    e.preventDefault();
-    var groupId=btn.getAttribute('data-manage');
-    var cfg=tagGroupConfig[groupId];
-    if(!cfg)return;
-    showTagManager(groupId,cfg.label,function(){
-      if(cfg.foodInput)rebuildFoodTags(groupId,cfg.foodInput);
-    });
-  });
-
-  // 事件委托已统一处理所有 .qk-manage-btn，无需直接绑定
+  // 直接绑定设置按钮（参考管理弹窗按钮写法，不依赖事件委托）
+  function bindAllMgrBtns(){
+    var btns=document.querySelectorAll('.qk-manage-btn');
+    for(var bi=0;bi<btns.length;bi++){
+      (function(btn){
+        btn.onclick=function(e){
+          e.stopPropagation();
+          var groupId=btn.getAttribute('data-manage');
+          var cfg=tagGroupConfig[groupId];
+          if(!cfg)return;
+          showTagManager(groupId,cfg.label,function(){
+            if(cfg.foodInput)rebuildFoodTags(groupId,cfg.foodInput);
+          });
+        };
+      })(btns[bi]);
+    }
+  }
+  bindAllMgrBtns();
 
   // 页面加载：先从本地缓存恢复（秒开），再从云端同步
   (function(){
