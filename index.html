@@ -814,6 +814,7 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
       inp.value=resultParts.join('，');
       fdata[foodInputId]=inp.value;
       sav();
+      autoResize(inp); // 快速选项更新后触发自动扩行
     }
 
     // 先用 cloneNode 替换标签元素，移除所有旧监听器，再绑新的
