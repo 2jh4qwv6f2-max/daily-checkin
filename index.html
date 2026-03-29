@@ -411,8 +411,7 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
   // 动态获取今天日期（UTC+8），避免跨夜后 todayStr 过时
   function getTodayStr(){
     var n=new Date();
-    var u=new Date(n.getTime()+8*3600000);
-    return u.getUTCFullYear()+'-'+pad(u.getUTCMonth()+1)+'-'+pad(u.getUTCDate());
+    return n.getFullYear()+'-'+pad(n.getMonth()+1)+'-'+pad(n.getDate());
   }
   var todayStr=getTodayStr();
   var now=new Date();
@@ -446,18 +445,27 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
 
   // Tab切换：用position:absolute移出屏幕（不是display:none）
   function doTab(idx){
+    // 先清除所有旧遮罩
+    [0,1,2].forEach(function(i){
+      var cfg=SECTION_LOCK[i];
+      var old=document.getElementById('sectionLock_'+cfg.panelId);
+      if(old){
+        if(old._reposition){window.removeEventListener('scroll',old._reposition);window.removeEventListener('resize',old._reposition);}
+        old.parentNode.removeChild(old);
+      }
+    });
+    // 切换 tab（panel 变成 vis 后 getBoundingClientRect 才正确）
     for(var i=0;i<5;i++){tbs[i].className='tbtn';pns[i].className='pnl';}
     tbs[idx].className='tbtn '+tcls[idx];pns[idx].className='pnl vis';
-    // 历史(3)和管理(4)面板隐藏底部按钮
     ge('botBar').style.display=(idx>=3)?'none':'';
     if(idx===3)loadHistory();
     if(idx===4)loadAdminUsers();
-    // 切换到早上/中午/晚上时检查时段锁定
+    // 切换完成后再检查当前 tab 的锁定（此时 panel 已 vis，位置正确）
     if(idx===0||idx===1||idx===2)checkSectionLock(idx);
   }
   tbs[0].onclick=function(){doTab(0);};tbs[1].onclick=function(){doTab(1);};tbs[2].onclick=function(){doTab(2);};tbs[3].onclick=function(){doTab(3);};tbs[4].onclick=function(){doTab(4);};
-  // 页面加载时立刻检查所有时段锁定（防止首次加载就在解锁时段）
-  setTimeout(function(){checkSectionLock(0);checkSectionLock(1);checkSectionLock(2);},200);
+  // 页面加载时只检查当前显示的 tab（s0），其他 tab 切换时再检查
+  setTimeout(function(){checkSectionLock(0);},200);
 
   // 时段锁定配置：早上7:00，中午11:00，晚上17:00；历史日期不锁定
   var SECTION_LOCK=[
@@ -481,8 +489,8 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
     if(selDate&&selDate<todayStr)return;
 
     // 检查当前时间（UTC+8）
-    var nowUtc8=new Date(new Date().getTime()+8*3600000);
-    var totalMins=nowUtc8.getUTCHours()*60+nowUtc8.getUTCMinutes();
+    var nowLocal=new Date();
+    var totalMins=nowLocal.getHours()*60+nowLocal.getMinutes();
     if(totalMins>=cfg.unlockMins)return; // 时间到了，不锁
 
     // 遮罩用 fixed 定位覆盖 panel，不影响文档流布局
@@ -521,8 +529,8 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
     if(selDate&&selDate<todayStr)return false; // 历史日期不锁
     var panel=chkEl.closest('#s0,#s1,#s2');
     if(!panel)return false;
-    var nowUtc8=new Date(new Date().getTime()+8*3600000);
-    var totalMins=nowUtc8.getUTCHours()*60+nowUtc8.getUTCMinutes();
+    var nowLocal=new Date();
+    var totalMins=nowLocal.getHours()*60+nowLocal.getMinutes();
     if(panel.id==='s0')return totalMins<7*60;   // 早上7:00前锁
     if(panel.id==='s1')return totalMins<11*60;  // 中午11:00前锁
     if(panel.id==='s2')return totalMins<17*60;  // 晚上17:00前锁
