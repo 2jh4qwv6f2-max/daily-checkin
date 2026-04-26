@@ -18,7 +18,7 @@ html,body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Hiragino S
 .dt-row input[type="date"]{width:130px}.dt-row input[type="time"]{width:85px}
 .tabs{display:flex;gap:4px;padding:10px 16px;max-width:500px;margin:0 auto;background:#0a0a0f}
 .tbtn{flex:1;padding:10px 0;border:none;border-radius:10px;background:#1c1c2e;color:#8888a8;font-size:14px;font-weight:600;font-family:inherit;-webkit-appearance:none}
-.tbtn.am{background:rgba(245,158,11,.15);color:#f59e0b}.tbtn.pm{background:rgba(6,182,212,.15);color:#06b6d4}.tbtn.em{background:rgba(139,92,246,.15);color:#8b5cf6}
+.tbtn.am{background:rgba(245,158,11,.15);color:#f59e0b}.tbtn.pm{background:rgba(6,182,212,.15);color:#06b6d4}.tbtn.em{background:rgba(139,92,246,.15);color:#8b5cf6}.tbtn.dc{background:rgba(236,72,153,.15);color:#ec4899}
 .prog{max-width:500px;margin:8px auto 0;padding:0 16px}
 .pbar{height:4px;background:#1c1c2e;border-radius:2px;overflow:hidden}
 .pfill{height:100%;border-radius:2px;background:linear-gradient(90deg,#f59e0b,#06b6d4,#8b5cf6);transition:width .4s;width:0}
@@ -341,7 +341,7 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
 </div>
 <div class="toast" id="toast"></div>
 <div class="hdr"><div class="hdr-in"><span class="logo">每日打卡</span><div class="dt-row"><button class="user-menu-btn" id="userMenuBtn" type="button">👤</button><input type="date" id="pD"><input type="time" id="pT" step="60"></div></div></div>
-<div class="tabs"><button class="tbtn am" id="t0" type="button">🌅 早上</button><button class="tbtn" id="t1" type="button">🌞 中午</button><button class="tbtn" id="t2" type="button">🌙 晚上</button><button class="tbtn" id="t3" type="button">📊 历史</button><button class="tbtn" id="t4" type="button" style="display:none">👑 管理</button></div>
+<div class="tabs"><button class="tbtn am" id="t0" type="button">🌅 早上</button><button class="tbtn" id="t1" type="button">🌞 中午</button><button class="tbtn" id="t2" type="button">🌙 晚上</button><button class="tbtn" id="t3" type="button">⭐ 自律</button><button class="tbtn" id="t4" type="button">📊 历史</button><button class="tbtn" id="t5" type="button" style="display:none">👑 管理</button></div>
 <div class="prog"><div class="pbar"><div class="pfill" id="pf" style="width: 0%;"></div></div><div class="ptx"><span id="pl">已完成 0/20 项</span><span id="pp">0%</span></div><div id="modifiedBadge" style="display:none;margin-top:4px;text-align:right"></div></div>
 <div class="wrap">
 <div class="pnl vis" id="s0"><div class="shd"><div class="sico sico-m">🌅</div><div class="stt">早上</div></div><div class="stk">
@@ -366,7 +366,22 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
   <div class="cg cg2"><label class="cw"><input type="checkbox" class="chk"><div class="cf"><div class="cm"><svg viewBox="0 0 16 16"><polyline points="3.5 8.5 6.5 11.5 12.5 4.5"></polyline></svg></div><span class="ct">脸部擦药</span></div></label><label class="cw"><input type="checkbox" class="chk"><div class="cf"><div class="cm"><svg viewBox="0 0 16 16"><polyline points="3.5 8.5 6.5 11.5 12.5 4.5"></polyline></svg></div><span class="ct">手部擦药</span></div></label></div>
   <div class="ic"><div class="il">😴 睡觉时间</div><input type="time" id="sleepTime" step="60" class="tfd"></div>
 </div></div>
-<div class="pnl" id="s3">
+<div class="pnl" id="s3"><div class="shd"><div class="sico" style="background:rgba(236,72,153,.15)">⭐</div><div class="stt">自律</div></div><div class="stk">
+  <label><input type="checkbox" class="chk"><div class="rw"><div class="bx"><svg viewBox="0 0 16 16"><polyline points="3.5 8.5 6.5 11.5 12.5 4.5"></polyline></svg></div><span class="tx">向老师问好</span></div></label>
+  <label><input type="checkbox" class="chk"><div class="rw"><div class="bx"><svg viewBox="0 0 16 16"><polyline points="3.5 8.5 6.5 11.5 12.5 4.5"></polyline></svg></div><span class="tx">向同学问好</span></div></label>
+  <label><input type="checkbox" class="chk"><div class="rw"><div class="bx"><svg viewBox="0 0 16 16"><polyline points="3.5 8.5 6.5 11.5 12.5 4.5"></polyline></svg></div><span class="tx">向陌生人问好（饭店老板等）</span></div></label>
+  <label><input type="checkbox" class="chk"><div class="rw"><div class="bx"><svg viewBox="0 0 16 16"><polyline points="3.5 8.5 6.5 11.5 12.5 4.5"></polyline></svg></div><span class="tx">花时间学电脑</span></div></label>
+  <label><input type="checkbox" class="chk"><div class="rw"><div class="bx"><svg viewBox="0 0 16 16"><polyline points="3.5 8.5 6.5 11.5 12.5 4.5"></polyline></svg></div><span class="tx">花时间复习练习功课</span></div></label>
+  <label><input type="checkbox" class="chk"><div class="rw"><div class="bx"><svg viewBox="0 0 16 16"><polyline points="3.5 8.5 6.5 11.5 12.5 4.5"></polyline></svg></div><span class="tx">不评价食物</span></div></label>
+  <label><input type="checkbox" class="chk"><div class="rw"><div class="bx"><svg viewBox="0 0 16 16"><polyline points="3.5 8.5 6.5 11.5 12.5 4.5"></polyline></svg></div><span class="tx">不问下一顿或明天吃什么</span></div></label>
+  <label><input type="checkbox" class="chk"><div class="rw"><div class="bx"><svg viewBox="0 0 16 16"><polyline points="3.5 8.5 6.5 11.5 12.5 4.5"></polyline></svg></div><span class="tx">正确使用刀叉</span></div></label>
+  <label><input type="checkbox" class="chk"><div class="rw"><div class="bx"><svg viewBox="0 0 16 16"><polyline points="3.5 8.5 6.5 11.5 12.5 4.5"></polyline></svg></div><span class="tx">点菜超量吃不完</span></div></label>
+  <label><input type="checkbox" class="chk"><div class="rw"><div class="bx"><svg viewBox="0 0 16 16"><polyline points="3.5 8.5 6.5 11.5 12.5 4.5"></polyline></svg></div><span class="tx">需要服务有用敬语（你好，帅哥/美女/老板）</span></div></label>
+  <label><input type="checkbox" class="chk"><div class="rw"><div class="bx"><svg viewBox="0 0 16 16"><polyline points="3.5 8.5 6.5 11.5 12.5 4.5"></polyline></svg></div><span class="tx">不指点他人（讨论问题不算）</span></div></label>
+  <label><input type="checkbox" class="chk"><div class="rw"><div class="bx"><svg viewBox="0 0 16 16"><polyline points="3.5 8.5 6.5 11.5 12.5 4.5"></polyline></svg></div><span class="tx">不说他人坏话</span></div></label>
+  <label><input type="checkbox" class="chk"><div class="rw"><div class="bx"><svg viewBox="0 0 16 16"><polyline points="3.5 8.5 6.5 11.5 12.5 4.5"></polyline></svg></div><span class="tx">不戳他人痛处（比如说别人矮丑黑胖笨穷饭量大好色等）</span></div></label>
+</div></div>
+<div class="pnl" id="s4">
   <div class="shd"><div class="sico" style="background:rgba(34,197,94,.15)">📊</div><div class="stt">历史记录</div></div>
   <div class="stk">
     <div class="ic">
@@ -393,7 +408,7 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
     </div>
   </div>
 </div>
-<div class="pnl" id="s4">
+<div class="pnl" id="s5">
   <div class="shd"><div class="sico" style="background:rgba(245,158,11,.15)">👑</div><div class="stt">用户管理</div></div>
   <div class="stk">
     <div class="ic">
@@ -441,7 +456,7 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
   });
 
   function getCurDT(){var d=ge('pD').value,t=ge('pT').value;if(d&&t)return new Date(d+'T'+t);return new Date();}
-  var tbs=[ge('t0'),ge('t1'),ge('t2'),ge('t3'),ge('t4')],pns=[ge('s0'),ge('s1'),ge('s2'),ge('s3'),ge('s4')],tcls=['am','pm','em','ht','ht'];
+  var tbs=[ge('t0'),ge('t1'),ge('t2'),ge('t3'),ge('t4'),ge('t5')],pns=[ge('s0'),ge('s1'),ge('s2'),ge('s3'),ge('s4'),ge('s5')],tcls=['am','pm','em','dc','ht','ht'];
 
   // Tab切换：用position:absolute移出屏幕（不是display:none）
   function doTab(idx){
@@ -455,15 +470,15 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
       }
     });
     // 切换 tab（panel 变成 vis 后 getBoundingClientRect 才正确）
-    for(var i=0;i<5;i++){tbs[i].className='tbtn';pns[i].className='pnl';}
+    for(var i=0;i<6;i++){tbs[i].className='tbtn';pns[i].className='pnl';}
     tbs[idx].className='tbtn '+tcls[idx];pns[idx].className='pnl vis';
-    ge('botBar').style.display=(idx>=3)?'none':'';
-    if(idx===3)loadHistory();
-    if(idx===4)loadAdminUsers();
+    ge('botBar').style.display=(idx>=4)?'none':'';
+    if(idx===4)loadHistory();
+    if(idx===5)loadAdminUsers();
     // 切换完成后再检查当前 tab 的锁定（此时 panel 已 vis，位置正确）
     if(idx===0||idx===1||idx===2)checkSectionLock(idx);
   }
-  tbs[0].onclick=function(){doTab(0);};tbs[1].onclick=function(){doTab(1);};tbs[2].onclick=function(){doTab(2);};tbs[3].onclick=function(){doTab(3);};tbs[4].onclick=function(){doTab(4);};
+  tbs[0].onclick=function(){doTab(0);};tbs[1].onclick=function(){doTab(1);};tbs[2].onclick=function(){doTab(2);};tbs[3].onclick=function(){doTab(3);};tbs[4].onclick=function(){doTab(4);};tbs[5].onclick=function(){doTab(5);};
   // 页面加载时只检查当前显示的 tab（s0），其他 tab 切换时再检查
   setTimeout(function(){checkSectionLock(0);},200);
 
@@ -1241,8 +1256,8 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
   function onLoginSuccess(isNewDevice){
     hideAuthScreen();
     ge('userMenuBtn').textContent='👤 '+CURRENT_USER.username;
-    if(CURRENT_USER.role==='admin')ge('t4').style.display='';
-    else ge('t4').style.display='none';
+    if(CURRENT_USER.role==='admin')ge('t5').style.display='';
+    else ge('t5').style.display='none';
     loadFromCloud();
     loadTagsFromCloud();
     // 新设备询问是否信任
