@@ -248,6 +248,16 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
 .device-del{color:#ef4444;font-size:12px;cursor:pointer;padding:4px 8px}
 .qk-mgr-btn{display:inline-block;width:auto;align-self:flex-start;padding:5px 10px;border-radius:8px;background:rgba(99,102,241,.15);border:1px solid rgba(99,102,241,.3);color:#a5b4fc;font-size:12px;cursor:pointer;font-family:inherit;font-weight:500;-webkit-appearance:none}
 .qk-mgr-btn:active{background:rgba(99,102,241,.3)}
+.dc-section{margin-top:6px}
+.dc-section-title{font-size:13px;font-weight:600;color:#a0a0c0;padding:8px 4px 4px;display:flex;align-items:center;gap:6px}
+.dc-good .dc-section-title{color:#22c55e}
+.dc-bad .dc-section-title{color:#ef4444}
+.dc-good label.dc-item{border-left:3px solid rgba(34,197,94,.4);padding-left:8px}
+.dc-bad label.dc-item{border-left:3px solid rgba(239,68,68,.4);padding-left:8px}
+.dc-bad label.dc-item .bx{border-color:rgba(239,68,68,.5)}
+.dc-bad label.dc-item input.chk:checked + .rw .bx{background:#ef4444;border-color:#ef4444}
+.dc-bad label.dc-item input.chk:checked + .rw .tx{color:#ef4444;text-decoration:line-through}
+.dc-good label.dc-item input.chk:checked + .rw .bx{background:#22c55e;border-color:#22c55e}
 </style>
 </head>
 <body>
@@ -367,19 +377,23 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
   <div class="ic"><div class="il">😴 睡觉时间</div><input type="time" id="sleepTime" step="60" class="tfd"></div>
 </div></div>
 <div class="pnl" id="s3"><div class="shd"><div class="sico" style="background:rgba(236,72,153,.15)">⭐</div><div class="stt">自律</div></div><div class="stk">
-  <label><input type="checkbox" class="chk"><div class="rw"><div class="bx"><svg viewBox="0 0 16 16"><polyline points="3.5 8.5 6.5 11.5 12.5 4.5"></polyline></svg></div><span class="tx">向老师问好</span></div></label>
-  <label><input type="checkbox" class="chk"><div class="rw"><div class="bx"><svg viewBox="0 0 16 16"><polyline points="3.5 8.5 6.5 11.5 12.5 4.5"></polyline></svg></div><span class="tx">向同学问好</span></div></label>
-  <label><input type="checkbox" class="chk"><div class="rw"><div class="bx"><svg viewBox="0 0 16 16"><polyline points="3.5 8.5 6.5 11.5 12.5 4.5"></polyline></svg></div><span class="tx">向陌生人问好（饭店老板等）</span></div></label>
-  <label><input type="checkbox" class="chk"><div class="rw"><div class="bx"><svg viewBox="0 0 16 16"><polyline points="3.5 8.5 6.5 11.5 12.5 4.5"></polyline></svg></div><span class="tx">花时间学电脑</span></div></label>
-  <label><input type="checkbox" class="chk"><div class="rw"><div class="bx"><svg viewBox="0 0 16 16"><polyline points="3.5 8.5 6.5 11.5 12.5 4.5"></polyline></svg></div><span class="tx">花时间复习练习功课</span></div></label>
-  <label><input type="checkbox" class="chk"><div class="rw"><div class="bx"><svg viewBox="0 0 16 16"><polyline points="3.5 8.5 6.5 11.5 12.5 4.5"></polyline></svg></div><span class="tx">不评价食物</span></div></label>
-  <label><input type="checkbox" class="chk"><div class="rw"><div class="bx"><svg viewBox="0 0 16 16"><polyline points="3.5 8.5 6.5 11.5 12.5 4.5"></polyline></svg></div><span class="tx">不问下一顿或明天吃什么</span></div></label>
-  <label><input type="checkbox" class="chk"><div class="rw"><div class="bx"><svg viewBox="0 0 16 16"><polyline points="3.5 8.5 6.5 11.5 12.5 4.5"></polyline></svg></div><span class="tx">正确使用刀叉</span></div></label>
-  <label><input type="checkbox" class="chk"><div class="rw"><div class="bx"><svg viewBox="0 0 16 16"><polyline points="3.5 8.5 6.5 11.5 12.5 4.5"></polyline></svg></div><span class="tx">点菜超量吃不完</span></div></label>
-  <label><input type="checkbox" class="chk"><div class="rw"><div class="bx"><svg viewBox="0 0 16 16"><polyline points="3.5 8.5 6.5 11.5 12.5 4.5"></polyline></svg></div><span class="tx">需要服务有用敬语（你好，帅哥/美女/老板）</span></div></label>
-  <label><input type="checkbox" class="chk"><div class="rw"><div class="bx"><svg viewBox="0 0 16 16"><polyline points="3.5 8.5 6.5 11.5 12.5 4.5"></polyline></svg></div><span class="tx">不指点他人（讨论问题不算）</span></div></label>
-  <label><input type="checkbox" class="chk"><div class="rw"><div class="bx"><svg viewBox="0 0 16 16"><polyline points="3.5 8.5 6.5 11.5 12.5 4.5"></polyline></svg></div><span class="tx">不说他人坏话</span></div></label>
-  <label><input type="checkbox" class="chk"><div class="rw"><div class="bx"><svg viewBox="0 0 16 16"><polyline points="3.5 8.5 6.5 11.5 12.5 4.5"></polyline></svg></div><span class="tx">不戳他人痛处（比如说别人矮丑黑胖笨穷饭量大好色等）</span></div></label>
+  <div class="dc-section dc-good"><div class="dc-section-title">👍 好习惯（坚持做）</div>
+  <label class="dc-item"><input type="checkbox" class="chk dc-chk-good"><div class="rw"><div class="bx"><svg viewBox="0 0 16 16"><polyline points="3.5 8.5 6.5 11.5 12.5 4.5"></polyline></svg></div><span class="tx">向老师问好</span></div></label>
+  <label class="dc-item"><input type="checkbox" class="chk dc-chk-good"><div class="rw"><div class="bx"><svg viewBox="0 0 16 16"><polyline points="3.5 8.5 6.5 11.5 12.5 4.5"></polyline></svg></div><span class="tx">向同学问好</span></div></label>
+  <label class="dc-item"><input type="checkbox" class="chk dc-chk-good"><div class="rw"><div class="bx"><svg viewBox="0 0 16 16"><polyline points="3.5 8.5 6.5 11.5 12.5 4.5"></polyline></svg></div><span class="tx">向陌生人问好（饭店老板等）</span></div></label>
+  <label class="dc-item"><input type="checkbox" class="chk dc-chk-good"><div class="rw"><div class="bx"><svg viewBox="0 0 16 16"><polyline points="3.5 8.5 6.5 11.5 12.5 4.5"></polyline></svg></div><span class="tx">花时间学电脑</span></div></label>
+  <label class="dc-item"><input type="checkbox" class="chk dc-chk-good"><div class="rw"><div class="bx"><svg viewBox="0 0 16 16"><polyline points="3.5 8.5 6.5 11.5 12.5 4.5"></polyline></svg></div><span class="tx">花时间复习/练习功课</span></div></label>
+  <label class="dc-item"><input type="checkbox" class="chk dc-chk-good"><div class="rw"><div class="bx"><svg viewBox="0 0 16 16"><polyline points="3.5 8.5 6.5 11.5 12.5 4.5"></polyline></svg></div><span class="tx">需要服务有用敬语（你好，帅哥/美女/老板）</span></div></label>
+  </div>
+  <div class="dc-section dc-bad"><div class="dc-section-title">👎 坏习惯（避免做）</div>
+  <label class="dc-item"><input type="checkbox" class="chk dc-chk-bad"><div class="rw"><div class="bx"><svg viewBox="0 0 16 16"><polyline points="3.5 8.5 6.5 11.5 12.5 4.5"></polyline></svg></div><span class="tx">评价食物</span></div></label>
+  <label class="dc-item"><input type="checkbox" class="chk dc-chk-bad"><div class="rw"><div class="bx"><svg viewBox="0 0 16 16"><polyline points="3.5 8.5 6.5 11.5 12.5 4.5"></polyline></svg></div><span class="tx">问下一顿或明天吃什么</span></div></label>
+  <label class="dc-item"><input type="checkbox" class="chk dc-chk-bad"><div class="rw"><div class="bx"><svg viewBox="0 0 16 16"><polyline points="3.5 8.5 6.5 11.5 12.5 4.5"></polyline></svg></div><span class="tx">未正确使用刀叉</span></div></label>
+  <label class="dc-item"><input type="checkbox" class="chk dc-chk-bad"><div class="rw"><div class="bx"><svg viewBox="0 0 16 16"><polyline points="3.5 8.5 6.5 11.5 12.5 4.5"></polyline></svg></div><span class="tx">点菜超量吃不完</span></div></label>
+  <label class="dc-item"><input type="checkbox" class="chk dc-chk-bad"><div class="rw"><div class="bx"><svg viewBox="0 0 16 16"><polyline points="3.5 8.5 6.5 11.5 12.5 4.5"></polyline></svg></div><span class="tx">指点他人（讨论问题不算）</span></div></label>
+  <label class="dc-item"><input type="checkbox" class="chk dc-chk-bad"><div class="rw"><div class="bx"><svg viewBox="0 0 16 16"><polyline points="3.5 8.5 6.5 11.5 12.5 4.5"></polyline></svg></div><span class="tx">说他人坏话</span></div></label>
+  <label class="dc-item"><input type="checkbox" class="chk dc-chk-bad"><div class="rw"><div class="bx"><svg viewBox="0 0 16 16"><polyline points="3.5 8.5 6.5 11.5 12.5 4.5"></polyline></svg></div><span class="tx">戳他人痛处（比如说别人矮丑黑胖笨穷饭量大好色等）</span></div></label>
+  </div>
 </div></div>
 <div class="pnl" id="s4">
   <div class="shd"><div class="sico" style="background:rgba(34,197,94,.15)">📊</div><div class="stt">历史记录</div></div>
@@ -536,7 +550,27 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
   });
 
   var chks=document.querySelectorAll('.chk');
-  function updP(){var total=chks.length,done=0;for(var i=0;i<total;i++){if(chks[i].checked)done++;}var pct=total>0?Math.round(done/total*100):0;ge('pf').style.width=pct+'%';ge('pl').textContent='已完成 '+done+'/'+total+' 项';ge('pp').textContent=pct+'%';}
+  function updP(){
+    // 计分逻辑：
+    // - 基础项目（非自律）：勾选 +1
+    // - 自律好习惯（dc-chk-good）：勾选 +1
+    // - 自律坏习惯（dc-chk-bad）：勾选 -1（不计入分母）
+    // 分母 = 基础项 + 好习惯（不含坏习惯）
+    var goodChks=document.querySelectorAll('.chk:not(.dc-chk-bad)');
+    var badChks=document.querySelectorAll('.dc-chk-bad');
+    var denominator=goodChks.length;
+    var goodDone=0;
+    for(var i=0;i<goodChks.length;i++){if(goodChks[i].checked)goodDone++;}
+    var badDone=0;
+    for(var i=0;i<badChks.length;i++){if(badChks[i].checked)badDone++;}
+    var net=Math.max(0,goodDone-badDone); // 净完成数，最低0
+    var pct=denominator>0?Math.round(net/denominator*100):0;
+    ge('pf').style.width=pct+'%';
+    var lbl='已完成 '+net+'/'+denominator+' 项';
+    if(badDone>0)lbl+=' （犯坏习惯 '+badDone+' 项）';
+    ge('pl').textContent=lbl;
+    ge('pp').textContent=pct+'%';
+  }
 
   // 校验 checkbox 所在时段是否已解锁（今天才校验，历史日期不限）
   function isSectionLocked(chkEl){
@@ -648,8 +682,13 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
     if(fdata.dinnerHome==='1')dF='🏠'+dF;
     var spend=(parseFloat(bP)||0)+(parseFloat(lP)||0)+(parseFloat(dP)||0);
 
-    var total=chks.length,done=0;
-    for(var i=0;i<total;i++){if(chks[i].checked)done++;}
+    // 自律计分：好习惯+坏习惯-，坏习惯不计入分母
+    var goodChks=document.querySelectorAll('.chk:not(.dc-chk-bad)');
+    var badChks=document.querySelectorAll('.dc-chk-bad');
+    var total=goodChks.length;
+    var goodDone=0;for(var i=0;i<goodChks.length;i++){if(goodChks[i].checked)goodDone++;}
+    var badDone=0;for(var i=0;i<badChks.length;i++){if(badChks[i].checked)badDone++;}
+    var done=Math.max(0,goodDone-badDone);
     var pct=total>0?Math.round(done/total*100):0;
     var dt=getCurDT(),wks=['日','一','二','三','四','五','六'];
     var ds=dt.getFullYear()+'年'+(dt.getMonth()+1)+'月'+dt.getDate()+'日 周'+wks[dt.getDay()]+' '+pad(dt.getHours())+':'+pad(dt.getMinutes());
@@ -1750,7 +1789,12 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
       dinner:{price:fdata.dinnerPrice||'',food:fdata.dinnerFood||'',home:fdata.dinnerHome==='1'}
     };
     var bP=parseFloat(fdata.breakfastPrice)||0,lP=parseFloat(fdata.lunchPrice)||0,dP=parseFloat(fdata.dinnerPrice)||0;
-    var total=chks.length,dn=0;for(var j=0;j<total;j++){if(chks[j].checked)dn++;}
+    var goodChks2=document.querySelectorAll('.chk:not(.dc-chk-bad)');
+    var badChks2=document.querySelectorAll('.dc-chk-bad');
+    var total=goodChks2.length,goodDn=0,badDn=0;
+    for(var j=0;j<goodChks2.length;j++){if(goodChks2[j].checked)goodDn++;}
+    for(var j=0;j<badChks2.length;j++){if(badChks2[j].checked)badDn++;}
+    var dn=Math.max(0,goodDn-badDn);
     var reasons=fdata._reasons||{};
     return {
       date:d,wake_time:fdata.wakeTime||null,sleep_time:fdata.sleepTime||null,
