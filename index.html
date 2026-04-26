@@ -713,43 +713,120 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
       cy+=S(22);
       if(!measure){ctx.font=fn(15);ctx.fillStyle='#8888a8';ctx.fillText(ds,LW/2,cy);}
       cy+=S(26);
-      var cardH=S(80);
+      var cardH=S(110);
       if(!measure){
         ctx.fillStyle='#1c1c2e';rr(ctx,LM,cy,CW,cardH,S(7));ctx.fill();
         ctx.strokeStyle='rgba(255,255,255,0.06)';ctx.lineWidth=SC*0.5;rr(ctx,LM,cy,CW,cardH,S(7));ctx.stroke();
-        ctx.font=fn(13);ctx.fillStyle='#8888a8';ctx.textAlign='center';ctx.fillText('今日完成度',LW/2,cy+S(16));
-        var bx=LM+S(16),bw=CW-S(32),barY=cy+S(24);
-        ctx.fillStyle='rgba(255,255,255,0.06)';rr(ctx,bx,barY,bw,S(4),S(2));ctx.fill();
-        if(pct>0){var grd=ctx.createLinearGradient(bx,0,bx+bw,0);grd.addColorStop(0,'#f59e0b');grd.addColorStop(.5,'#06b6d4');grd.addColorStop(1,'#8b5cf6');ctx.fillStyle=grd;rr(ctx,bx,barY,bw*pct/100,S(4),S(2));ctx.fill();}
-        ctx.font=fn(32,'900');ctx.fillStyle='#a78bfa';ctx.fillText(pct+'%',LW/2,cy+S(46));
-        ctx.font=fn(13);ctx.fillStyle='#555570';ctx.fillText(done+'/'+total+' 项 · 餐饮消费 ¥'+spend.toFixed(0),LW/2,cy+S(57));
+        ctx.font=fn(13);ctx.fillStyle='#8888a8';ctx.textAlign='center';ctx.fillText('今日完成度',LW/2,cy+S(18));
+        ctx.font=fn(36,'900');ctx.fillStyle='#a78bfa';ctx.fillText(pct+'%',LW/2,cy+S(54));
+        var bx=LM+S(20),bw=CW-S(40),barY=cy+S(72);
+        ctx.fillStyle='rgba(255,255,255,0.06)';rr(ctx,bx,barY,bw,S(5),S(2.5));ctx.fill();
+        if(pct>0){var grd=ctx.createLinearGradient(bx,0,bx+bw,0);grd.addColorStop(0,'#f59e0b');grd.addColorStop(.5,'#06b6d4');grd.addColorStop(1,'#8b5cf6');ctx.fillStyle=grd;rr(ctx,bx,barY,bw*pct/100,S(5),S(2.5));ctx.fill();}
+        var statText=done+'/'+total+' 项 · 餐饮消费 ¥'+spend.toFixed(0);
+        if(badDone>0)statText+=' · 坏习惯 '+badDone+' 项';
+        ctx.font=fn(12);ctx.fillStyle='#555570';ctx.fillText(statText,LW/2,cy+S(95));
       }
       cy+=cardH+S(28);
       for(var si=0;si<secData.length;si++){
         var s=secData[si];
         if(si>0){var ly=cy-S(14);if(!measure){ctx.strokeStyle='rgba(255,255,255,0.08)';ctx.lineWidth=SC*0.5;ctx.setLineDash([S(4),S(4)]);ctx.beginPath();ctx.moveTo(LM,ly);ctx.lineTo(LW-RM,ly);ctx.stroke();ctx.setLineDash([]);}}
-        if(!measure){ctx.textAlign='left';ctx.font=fn(20,'700');ctx.fillStyle=s.cl;var ttx=s.tt;if(s.time)ttx+=' · '+s.time;ctx.fillText(ttx,LM,cy);}
-        cy+=S(10);
-        if(!measure){ctx.textAlign='left';ctx.font=fn(15);ctx.fillStyle='#e8e8f0';var mt=s.me+' '+s.ml+': '+s.mf;ctx.fillText(mt,LM,cy+S(11));if(s.mp){var bw2=ctx.measureText(mt+'  ').width;ctx.fillStyle='#f59e0b';ctx.font=fn(11,'700');ctx.fillText('¥'+s.mp,LM+bw2,cy+S(11));}}
-        cy+=S(22);
-        var tagX=LM;ctx.font=fn(10);
-        for(var j=0;j<s.it.length;j++){
-          var it=s.it[j],lb=(it.ok?'✓ ':'○ ')+it.t;ctx.font=fn(10);
-          var tw=ctx.measureText(lb).width+S(12);
-          if(tagX+tw>LW-RM){tagX=LM;cy+=S(24);}
-          if(!measure){ctx.fillStyle=it.ok?'rgba(99,102,241,0.15)':'rgba(255,255,255,0.04)';rr(ctx,tagX,cy,tw,S(15),S(4));ctx.fill();ctx.strokeStyle=it.ok?'rgba(99,102,241,0.3)':'rgba(255,255,255,0.08)';ctx.lineWidth=SC*0.4;rr(ctx,tagX,cy,tw,S(15),S(4));ctx.stroke();ctx.fillStyle=it.ok?'#a5b4fc':'#555570';ctx.font=fn(10);ctx.fillText(lb,tagX+S(6),cy+S(11));}
-          tagX+=tw+S(5);
-        }
-        cy+=S(30);
-        // 绘制未完成原因（仅显示原因，未完成项看标签即可）
-        if(s.reason&&s.reason.reason){
+        if(s._empty){
+          // 未打卡：只显示标题+灰色"未打卡"
           if(!measure){
-            ctx.textAlign='left';ctx.fillStyle='#f59e0b';ctx.font=fn(10);
-            ctx.fillText('💬 原因: '+s.reason.reason,LM,cy);
+            ctx.textAlign='left';ctx.font=fn(20,'700');ctx.fillStyle=s.cl;ctx.fillText(s.tt,LM,cy);
+            ctx.font=fn(13);ctx.fillStyle='#555570';
+            var emptyTxt='未打卡';
+            var titleW=ctx.measureText(s.tt).width;
+            ctx.font=fn(20,'700');
+            var titleW2=ctx.measureText(s.tt).width;
+            ctx.font=fn(13);ctx.fillStyle='#555570';
+            ctx.fillText(emptyTxt,LM+titleW2+S(10),cy-S(2));
           }
-          cy+=S(18);
+          cy+=S(20);
+        }else{
+          if(!measure){ctx.textAlign='left';ctx.font=fn(20,'700');ctx.fillStyle=s.cl;var ttx=s.tt;if(s.time)ttx+=' · '+s.time;ctx.fillText(ttx,LM,cy);}
+          cy+=S(10);
+          if(!measure){ctx.textAlign='left';ctx.font=fn(15);ctx.fillStyle='#e8e8f0';var mt=s.me+' '+s.ml+': '+s.mf;ctx.fillText(mt,LM,cy+S(11));if(s.mp){var bw2=ctx.measureText(mt+'  ').width;ctx.fillStyle='#f59e0b';ctx.font=fn(11,'700');ctx.fillText('¥'+s.mp,LM+bw2,cy+S(11));}}
+          cy+=S(22);
+          var tagX=LM;ctx.font=fn(10);
+          for(var j=0;j<s.it.length;j++){
+            var it=s.it[j],lb=(it.ok?'✓ ':'○ ')+it.t;ctx.font=fn(10);
+            var tw=ctx.measureText(lb).width+S(12);
+            if(tagX+tw>LW-RM){tagX=LM;cy+=S(24);}
+            if(!measure){ctx.fillStyle=it.ok?'rgba(99,102,241,0.15)':'rgba(255,255,255,0.04)';rr(ctx,tagX,cy,tw,S(15),S(4));ctx.fill();ctx.strokeStyle=it.ok?'rgba(99,102,241,0.3)':'rgba(255,255,255,0.08)';ctx.lineWidth=SC*0.4;rr(ctx,tagX,cy,tw,S(15),S(4));ctx.stroke();ctx.fillStyle=it.ok?'#a5b4fc':'#555570';ctx.font=fn(10);ctx.fillText(lb,tagX+S(6),cy+S(11));}
+            tagX+=tw+S(5);
+          }
+          cy+=S(30);
+          if(s.reason&&s.reason.reason){
+            if(!measure){
+              ctx.textAlign='left';ctx.fillStyle='#f59e0b';ctx.font=fn(10);
+              ctx.fillText('💬 原因: '+s.reason.reason,LM,cy);
+            }
+            cy+=S(18);
+          }
         }
-        cy+=S(16);// 时段间增加间距
+        cy+=S(16);
+      }
+      
+      // ⭐ 自律 section（在最后追加）
+      var dcGoodChks=document.querySelectorAll('.dc-chk-good');
+      var dcBadChks=document.querySelectorAll('.dc-chk-bad');
+      function getDcItems(chks){
+        var arr=[];
+        for(var k=0;k<chks.length;k++){
+          var lb=chks[k].closest('label');
+          var tx=lb&&lb.querySelector('.tx');
+          if(tx)arr.push({t:tx.textContent,ok:chks[k].checked});
+        }
+        return arr;
+      }
+      var goodItems=getDcItems(dcGoodChks);
+      var badItems=getDcItems(dcBadChks);
+      var dcGoodDone=goodItems.filter(function(x){return x.ok;}).length;
+      var dcBadDone=badItems.filter(function(x){return x.ok;}).length;
+      var hasDcData=dcGoodDone>0||dcBadDone>0;
+      
+      if(hasDcData){
+        // 分隔线
+        var ly=cy-S(14);
+        if(!measure){ctx.strokeStyle='rgba(255,255,255,0.08)';ctx.lineWidth=SC*0.5;ctx.setLineDash([S(4),S(4)]);ctx.beginPath();ctx.moveTo(LM,ly);ctx.lineTo(LW-RM,ly);ctx.stroke();ctx.setLineDash([]);}
+        
+        // 标题
+        if(!measure){ctx.textAlign='left';ctx.font=fn(20,'700');ctx.fillStyle='#ec4899';ctx.fillText('⭐ 自律',LM,cy);}
+        cy+=S(28);
+        
+        // 好习惯
+        if(dcGoodDone>0){
+          if(!measure){ctx.textAlign='left';ctx.font=fn(13,'600');ctx.fillStyle='#22c55e';ctx.fillText('👍 好习惯（已完成 '+dcGoodDone+'/'+goodItems.length+'）',LM,cy);}
+          cy+=S(18);
+          var tagX=LM;ctx.font=fn(10);
+          for(var j=0;j<goodItems.length;j++){
+            var it=goodItems[j],lb=(it.ok?'✓ ':'○ ')+it.t;ctx.font=fn(10);
+            var tw=ctx.measureText(lb).width+S(12);
+            if(tagX+tw>LW-RM){tagX=LM;cy+=S(24);}
+            if(!measure){ctx.fillStyle=it.ok?'rgba(34,197,94,0.15)':'rgba(255,255,255,0.04)';rr(ctx,tagX,cy,tw,S(15),S(4));ctx.fill();ctx.strokeStyle=it.ok?'rgba(34,197,94,0.4)':'rgba(255,255,255,0.08)';ctx.lineWidth=SC*0.4;rr(ctx,tagX,cy,tw,S(15),S(4));ctx.stroke();ctx.fillStyle=it.ok?'#86efac':'#555570';ctx.font=fn(10);ctx.fillText(lb,tagX+S(6),cy+S(11));}
+            tagX+=tw+S(5);
+          }
+          cy+=S(30);
+        }
+        
+        // 坏习惯（只显示已勾选的，避免显示一堆未犯的）
+        if(dcBadDone>0){
+          if(!measure){ctx.textAlign='left';ctx.font=fn(13,'600');ctx.fillStyle='#ef4444';ctx.fillText('👎 今天犯了的坏习惯（'+dcBadDone+' 项）',LM,cy);}
+          cy+=S(18);
+          var tagX=LM;ctx.font=fn(10);
+          var checkedBads=badItems.filter(function(x){return x.ok;});
+          for(var j=0;j<checkedBads.length;j++){
+            var it=checkedBads[j],lb='✕ '+it.t;ctx.font=fn(10);
+            var tw=ctx.measureText(lb).width+S(12);
+            if(tagX+tw>LW-RM){tagX=LM;cy+=S(24);}
+            if(!measure){ctx.fillStyle='rgba(239,68,68,0.15)';rr(ctx,tagX,cy,tw,S(15),S(4));ctx.fill();ctx.strokeStyle='rgba(239,68,68,0.4)';ctx.lineWidth=SC*0.4;rr(ctx,tagX,cy,tw,S(15),S(4));ctx.stroke();ctx.fillStyle='#fca5a5';ctx.font=fn(10);ctx.fillText(lb,tagX+S(6),cy+S(11));}
+            tagX+=tw+S(5);
+          }
+          cy+=S(30);
+        }
+        
+        cy+=S(8);
       }
       cy-=S(10);
       if(!measure){ctx.textAlign='center';ctx.strokeStyle='rgba(255,255,255,0.08)';ctx.lineWidth=SC*0.4;ctx.beginPath();ctx.moveTo(LM,cy);ctx.lineTo(LW-RM,cy);ctx.stroke();cy+=S(16);ctx.font=fn(13);ctx.fillStyle='#555570';ctx.fillText('每日打卡汇报 · '+ds,LW/2,cy);}
