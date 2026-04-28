@@ -277,6 +277,38 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
 
 /* ══ 底部导航（Instagram 风格）══ */
 
+
+/* 头像选择九宫格 */
+.kid-avatar-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:4px}
+.kid-avatar-opt{aspect-ratio:1;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.04);border:2px solid transparent;border-radius:12px;cursor:pointer;padding:6px;transition:all .15s}
+.kid-avatar-opt:hover{background:rgba(255,255,255,.08)}
+.kid-avatar-opt.selected{border-color:#fbbf24;background:rgba(251,191,36,.15);transform:scale(1.05)}
+/* tab 内 SVG 头像 */
+.kid-tab-avatar{display:inline-block;vertical-align:middle;margin-right:4px;line-height:0}
+.kid-tab-avatar svg{display:block}
+/* 语言/静音切换按钮 */
+.kid-lang-btn{padding:4px 12px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:14px;color:#a0a0c0;font-size:12px;cursor:pointer;font-family:inherit}
+.kid-lang-btn:active{transform:scale(0.96)}
+/* 加分按钮脉冲动画 */
+@keyframes kidPulse{0%{transform:scale(1)}50%{transform:scale(1.18);box-shadow:0 0 12px rgba(251,191,36,.5)}100%{transform:scale(1)}}
+.kid-pt-btn-pulse{animation:kidPulse 0.4s ease-out}
+/* 浮动 +N 动画 */
+.kid-float-pts{position:fixed;font-size:24px;font-weight:900;pointer-events:none;z-index:9999;animation:kidFloat 1.2s ease-out forwards}
+.kid-float-pts.pos{color:#22c55e;text-shadow:0 0 8px rgba(34,197,94,.6)}
+.kid-float-pts.neg{color:#ef4444;text-shadow:0 0 8px rgba(239,68,68,.6)}
+@keyframes kidFloat{0%{opacity:0;transform:translateY(0) scale(0.5)}20%{opacity:1;transform:translateY(-20px) scale(1.2)}100%{opacity:0;transform:translateY(-80px) scale(1)}}
+/* 余额数字闪光 */
+.kid-balance-num{transition:text-shadow .3s}
+.kid-balance-card.flash .kid-balance-num{text-shadow:0 0 16px rgba(251,191,36,.8)}
+/* 计时器卡片 */
+.kid-timer-card{background:#1c1c2e;border:1px solid rgba(255,255,255,.06);border-radius:16px;padding:18px;margin-bottom:12px}
+.kid-timer-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.kid-timer-type{font-size:14px;font-weight:700;color:#e8e8f0}
+.kid-timer-status{font-size:18px}
+.kid-timer-display{position:relative;display:flex;align-items:center;justify-content:center;margin:8px 0}
+.kid-timer-time{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:32px;font-weight:900;color:#fbbf24;font-variant-numeric:tabular-nums}
+.kid-timer-btns{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-top:12px}
+
 /* ══ 积分页面 ══ */
 .kid-page{display:flex;flex-direction:column;gap:10px}
 .kid-empty{text-align:center;padding:40px 20px;color:#8888a8}
@@ -1607,6 +1639,35 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
     if(isNewDevice){
       setTimeout(function(){showTrustDevicePrompt();},400);
     }
+    // 启动全局计时器监听（即使不在积分页也能弹通知）
+    startGlobalTimerWatcher();
+  }
+  
+  // 全局计时器监听（每秒检查所有 running 计时器）
+  function startGlobalTimerWatcher(){
+    if(window._globalTimerInt) return; // 防重复启动
+    window._globalTimerInt = setInterval(function(){
+      var arr = loadTimers();
+      var changed = false, doneList = [];
+      arr.forEach(function(tm){
+        if(tm.status==='running'){
+          tm.remainingSeconds = Math.max(0, tm.remainingSeconds - 1);
+          tm.startedAt = Date.now();
+          if(tm.remainingSeconds===0){
+            tm.status = 'done';
+            tm.startedAt = null;
+            doneList.push(tm);
+          }
+          changed = true;
+        }
+      });
+      if(changed) saveTimers(arr);
+      doneList.forEach(function(tm){
+        var typeName = tm.type==='tv'?(I18N[KID_LANG]||I18N.zh).redeem_tv:tm.type==='game'?(I18N[KID_LANG]||I18N.zh).redeem_game:tm.type;
+        try{ if(_kidSoundOn) playSoundTimerEnd(); }catch(e){}
+        sendNotify((I18N[KID_LANG]||I18N.zh).kid_timer_done, typeName);
+      });
+    }, 1000);
   }
 
   // 新设备信任提示弹窗
@@ -2190,34 +2251,313 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
   // 积分系统
   // ══════════════════════════════════════════════
   
+
+  // ══════════════════════════════════════════════
+  // 国际化（i18n）
+  // ══════════════════════════════════════════════
+  var KID_LANG = 'zh'; // zh / en
+  try{ KID_LANG = localStorage.getItem('kid_lang') || 'zh'; }catch(e){}
+  
+  var I18N = {
+    zh: {
+      // 通用
+      add: '添加', save: '保存', cancel: '取消', confirm: '确认', delete: '删除',
+      edit: '编辑', back: '返回', loading: '加载中...', empty: '暂无数据',
+      // 积分页
+      kid_no_data: '还没有孩子', kid_add_first: '+ 添加孩子', kid_add_tip: '添加一个开始记录积分吧',
+      kid_balance: '当前余额', kid_lwb_label: '上周结余', kid_earned: '已得', kid_used: '已用',
+      kid_tab_today: '📊 录入', kid_tab_logs: '📋 记录', kid_tab_redeem: '🎁 兑换',
+      kid_tab_timer: '⏰ 计时',
+      kid_edit: '✏️ 编辑', kid_del_request: '🗑️ 申请删除',
+      kid_no_logs: '还没有记录', kid_no_redeem: '还没有兑换记录',
+      kid_today_tip: '点击下方按钮快速记一笔积分。每次记录都会保存到历史。',
+      kid_redeem_rule: '使用规则：累积 100 分才可使用；吃完饭、写完作业、洗好澡之后才可以使用积分',
+      kid_redeem_history: '兑换历史',
+      // 添加/编辑孩子
+      kid_dlg_add: '添加孩子', kid_dlg_edit: '编辑孩子信息', kid_dlg_del: '申请删除',
+      kid_field_name: '姓名', kid_field_avatar: '选择头像', kid_field_lwb: '上周结余 (可选)',
+      kid_name_placeholder: '例如：Bobo',
+      kid_del_warn: '删除孩子需要管理员审批。提交后所有积分记录将被保留，但孩子从你的列表中消失。',
+      kid_field_reason: '申请原因 (可选)',
+      kid_submit: '提交申请',
+      // 兑换
+      kid_redeem_dlg: '兑换：', kid_redeem_pts: '使用积分', kid_redeem_max: '（最多 ',
+      kid_redeem_note: '用途说明 (可选)', kid_redeem_confirm: '确认兑换',
+      kid_redeem_minutes: ' 分钟', kid_redeem_thb: ' 泰铢',
+      kid_redeem_success: '兑换成功，剩余 ', kid_redeem_unit: ' 积分',
+      kid_redeem_success_emoji: '🎉',
+      // 计时器
+      kid_timer_title: '⏰ 倒计时',
+      kid_timer_start: '▶ 开始', kid_timer_pause: '⏸ 暂停', kid_timer_resume: '▶ 继续',
+      kid_timer_reset: '↻ 重置', kid_timer_remove: '🗑️ 删除',
+      kid_timer_done: '⏰ 时间到！',
+      kid_timer_no_active: '还没有活动的计时器。兑换看电视/玩游戏会自动创建计时器。',
+      kid_timer_notify_perm: '需要授权浏览器通知，到点后即使页面在后台也能提醒。',
+      kid_timer_notify_btn: '🔔 开启通知',
+      kid_timer_remaining: '剩余',
+      // 项目分类
+      cat_homework: '写作业', cat_math: '数学', cat_english: '英语', cat_chinese: '中文',
+      cat_meal: '吃饭', cat_sleeping: '睡觉', cat_brushteeth: '刷牙', cat_washface: '洗脸',
+      cat_sayhello: '说你好',
+      cat_no_homework: '不写作业', cat_not_serious: '不认真', cat_forgot: '忘记东西',
+      cat_no_meal: '不好好吃饭', cat_no_sleep: '不睡觉', cat_no_brush: '不刷牙',
+      cat_no_wash: '不洗脸', cat_no_hello: '不说你好',
+      cat_homework_desc: '写作业 1 页 +10 分；测试写对一题 +5 分',
+      cat_math_desc: '测试对题 +5；99 乘法口诀全对 +25',
+      cat_english_desc: '阅读对 +5~15；写 0-100 全对 +25；拼写对 +5',
+      cat_chinese_desc: '阅读对 +3；认真写字一字 +5',
+      cat_meal_desc: '好好吃饭 +5~25；吃肉/吃菜 +10',
+      cat_sleeping_desc: '听话睡午觉 +15',
+      cat_brushteeth_desc: '自己刷牙干净 +5',
+      cat_washface_desc: '自己洗脸干净 +5',
+      cat_sayhello_desc: '说一次你好 +5',
+      cat_no_homework_desc: '不写作业一次 -25',
+      cat_not_serious_desc: '上课/补习不认真 -5~25',
+      cat_forgot_desc: '忘记书本/作业/水瓶 -15',
+      cat_no_meal_desc: '不好好吃饭 -5~25',
+      cat_no_sleep_desc: '不睡午觉 -15',
+      cat_no_brush_desc: '不刷牙 -15',
+      cat_no_wash_desc: '不洗脸 -15',
+      cat_no_hello_desc: '不说你好 -5',
+      // 兑换类型
+      redeem_tv: '看电视', redeem_game: '玩游戏', redeem_shopping: '美食/玩/购物',
+      redeem_tv_rate: '5 积分 = 10 分钟', redeem_tv_note: '一次最多 30 积分 = 60 分钟',
+      redeem_game_rate: '10 积分 = 10 分钟', redeem_game_note: '一次最多 50 积分 = 50 分钟',
+      redeem_shopping_rate: '1 积分 = 1 THB', redeem_shopping_note: '按需兑换泰铢',
+      // toast
+      toast_added: '添加成功',
+      // 按钮
+      btn_redeem: '兑换',
+      // logo
+      logo_points: '🌟 积分',
+      // 申请删除
+      del_req_title: '🗑️ 孩子删除申请',
+      del_req_empty: '没有待审批申请',
+      del_req_applicant: '申请人',
+      del_req_approve: '批准删除',
+      del_req_reject: '拒绝',
+      del_req_confirm: '确定批准删除？此操作不可撤销。',
+      del_my_section_title: '👑 管理员',
+      del_my_user_mgmt: '用户管理',
+      del_my_kid_del: '孩子删除申请'
+    },
+    en: {
+      add: 'Add', save: 'Save', cancel: 'Cancel', confirm: 'Confirm', delete: 'Delete',
+      edit: 'Edit', back: 'Back', loading: 'Loading...', empty: 'No data',
+      kid_no_data: 'No kids yet', kid_add_first: '+ Add Kid', kid_add_tip: 'Add a kid to start tracking points',
+      kid_balance: 'Balance', kid_lwb_label: 'Last week', kid_earned: 'Earned', kid_used: 'Used',
+      kid_tab_today: '📊 Record', kid_tab_logs: '📋 History', kid_tab_redeem: '🎁 Redeem',
+      kid_tab_timer: '⏰ Timer',
+      kid_edit: '✏️ Edit', kid_del_request: '🗑️ Request Delete',
+      kid_no_logs: 'No records yet', kid_no_redeem: 'No redemptions yet',
+      kid_today_tip: 'Tap a button to quickly log points. Each entry is saved to history.',
+      kid_redeem_rule: 'Rule: 100+ points required; only after meals, homework and shower',
+      kid_redeem_history: 'Redemption History',
+      kid_dlg_add: 'Add a Kid', kid_dlg_edit: 'Edit Kid Info', kid_dlg_del: 'Request Delete',
+      kid_field_name: 'Name', kid_field_avatar: 'Choose Avatar', kid_field_lwb: 'Last week balance (optional)',
+      kid_name_placeholder: 'e.g. Bobo',
+      kid_del_warn: 'Deleting requires admin approval. All point records will be kept, but the kid will be removed from your list.',
+      kid_field_reason: 'Reason (optional)',
+      kid_submit: 'Submit',
+      kid_redeem_dlg: 'Redeem: ', kid_redeem_pts: 'Points to use', kid_redeem_max: ' (max ',
+      kid_redeem_note: 'Note (optional)', kid_redeem_confirm: 'Redeem',
+      kid_redeem_minutes: ' min', kid_redeem_thb: ' THB',
+      kid_redeem_success: 'Redeemed! Balance: ', kid_redeem_unit: ' pts',
+      kid_redeem_success_emoji: '🎉',
+      kid_timer_title: '⏰ Countdown',
+      kid_timer_start: '▶ Start', kid_timer_pause: '⏸ Pause', kid_timer_resume: '▶ Resume',
+      kid_timer_reset: '↻ Reset', kid_timer_remove: '🗑️ Remove',
+      kid_timer_done: "⏰ Time's up!",
+      kid_timer_no_active: 'No active timers. Redeeming TV/Game will auto-create a timer.',
+      kid_timer_notify_perm: 'Enable notifications to be reminded when timers finish, even in the background.',
+      kid_timer_notify_btn: '🔔 Enable Notifications',
+      kid_timer_remaining: 'Remaining',
+      cat_homework: 'Homework', cat_math: 'Math', cat_english: 'English', cat_chinese: 'Chinese',
+      cat_meal: 'Meal', cat_sleeping: 'Sleep', cat_brushteeth: 'Brush Teeth', cat_washface: 'Wash Face',
+      cat_sayhello: 'Say Hello',
+      cat_no_homework: 'No Homework', cat_not_serious: 'Not Serious', cat_forgot: 'Forgot Things',
+      cat_no_meal: 'Bad Eating', cat_no_sleep: 'No Sleep', cat_no_brush: 'No Brush',
+      cat_no_wash: 'No Wash', cat_no_hello: 'No Hello',
+      cat_homework_desc: '+10 per page; +5 per correct test answer',
+      cat_math_desc: '+5 per correct; +25 for full multiplication table',
+      cat_english_desc: 'Reading +5~15; full 0-100 +25; spelling +5',
+      cat_chinese_desc: 'Reading +3; careful writing +5/word',
+      cat_meal_desc: 'Good eating +5~25; meat/veggie +10',
+      cat_sleeping_desc: 'Nap obediently +15',
+      cat_brushteeth_desc: 'Brush teeth clean +5',
+      cat_washface_desc: 'Wash face clean +5',
+      cat_sayhello_desc: 'Say hello once +5',
+      cat_no_homework_desc: 'Skip homework -25',
+      cat_not_serious_desc: 'Not serious in class -5~25',
+      cat_forgot_desc: 'Forgot books/homework/bottle -15',
+      cat_no_meal_desc: 'Bad eating -5~25',
+      cat_no_sleep_desc: 'No nap -15',
+      cat_no_brush_desc: 'Not brushing -15',
+      cat_no_wash_desc: 'Not washing -15',
+      cat_no_hello_desc: 'Not saying hello -5',
+      redeem_tv: 'Watch TV', redeem_game: 'Play Games', redeem_shopping: 'Food/Toys/Shopping',
+      redeem_tv_rate: '5 pts = 10 min', redeem_tv_note: 'Max 30 pts = 60 min',
+      redeem_game_rate: '10 pts = 10 min', redeem_game_note: 'Max 50 pts = 50 min',
+      redeem_shopping_rate: '1 pt = 1 THB', redeem_shopping_note: 'Exchange for THB',
+      toast_added: 'Added',
+      btn_redeem: 'Redeem',
+      logo_points: '🌟 Points',
+      del_req_title: '🗑️ Kid Delete Requests',
+      del_req_empty: 'No pending requests',
+      del_req_applicant: 'Requested by',
+      del_req_approve: 'Approve',
+      del_req_reject: 'Reject',
+      del_req_confirm: 'Approve deletion? This cannot be undone.',
+      del_my_section_title: '👑 Admin',
+      del_my_user_mgmt: 'User Management',
+      del_my_kid_del: 'Kid Delete Requests'
+    }
+  };
+  function t(key){ var d=I18N[KID_LANG]||I18N.zh; return d[key]||I18N.zh[key]||key; }
+  function setLang(lang){ KID_LANG=lang; try{localStorage.setItem('kid_lang',lang);}catch(e){} }
+
   // 项目分类配置（来源 PDF）
   var KID_CATEGORIES_POS = [
-    {key:'homework',name:'写作业',icon:'📝',desc:'写作业 1 页 +10 分；测试写对一题 +5 分',options:[5,10,25]},
-    {key:'math',name:'数学',icon:'🔢',desc:'测试对题 +5；99 乘法口诀全对 +25',options:[5,15,25]},
-    {key:'english',name:'英语',icon:'🇬🇧',desc:'阅读对 +5~15；写 0-100 全对 +25；拼写对 +5',options:[5,15,25]},
-    {key:'chinese',name:'中文',icon:'🇨🇳',desc:'阅读对 +3；认真写字一字 +5',options:[3,5,15,25]},
-    {key:'meal',name:'吃饭',icon:'🍱',desc:'好好吃饭 +5~25；吃肉/吃菜 +10；好好吃饭 +15',options:[5,10,15,25]},
-    {key:'sleeping',name:'睡觉',icon:'😴',desc:'听话睡午觉 +15',options:[5,15,25]},
-    {key:'brushteeth',name:'刷牙',icon:'🪥',desc:'自己刷牙干净 +5',options:[5]},
-    {key:'washface',name:'洗脸',icon:'🧼',desc:'自己洗脸干净 +5',options:[5]},
-    {key:'sayhello',name:'说你好',icon:'👋',desc:'说一次你好 +5',options:[5]}
+    {key:'homework',i18n:'cat_homework',descKey:'cat_homework_desc',icon:'📝',options:[5,10,25]},
+    {key:'math',i18n:'cat_math',descKey:'cat_math_desc',icon:'🔢',options:[5,15,25]},
+    {key:'english',i18n:'cat_english',descKey:'cat_english_desc',icon:'🇬🇧',options:[5,15,25]},
+    {key:'chinese',i18n:'cat_chinese',descKey:'cat_chinese_desc',icon:'🇨🇳',options:[3,5,15,25]},
+    {key:'meal',i18n:'cat_meal',descKey:'cat_meal_desc',icon:'🍱',options:[5,10,15,25]},
+    {key:'sleeping',i18n:'cat_sleeping',descKey:'cat_sleeping_desc',icon:'😴',options:[5,15]},
+    {key:'brushteeth',i18n:'cat_brushteeth',descKey:'cat_brushteeth_desc',icon:'🪥',options:[5]},
+    {key:'washface',i18n:'cat_washface',descKey:'cat_washface_desc',icon:'🧼',options:[5]},
+    {key:'sayhello',i18n:'cat_sayhello',descKey:'cat_sayhello_desc',icon:'👋',options:[5]}
   ];
   var KID_CATEGORIES_NEG = [
-    {key:'no_homework',name:'不写作业',icon:'❌',desc:'不写作业一次 -25',options:[-25]},
-    {key:'not_serious',name:'不认真',icon:'😒',desc:'上课/补习不认真 -5~25',options:[-5,-15,-25]},
-    {key:'forgot',name:'忘记东西',icon:'🤔',desc:'忘记书本/作业/水瓶 -15',options:[-15]},
-    {key:'no_meal',name:'不好好吃饭',icon:'🍽️',desc:'不好好吃饭 -5~25',options:[-5,-15,-25]},
-    {key:'no_sleep',name:'不睡觉',icon:'😫',desc:'不睡午觉 -15',options:[-15]},
-    {key:'no_brush',name:'不刷牙',icon:'🦷',desc:'不刷牙 -15',options:[-5,-15]},
-    {key:'no_wash',name:'不洗脸',icon:'😶',desc:'不洗脸 -15',options:[-5,-15]},
-    {key:'no_hello',name:'不说你好',icon:'🙊',desc:'不说你好 -5',options:[-5]}
+    {key:'no_homework',i18n:'cat_no_homework',descKey:'cat_no_homework_desc',icon:'❌',options:[-25]},
+    {key:'not_serious',i18n:'cat_not_serious',descKey:'cat_not_serious_desc',icon:'😒',options:[-5,-15,-25]},
+    {key:'forgot',i18n:'cat_forgot',descKey:'cat_forgot_desc',icon:'🤔',options:[-15]},
+    {key:'no_meal',i18n:'cat_no_meal',descKey:'cat_no_meal_desc',icon:'🍽️',options:[-5,-15,-25]},
+    {key:'no_sleep',i18n:'cat_no_sleep',descKey:'cat_no_sleep_desc',icon:'😫',options:[-15]},
+    {key:'no_brush',i18n:'cat_no_brush',descKey:'cat_no_brush_desc',icon:'🦷',options:[-5,-15]},
+    {key:'no_wash',i18n:'cat_no_wash',descKey:'cat_no_wash_desc',icon:'😶',options:[-5,-15]},
+    {key:'no_hello',i18n:'cat_no_hello',descKey:'cat_no_hello_desc',icon:'🙊',options:[-5]}
   ];
-  // 兑换规则
   var KID_REDEEM_TYPES = [
-    {key:'tv',name:'看电视',icon:'📺',rate:'5 积分 = 10 分钟',max:30,note:'一次最多 30 积分 = 60 分钟'},
-    {key:'game',name:'玩游戏',icon:'🎮',rate:'10 积分 = 10 分钟',max:50,note:'一次最多 50 积分 = 50 分钟'},
-    {key:'shopping',name:'美食/玩/购物',icon:'🍦',rate:'1 积分 = 1 THB',max:0,note:'按需兑换泰铢'}
+    {key:'tv',i18n:'redeem_tv',rateKey:'redeem_tv_rate',noteKey:'redeem_tv_note',icon:'📺',max:30,timer:true,timerRate:5,timerMin:10},
+    {key:'game',i18n:'redeem_game',rateKey:'redeem_game_rate',noteKey:'redeem_game_note',icon:'🎮',max:50,timer:true,timerRate:10,timerMin:10},
+    {key:'shopping',i18n:'redeem_shopping',rateKey:'redeem_shopping_rate',noteKey:'redeem_shopping_note',icon:'🍦',max:0,timer:false}
   ];
+  // SVG 可爱头像（10种）
+  var KID_AVATARS = [
+    {id:'happy',svg:'<circle cx="50" cy="50" r="45" fill="#fcd34d"/><circle cx="35" cy="42" r="5" fill="#1f2937"/><circle cx="65" cy="42" r="5" fill="#1f2937"/><path d="M30 60 Q50 78 70 60" stroke="#1f2937" stroke-width="4" fill="none" stroke-linecap="round"/>'},
+    {id:'cool',svg:'<circle cx="50" cy="50" r="45" fill="#60a5fa"/><rect x="22" y="38" width="20" height="10" rx="2" fill="#1f2937"/><rect x="58" y="38" width="20" height="10" rx="2" fill="#1f2937"/><line x1="42" y1="43" x2="58" y2="43" stroke="#1f2937" stroke-width="2"/><path d="M35 65 L65 65" stroke="#1f2937" stroke-width="3" stroke-linecap="round"/>'},
+    {id:'star',svg:'<circle cx="50" cy="50" r="45" fill="#a78bfa"/><path d="M30 38 L42 42 L40 32 L34 28 L38 36 Z" fill="#fff"/><path d="M70 38 L58 42 L60 32 L66 28 L62 36 Z" fill="#fff"/><circle cx="35" cy="42" r="3" fill="#1f2937"/><circle cx="65" cy="42" r="3" fill="#1f2937"/><path d="M35 60 Q50 72 65 60" stroke="#1f2937" stroke-width="3" fill="none" stroke-linecap="round"/>'},
+    {id:'love',svg:'<circle cx="50" cy="50" r="45" fill="#fb7185"/><path d="M30 35 Q26 42 35 48 Q40 42 35 35 Z M40 35 Q35 42 35 48" fill="#dc2626"/><path d="M70 35 Q66 42 75 48 Q80 42 75 35 Z" fill="#dc2626"/><path d="M35 62 Q50 75 65 62" stroke="#1f2937" stroke-width="3" fill="none" stroke-linecap="round"/>'},
+    {id:'wink',svg:'<circle cx="50" cy="50" r="45" fill="#34d399"/><path d="M28 42 Q35 38 42 42" stroke="#1f2937" stroke-width="3" fill="none" stroke-linecap="round"/><circle cx="65" cy="42" r="5" fill="#1f2937"/><path d="M30 60 Q50 78 70 58" stroke="#1f2937" stroke-width="4" fill="none" stroke-linecap="round"/>'},
+    {id:'shy',svg:'<circle cx="50" cy="50" r="45" fill="#f9a8d4"/><circle cx="35" cy="42" r="4" fill="#1f2937"/><circle cx="65" cy="42" r="4" fill="#1f2937"/><circle cx="28" cy="55" r="6" fill="#fb7185" opacity="0.6"/><circle cx="72" cy="55" r="6" fill="#fb7185" opacity="0.6"/><path d="M40 65 Q50 70 60 65" stroke="#1f2937" stroke-width="3" fill="none" stroke-linecap="round"/>'},
+    {id:'rocket',svg:'<circle cx="50" cy="50" r="45" fill="#3b82f6"/><circle cx="35" cy="42" r="4" fill="#fff"/><circle cx="65" cy="42" r="4" fill="#fff"/><path d="M30 60 Q50 75 70 60" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M50 18 L46 28 L54 28 Z" fill="#ef4444"/>'},
+    {id:'ninja',svg:'<circle cx="50" cy="50" r="45" fill="#1f2937"/><rect x="10" y="38" width="80" height="14" fill="#374151"/><circle cx="35" cy="45" r="4" fill="#fff"/><circle cx="65" cy="45" r="4" fill="#fff"/>'},
+    {id:'cat',svg:'<circle cx="50" cy="50" r="45" fill="#fbbf24"/><path d="M22 28 L32 18 L34 35 Z" fill="#fbbf24"/><path d="M78 28 L68 18 L66 35 Z" fill="#fbbf24"/><circle cx="35" cy="44" r="4" fill="#1f2937"/><circle cx="65" cy="44" r="4" fill="#1f2937"/><path d="M48 56 L52 56 L50 60 Z" fill="#ec4899"/><path d="M40 60 Q50 68 60 60" stroke="#1f2937" stroke-width="2" fill="none"/>'},
+    {id:'crown',svg:'<circle cx="50" cy="50" r="45" fill="#fde047"/><path d="M25 25 L35 35 L45 22 L55 35 L65 22 L75 35 L72 18 L60 24 L50 12 L40 24 L28 18 Z" fill="#eab308"/><circle cx="38" cy="48" r="4" fill="#1f2937"/><circle cx="62" cy="48" r="4" fill="#1f2937"/><path d="M35 62 Q50 72 65 62" stroke="#1f2937" stroke-width="3" fill="none" stroke-linecap="round"/>'},
+    {id:'rainbow',svg:'<circle cx="50" cy="50" r="45" fill="#c084fc"/><path d="M20 35 Q50 15 80 35" stroke="#ef4444" stroke-width="3" fill="none"/><path d="M22 38 Q50 20 78 38" stroke="#f59e0b" stroke-width="3" fill="none"/><path d="M24 41 Q50 25 76 41" stroke="#22c55e" stroke-width="3" fill="none"/><circle cx="38" cy="50" r="4" fill="#1f2937"/><circle cx="62" cy="50" r="4" fill="#1f2937"/><path d="M35 65 Q50 75 65 65" stroke="#1f2937" stroke-width="3" fill="none" stroke-linecap="round"/>'},
+    {id:'panda',svg:'<circle cx="50" cy="50" r="45" fill="#f3f4f6"/><circle cx="22" cy="22" r="12" fill="#1f2937"/><circle cx="78" cy="22" r="12" fill="#1f2937"/><ellipse cx="35" cy="48" rx="9" ry="11" fill="#1f2937"/><ellipse cx="65" cy="48" rx="9" ry="11" fill="#1f2937"/><circle cx="35" cy="48" r="3" fill="#fff"/><circle cx="65" cy="48" r="3" fill="#fff"/><ellipse cx="50" cy="62" rx="4" ry="3" fill="#1f2937"/><path d="M40 70 Q50 78 60 70" stroke="#1f2937" stroke-width="2" fill="none"/>'}
+  ];
+  function getAvatarSvg(avatarId,size){
+    var a = KID_AVATARS.find(function(x){return x.id===avatarId;}) || KID_AVATARS[0];
+    return '<svg viewBox="0 0 100 100" width="'+(size||56)+'" height="'+(size||56)+'" xmlns="http://www.w3.org/2000/svg">'+a.svg+'</svg>';
+  }
+
+  // ══ 音效系统（AudioContext 纯 JS 生成）══
+  var _audioCtx = null;
+  function getAudioCtx(){
+    if(!_audioCtx){
+      try{ _audioCtx = new (window.AudioContext||window.webkitAudioContext)(); }catch(e){}
+    }
+    return _audioCtx;
+  }
+  function playTone(freq, duration, volume, type){
+    var ctx = getAudioCtx(); if(!ctx) return;
+    if(ctx.state==='suspended') ctx.resume();
+    var osc = ctx.createOscillator();
+    var gain = ctx.createGain();
+    osc.type = type || 'sine';
+    osc.frequency.value = freq;
+    gain.gain.setValueAtTime(volume||0.3, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+    osc.connect(gain); gain.connect(ctx.destination);
+    osc.start(); osc.stop(ctx.currentTime + duration);
+  }
+  function playSoundReward(){
+    // 上扬"叮叮"声
+    playTone(523.25, 0.15, 0.3, 'sine'); // C5
+    setTimeout(function(){ playTone(659.25, 0.15, 0.3, 'sine'); }, 100); // E5
+    setTimeout(function(){ playTone(783.99, 0.25, 0.3, 'sine'); }, 200); // G5
+  }
+  function playSoundPenalty(){
+    // 下降"嗯嗯"声
+    playTone(220, 0.2, 0.25, 'sawtooth');
+    setTimeout(function(){ playTone(165, 0.3, 0.25, 'sawtooth'); }, 150);
+  }
+  function playSoundDone(){
+    // 庆祝音
+    var notes = [523.25, 659.25, 783.99, 1046.50]; // C E G C
+    notes.forEach(function(f, i){
+      setTimeout(function(){ playTone(f, 0.2, 0.3, 'triangle'); }, i*100);
+    });
+  }
+  function playSoundTimerEnd(){
+    // 警示铃声（2 次）
+    function ring(){
+      playTone(880, 0.3, 0.4, 'sine');
+      setTimeout(function(){ playTone(1046.5, 0.3, 0.4, 'sine'); }, 300);
+    }
+    ring();
+    setTimeout(ring, 700);
+  }
+  // 静音开关
+  var _kidSoundOn = true;
+  try{ _kidSoundOn = localStorage.getItem('kid_sound') !== '0'; }catch(e){}
+  function setSoundOn(on){ _kidSoundOn = on; try{localStorage.setItem('kid_sound',on?'1':'0');}catch(e){} }
+  function safePlay(fn){ if(_kidSoundOn) try{ fn(); }catch(e){} }
+
+  // ══ 浏览器通知 ══
+  function notifyPermission(){
+    if(!('Notification' in window)) return 'unsupported';
+    return Notification.permission;
+  }
+  function requestNotifyPermission(cb){
+    if(!('Notification' in window)){ if(cb)cb(false); return; }
+    Notification.requestPermission(function(p){ if(cb)cb(p==='granted'); });
+  }
+  function sendNotify(title, body){
+    if(!('Notification' in window)) return;
+    if(Notification.permission!=='granted') return;
+    try{ new Notification(title, {body:body, icon:'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" fill="%23fcd34d"/></svg>'}); }catch(e){}
+  }
+
+  // ══ 计时器系统（localStorage 持久化）══
+  var KID_TIMERS_KEY = 'kid_timers_v1';
+  function loadTimers(){
+    try{ return JSON.parse(localStorage.getItem(KID_TIMERS_KEY)||'[]'); }catch(e){ return []; }
+  }
+  function saveTimers(arr){
+    try{ localStorage.setItem(KID_TIMERS_KEY, JSON.stringify(arr)); }catch(e){}
+  }
+  function addTimer(timer){
+    var arr = loadTimers();
+    arr.push(timer);
+    saveTimers(arr);
+    return timer;
+  }
+  function updateTimer(id, patch){
+    var arr = loadTimers();
+    var idx = arr.findIndex(function(t){return t.id===id;});
+    if(idx<0) return;
+    Object.assign(arr[idx], patch);
+    saveTimers(arr);
+  }
+  function removeTimer(id){
+    var arr = loadTimers().filter(function(t){return t.id!==id;});
+    saveTimers(arr);
+  }
+  // 计时器结构：{id, kidId, type, totalSeconds, remainingSeconds, status:'idle|running|paused|done', startedAt, createdAt}
+
   
   // 积分页状态
   var _kidsList = [];
@@ -2237,9 +2577,9 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
     // 没有孩子时显示空态
     if(_kidsList.length===0){
       c.innerHTML = '<div class="kid-empty">'
-        +'<div class="kid-empty-emoji">👶</div>'
-        +'<div class="kid-empty-tip">还没有孩子<br>添加一个开始记录积分吧</div>'
-        +'<button class="kid-empty-btn" id="kidAddFirst" type="button">+ 添加孩子</button>'
+        +'<div class="kid-empty-emoji">'+getAvatarSvg('happy',80)+'</div>'
+        +'<div class="kid-empty-tip">'+t('kid_no_data')+'<br>'+t('kid_add_tip')+'</div>'
+        +'<button class="kid-empty-btn" id="kidAddFirst" type="button">'+t('kid_add_first')+'</button>'
         +'</div>';
       ge('kidAddFirst').onclick = showAddKidDialog;
       return;
@@ -2251,28 +2591,36 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
     }
     
     var html = '';
+    // 语言切换 + 静音切换
+    html += '<div style="display:flex;justify-content:flex-end;gap:6px;margin-bottom:6px">'
+      +'<button class="kid-lang-btn" id="kidLangBtn" type="button">'+(KID_LANG==='zh'?'中/EN':'EN/中')+'</button>'
+      +'<button class="kid-lang-btn" id="kidSoundBtn" type="button">'+(_kidSoundOn?'🔊':'🔇')+'</button>'
+      +'</div>';
+    
     // 孩子 tabs
     html += '<div class="kid-tabs">';
     _kidsList.forEach(function(k){
       var act = k.id===_curKidId ? ' active' : '';
       html += '<button class="kid-tab'+act+'" data-kid="'+k.id+'" type="button">'
-        +(k.avatar_emoji||'👶')+' '+escapeHtml(k.name)+'</button>';
+        +'<span class="kid-tab-avatar">'+getAvatarSvg(k.avatar_emoji||'happy',24)+'</span>'
+        +escapeHtml(k.name)+'</button>';
     });
     html += '<button class="kid-tab-add" id="kidAddBtn" type="button">+</button>';
     html += '</div>';
     
     // 余额卡片
     html += '<div class="kid-balance-card" id="kidBalanceCard">'
-      +'<div class="kid-balance-label">当前余额</div>'
+      +'<div class="kid-balance-label">'+t('kid_balance')+'</div>'
       +'<div class="kid-balance-num" id="kidBalanceNum">--</div>'
-      +'<div class="kid-balance-sub" id="kidBalanceSub">加载中...</div>'
+      +'<div class="kid-balance-sub" id="kidBalanceSub">'+t('loading')+'</div>'
       +'</div>';
     
-    // 子导航
+    // 子导航（增加计时器 tab）
     html += '<div class="kid-subnav">'
-      +'<button class="kid-subnav-btn'+(_kidSubTab==='today'?' active':'')+'" data-sub="today" type="button">📊 录入</button>'
-      +'<button class="kid-subnav-btn'+(_kidSubTab==='balance'?' active':'')+'" data-sub="balance" type="button">📋 记录</button>'
-      +'<button class="kid-subnav-btn'+(_kidSubTab==='redeem'?' active':'')+'" data-sub="redeem" type="button">🎁 兑换</button>'
+      +'<button class="kid-subnav-btn'+(_kidSubTab==='today'?' active':'')+'" data-sub="today" type="button">'+t('kid_tab_today')+'</button>'
+      +'<button class="kid-subnav-btn'+(_kidSubTab==='balance'?' active':'')+'" data-sub="balance" type="button">'+t('kid_tab_logs')+'</button>'
+      +'<button class="kid-subnav-btn'+(_kidSubTab==='redeem'?' active':'')+'" data-sub="redeem" type="button">'+t('kid_tab_redeem')+'</button>'
+      +'<button class="kid-subnav-btn'+(_kidSubTab==='timer'?' active':'')+'" data-sub="timer" type="button">'+t('kid_tab_timer')+'</button>'
       +'</div>';
     
     // 子内容容器
@@ -2280,16 +2628,16 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
     
     // 操作区（编辑/删除当前孩子）
     html += '<div style="text-align:center;padding:8px 0">'
-      +'<button class="kid-redeem-btn" id="kidEditBtn" type="button" style="margin-right:8px">✏️ 编辑</button>'
-      +'<button class="kid-redeem-btn" id="kidDelBtn" type="button" style="background:rgba(239,68,68,.1);color:#ef4444;border-color:rgba(239,68,68,.3)">🗑️ 申请删除</button>'
+      +'<button class="kid-redeem-btn" id="kidEditBtn" type="button" style="margin-right:8px">'+t('kid_edit')+'</button>'
+      +'<button class="kid-redeem-btn" id="kidDelBtn" type="button" style="background:rgba(239,68,68,.1);color:#ef4444;border-color:rgba(239,68,68,.3)">'+t('kid_del_request')+'</button>'
       +'</div>';
     
     c.innerHTML = html;
     
     // 绑定事件
-    c.querySelectorAll('.kid-tab').forEach(function(t){
-      t.onclick = function(){
-        _curKidId = parseInt(t.getAttribute('data-kid'));
+    c.querySelectorAll('.kid-tab').forEach(function(tt){
+      tt.onclick = function(){
+        _curKidId = parseInt(tt.getAttribute('data-kid'));
         renderKidPage();
       };
     });
@@ -2302,6 +2650,8 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
     });
     ge('kidEditBtn').onclick = function(){ showEditKidDialog(_curKidId); };
     ge('kidDelBtn').onclick  = function(){ showDeleteKidDialog(_curKidId); };
+    ge('kidLangBtn').onclick = function(){ setLang(KID_LANG==='zh'?'en':'zh'); ge('logoTitle').textContent=t('logo_points'); renderKidPage(); };
+    ge('kidSoundBtn').onclick = function(){ setSoundOn(!_kidSoundOn); renderKidPage(); };
     
     // 加载余额
     refreshKidBalance();
@@ -2314,11 +2664,28 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
     apiCall('GET','/api/kids/balance?kid_id='+_curKidId).then(function(res){
       if(!res) return;
       var num = ge('kidBalanceNum'); var sub = ge('kidBalanceSub');
-      if(num) num.textContent = res.balance!=null ? res.balance : '--';
+      if(num){
+        // 数字滚动动画
+        animateNumber(num, parseInt(num.textContent)||0, res.balance||0);
+      }
       if(sub){
-        sub.textContent = '上周结余 '+(res.last_week_balance||0)+' · 已得 '+(res.earned||0)+' · 已用 '+(res.used||0);
+        sub.textContent = t('kid_lwb_label')+' '+(res.last_week_balance||0)+' · '+t('kid_earned')+' '+(res.earned||0)+' · '+t('kid_used')+' '+(res.used||0);
       }
     });
+  }
+  
+  // 数字滚动动画
+  function animateNumber(el, from, to){
+    if(from===to){el.textContent=to;return;}
+    var duration = 600, start = Date.now();
+    var step = function(){
+      var p = Math.min(1, (Date.now()-start)/duration);
+      var ease = 1-Math.pow(1-p, 3); // ease-out
+      var v = Math.round(from + (to-from)*ease);
+      el.textContent = v;
+      if(p<1) requestAnimationFrame(step);
+    };
+    step();
   }
   
   function renderKidSubContent(){
@@ -2327,35 +2694,33 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
     if(_kidSubTab==='today') renderKidToday(c);
     else if(_kidSubTab==='balance') renderKidLogs(c);
     else if(_kidSubTab==='redeem') renderKidRedeem(c);
+    else if(_kidSubTab==='timer') renderKidTimer(c);
   }
   
   function renderKidToday(c){
-    var html = '<div class="kid-tip-box">点击下方按钮快速记一笔积分。每次记录都会保存到历史。</div>';
-    // 加分类
+    var html = '<div class="kid-tip-box">'+t('kid_today_tip')+'</div>';
     KID_CATEGORIES_POS.forEach(function(cat){
       html += '<div class="kid-cat kid-cat-pos">'
-        +'<div class="kid-cat-title">'+cat.icon+' '+cat.name+'</div>'
-        +'<div class="kid-cat-desc">'+cat.desc+'</div>'
+        +'<div class="kid-cat-title">'+cat.icon+' '+t(cat.i18n)+'</div>'
+        +'<div class="kid-cat-desc">'+t(cat.descKey)+'</div>'
         +'<div class="kid-pt-btns">';
       cat.options.forEach(function(p){
-        html += '<button class="kid-pt-btn pos" data-cat="'+cat.key+'" data-name="'+cat.name+'" data-pts="+'+p+'" type="button">+'+p+'</button>';
+        html += '<button class="kid-pt-btn pos" data-cat="'+cat.key+'" data-name="'+t(cat.i18n)+'" data-pts="+'+p+'" type="button">+'+p+'</button>';
       });
       html += '</div></div>';
     });
-    // 减分类
     KID_CATEGORIES_NEG.forEach(function(cat){
       html += '<div class="kid-cat kid-cat-neg">'
-        +'<div class="kid-cat-title">'+cat.icon+' '+cat.name+'</div>'
-        +'<div class="kid-cat-desc">'+cat.desc+'</div>'
+        +'<div class="kid-cat-title">'+cat.icon+' '+t(cat.i18n)+'</div>'
+        +'<div class="kid-cat-desc">'+t(cat.descKey)+'</div>'
         +'<div class="kid-pt-btns">';
       cat.options.forEach(function(p){
-        html += '<button class="kid-pt-btn neg" data-cat="'+cat.key+'" data-name="'+cat.name+'" data-pts="'+p+'" type="button">'+p+'</button>';
+        html += '<button class="kid-pt-btn neg" data-cat="'+cat.key+'" data-name="'+t(cat.i18n)+'" data-pts="'+p+'" type="button">'+p+'</button>';
       });
       html += '</div></div>';
     });
     c.innerHTML = html;
     
-    // 绑定积分按钮
     c.querySelectorAll('.kid-pt-btn').forEach(function(b){
       b.onclick = function(){
         var cat = b.getAttribute('data-cat');
@@ -2364,11 +2729,16 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
         var today = getTodayStr();
         apiCall('POST','/api/kids/points',{kid_id:_curKidId, date:today, category:name, item:cat, points:pts}).then(function(r){
           if(r && r.ok){
-            toast((pts>0?'+':'')+pts+' '+name+' ✓');
-            refreshKidBalance();
+            // 浮动 +N 动画
+            spawnFloatingPoints(b, pts);
             // 短暂高亮按钮
-            b.style.transform='scale(1.15)';
-            setTimeout(function(){b.style.transform='';},150);
+            b.classList.add('kid-pt-btn-pulse');
+            setTimeout(function(){b.classList.remove('kid-pt-btn-pulse');},400);
+            // 音效
+            safePlay(pts>=0 ? playSoundReward : playSoundPenalty);
+            // 余额刷新
+            refreshKidBalance();
+            toast((pts>0?'+':'')+pts+' '+name+' '+(pts>=0?'🎉':'😟'));
           }else{
             toast(r&&r.error||'操作失败');
           }
@@ -2377,11 +2747,23 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
     });
   }
   
+  // 浮动 +N 动画
+  function spawnFloatingPoints(btn, pts){
+    var rect = btn.getBoundingClientRect();
+    var fp = document.createElement('div');
+    fp.className = 'kid-float-pts ' + (pts>=0?'pos':'neg');
+    fp.textContent = (pts>0?'+':'')+pts;
+    fp.style.left = (rect.left + rect.width/2 - 20) + 'px';
+    fp.style.top = (rect.top - 10) + 'px';
+    document.body.appendChild(fp);
+    setTimeout(function(){ if(fp.parentNode) fp.parentNode.removeChild(fp); }, 1200);
+  }
+  
   function renderKidLogs(c){
-    c.innerHTML = '<div style="color:#8888a8;text-align:center;padding:20px">加载中...</div>';
+    c.innerHTML = '<div style="color:#8888a8;text-align:center;padding:20px">'+t('loading')+'</div>';
     apiCall('GET','/api/kids/points?kid_id='+_curKidId).then(function(res){
       if(!res||!res.logs){ c.innerHTML='<div style="color:#8888a8;text-align:center;padding:20px">加载失败</div>'; return; }
-      if(res.logs.length===0){ c.innerHTML='<div style="color:#555570;text-align:center;padding:20px">还没有记录</div>'; return; }
+      if(res.logs.length===0){ c.innerHTML='<div style="color:#555570;text-align:center;padding:20px">'+t('kid_no_logs')+'</div>'; return; }
       var html = '<div class="kid-log-list">';
       res.logs.forEach(function(log){
         var posCls = log.points>=0 ? 'pos' : 'neg';
@@ -2392,17 +2774,17 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
             +'<div class="kid-log-cat-time">'+(log.date||'')+(log.note?' · '+escapeHtml(log.note):'')+'</div>'
           +'</div>'
           +'<div class="kid-log-pts '+posCls+'">'+sign+log.points+'</div>'
-          +'<button class="kid-log-del" data-id="'+log.id+'" type="button">删除</button>'
+          +'<button class="kid-log-del" data-id="'+log.id+'" type="button">'+t('delete')+'</button>'
           +'</div>';
       });
       html += '</div>';
       c.innerHTML = html;
       c.querySelectorAll('.kid-log-del').forEach(function(b){
         b.onclick = function(){
-          if(!confirm('确定删除这条积分记录？')) return;
+          if(!confirm(KID_LANG==='zh'?'确定删除这条积分记录？':'Delete this record?')) return;
           apiCall('POST','/api/kids/points/delete',{id:parseInt(b.getAttribute('data-id'))}).then(function(r){
-            if(r&&r.ok){toast('已删除');renderKidLogs(c);refreshKidBalance();}
-            else toast(r&&r.error||'删除失败');
+            if(r&&r.ok){toast('✓');renderKidLogs(c);refreshKidBalance();}
+            else toast(r&&r.error||'操作失败');
           });
         };
       });
@@ -2410,34 +2792,31 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
   }
   
   function renderKidRedeem(c){
-    var html = '<div class="kid-tip-box">使用规则：累积 100 分才可使用；吃完饭、写完作业、洗好澡之后才可以使用积分</div>';
-    KID_REDEEM_TYPES.forEach(function(t){
+    var html = '<div class="kid-tip-box">'+t('kid_redeem_rule')+'</div>';
+    KID_REDEEM_TYPES.forEach(function(rt){
       html += '<div class="kid-redeem-card">'
-        +'<div class="kid-redeem-title">'+t.icon+' '+t.name+'</div>'
-        +'<div class="kid-redeem-rule">'+t.rate+(t.max?' · '+t.note:'')+'</div>'
-        +'<button class="kid-redeem-btn" data-type="'+t.key+'" data-name="'+t.name+'" type="button">兑换</button>'
+        +'<div class="kid-redeem-title">'+rt.icon+' '+t(rt.i18n)+'</div>'
+        +'<div class="kid-redeem-rule">'+t(rt.rateKey)+(rt.max?' · '+t(rt.noteKey):'')+'</div>'
+        +'<button class="kid-redeem-btn" data-type="'+rt.key+'" type="button">'+t('btn_redeem')+'</button>'
         +'</div>';
     });
-    // 兑换历史
-    html += '<div style="font-size:13px;color:#8888a8;margin:12px 0 6px">兑换历史</div>';
-    html += '<div id="kidRedeemList"><div style="color:#555570;text-align:center;padding:20px">加载中...</div></div>';
+    html += '<div style="font-size:13px;color:#8888a8;margin:12px 0 6px">'+t('kid_redeem_history')+'</div>';
+    html += '<div id="kidRedeemList"><div style="color:#555570;text-align:center;padding:20px">'+t('loading')+'</div></div>';
     c.innerHTML = html;
     
     c.querySelectorAll('.kid-redeem-btn').forEach(function(b){
       if(!b.getAttribute('data-type')) return;
       b.onclick = function(){
         var type = b.getAttribute('data-type');
-        var name = b.getAttribute('data-name');
-        var typeCfg = KID_REDEEM_TYPES.find(function(t){return t.key===type;});
+        var typeCfg = KID_REDEEM_TYPES.find(function(rt){return rt.key===type;});
         showRedeemDialog(typeCfg);
       };
     });
     
-    // 加载兑换历史
     apiCall('GET','/api/kids/redeems?kid_id='+_curKidId).then(function(res){
       var lc = ge('kidRedeemList'); if(!lc) return;
       if(!res||!res.redeems||!res.redeems.length){
-        lc.innerHTML = '<div style="color:#555570;text-align:center;padding:20px">还没有兑换记录</div>';
+        lc.innerHTML = '<div style="color:#555570;text-align:center;padding:20px">'+t('kid_no_redeem')+'</div>';
         return;
       }
       var lhtml = '<div class="kid-log-list">';
@@ -2448,16 +2827,16 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
             +'<div class="kid-log-cat-time">'+(r.created_at||'').slice(0,16)+'</div>'
           +'</div>'
           +'<div class="kid-log-pts neg">-'+r.points_used+'</div>'
-          +'<button class="kid-log-del" data-rid="'+r.id+'" type="button">撤销</button>'
+          +'<button class="kid-log-del" data-rid="'+r.id+'" type="button">'+t('delete')+'</button>'
           +'</div>';
       });
       lhtml += '</div>';
       lc.innerHTML = lhtml;
       lc.querySelectorAll('.kid-log-del').forEach(function(b){
         b.onclick = function(){
-          if(!confirm('撤销这次兑换？积分会还回来。')) return;
+          if(!confirm(KID_LANG==='zh'?'撤销这次兑换？积分会还回来。':'Undo redemption? Points will be refunded.')) return;
           apiCall('POST','/api/kids/redeem/delete',{id:parseInt(b.getAttribute('data-rid'))}).then(function(r){
-            if(r&&r.ok){toast('已撤销');renderKidSubContent();refreshKidBalance();}
+            if(r&&r.ok){toast('✓');renderKidSubContent();refreshKidBalance();}
             else toast(r&&r.error||'操作失败');
           });
         };
@@ -2465,80 +2844,208 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
     });
   }
   
-  // 添加孩子对话框
+  // ══ 计时器子页面 ══
+  var _timerInterval = null;
+  function renderKidTimer(c){
+    var html = '';
+    
+    // 通知权限提示
+    var perm = notifyPermission();
+    if(perm==='default'){
+      html += '<div class="kid-tip-box" style="background:rgba(251,191,36,.1);border-color:rgba(251,191,36,.3);color:#fcd34d">'
+        +t('kid_timer_notify_perm')
+        +'<div style="margin-top:8px"><button class="kid-redeem-btn" id="kidNotifyBtn" type="button">'+t('kid_timer_notify_btn')+'</button></div>'
+        +'</div>';
+    }
+    
+    // 当前孩子的活动计时器
+    var allTimers = loadTimers();
+    var myTimers = allTimers.filter(function(tm){return tm.kidId===_curKidId;});
+    
+    if(myTimers.length===0){
+      html += '<div style="color:#555570;text-align:center;padding:30px 20px;font-size:13px;line-height:1.6">'+t('kid_timer_no_active')+'</div>';
+    }else{
+      myTimers.forEach(function(tm){
+        var pct = Math.max(0, Math.min(1, tm.remainingSeconds/tm.totalSeconds));
+        var mins = Math.floor(tm.remainingSeconds/60);
+        var secs = tm.remainingSeconds%60;
+        var timeStr = (mins<10?'0':'')+mins+':'+(secs<10?'0':'')+secs;
+        var statusColor = tm.status==='running' ? '#22c55e' : tm.status==='done' ? '#ef4444' : '#fbbf24';
+        var typeName = tm.type==='tv' ? t('redeem_tv') : tm.type==='game' ? t('redeem_game') : tm.type;
+        var typeIcon = tm.type==='tv' ? '📺' : tm.type==='game' ? '🎮' : '⏰';
+        
+        html += '<div class="kid-timer-card" data-timer="'+tm.id+'">'
+          +'<div class="kid-timer-header">'
+            +'<div class="kid-timer-type">'+typeIcon+' '+typeName+'</div>'
+            +'<div class="kid-timer-status" style="color:'+statusColor+'">'+(tm.status==='running'?'⏱':tm.status==='done'?'✓':'⏸')+'</div>'
+          +'</div>'
+          +'<div class="kid-timer-display">'
+            +'<svg width="160" height="160" viewBox="0 0 160 160">'
+              +'<circle cx="80" cy="80" r="70" stroke="rgba(255,255,255,.08)" stroke-width="8" fill="none"/>'
+              +'<circle cx="80" cy="80" r="70" stroke="'+statusColor+'" stroke-width="8" fill="none" stroke-linecap="round" stroke-dasharray="'+(2*Math.PI*70)+'" stroke-dashoffset="'+(2*Math.PI*70*(1-pct))+'" transform="rotate(-90 80 80)" style="transition:stroke-dashoffset 0.5s"/>'
+            +'</svg>'
+            +'<div class="kid-timer-time">'+timeStr+'</div>'
+          +'</div>'
+          +'<div class="kid-timer-btns">';
+        if(tm.status==='idle' || tm.status==='paused'){
+          html += '<button class="kid-redeem-btn" data-act="start" type="button">'+(tm.status==='idle'?t('kid_timer_start'):t('kid_timer_resume'))+'</button>';
+        }
+        if(tm.status==='running'){
+          html += '<button class="kid-redeem-btn" data-act="pause" type="button">'+t('kid_timer_pause')+'</button>';
+        }
+        if(tm.status!=='idle'){
+          html += '<button class="kid-redeem-btn" data-act="reset" type="button">'+t('kid_timer_reset')+'</button>';
+        }
+        html += '<button class="kid-redeem-btn" data-act="remove" type="button" style="background:rgba(239,68,68,.1);color:#ef4444;border-color:rgba(239,68,68,.3)">'+t('kid_timer_remove')+'</button>'
+          +'</div></div>';
+      });
+    }
+    
+    c.innerHTML = html;
+    
+    if(perm==='default'){
+      var nb = ge('kidNotifyBtn');
+      if(nb) nb.onclick = function(){ requestNotifyPermission(function(ok){ renderKidTimer(c); }); };
+    }
+    
+    // 绑定计时器按钮
+    c.querySelectorAll('.kid-timer-card').forEach(function(card){
+      var tid = card.getAttribute('data-timer');
+      card.querySelectorAll('[data-act]').forEach(function(b){
+        b.onclick = function(){
+          var act = b.getAttribute('data-act');
+          var arr = loadTimers();
+          var tm = arr.find(function(x){return x.id===tid;});
+          if(!tm) return;
+          if(act==='start'){
+            tm.status = 'running';
+            tm.startedAt = Date.now();
+            updateTimer(tid, {status:'running', startedAt:Date.now()});
+          }else if(act==='pause'){
+            // 计算消耗的时间
+            if(tm.startedAt){
+              var elapsed = Math.floor((Date.now()-tm.startedAt)/1000);
+              tm.remainingSeconds = Math.max(0, tm.remainingSeconds - elapsed);
+            }
+            updateTimer(tid, {status:'paused', remainingSeconds:tm.remainingSeconds, startedAt:null});
+          }else if(act==='reset'){
+            updateTimer(tid, {status:'idle', remainingSeconds:tm.totalSeconds, startedAt:null});
+          }else if(act==='remove'){
+            if(!confirm(KID_LANG==='zh'?'删除此计时器？':'Remove this timer?')) return;
+            removeTimer(tid);
+          }
+          renderKidTimer(c);
+        };
+      });
+    });
+    
+    // 在计时器页面时，每秒刷新 UI（实际倒计时由全局监听处理）
+    if(_timerInterval) clearInterval(_timerInterval);
+    if(myTimers.some(function(t){return t.status==='running';})){
+      _timerInterval = setInterval(function(){
+        if(_kidSubTab!=='timer' || !ge('kidPageContent')){clearInterval(_timerInterval);_timerInterval=null;return;}
+        renderKidTimer(c);
+      }, 1000);
+    }
+  }
+  
+  // 添加孩子对话框（带 SVG 头像选择）
   function showAddKidDialog(){
+    var selectedAvatar = 'happy';
     var mask = document.createElement('div'); mask.className='manage-mask';
     var box = document.createElement('div'); box.className='manage-box';
-    box.innerHTML = '<div class="manage-title">添加孩子</div>'
-      +'<div class="manage-row"><label>姓名</label><input id="kidAddName" maxlength="20" placeholder="例如：Bobo"></div>'
-      +'<div class="manage-row"><label>头像 emoji</label><input id="kidAddAvatar" maxlength="2" value="👶" style="width:60px;text-align:center;font-size:24px"></div>'
-      +'<div class="manage-row"><label>上周结余 (可选)</label><input id="kidAddLwb" type="number" placeholder="0"></div>'
-      +'<div class="manage-actions"><button class="manage-btn" id="kidAddCancel" type="button">取消</button>'
-      +'<button class="manage-btn primary" id="kidAddOk" type="button">添加</button></div>';
+    var avatarHtml = '<div class="kid-avatar-grid">';
+    KID_AVATARS.forEach(function(a){
+      avatarHtml += '<div class="kid-avatar-opt'+(a.id===selectedAvatar?' selected':'')+'" data-aid="'+a.id+'">'+getAvatarSvg(a.id,44)+'</div>';
+    });
+    avatarHtml += '</div>';
+    box.innerHTML = '<div class="manage-title">'+t('kid_dlg_add')+'</div>'
+      +'<div class="manage-row"><label>'+t('kid_field_name')+'</label><input id="kidAddName" maxlength="20" placeholder="'+t('kid_name_placeholder')+'"></div>'
+      +'<div class="manage-row"><label>'+t('kid_field_avatar')+'</label>'+avatarHtml+'</div>'
+      +'<div class="manage-row"><label>'+t('kid_field_lwb')+'</label><input id="kidAddLwb" type="number" placeholder="0"></div>'
+      +'<div class="manage-actions"><button class="manage-btn" id="kidAddCancel" type="button">'+t('cancel')+'</button>'
+      +'<button class="manage-btn primary" id="kidAddOk" type="button">'+t('add')+'</button></div>';
     mask.appendChild(box); document.body.appendChild(mask);
     box.querySelector('#kidAddCancel').onclick = function(){document.body.removeChild(mask);};
     mask.onclick = function(e){if(e.target===mask)document.body.removeChild(mask);};
+    box.querySelectorAll('.kid-avatar-opt').forEach(function(o){
+      o.onclick = function(){
+        box.querySelectorAll('.kid-avatar-opt').forEach(function(x){x.classList.remove('selected');});
+        o.classList.add('selected');
+        selectedAvatar = o.getAttribute('data-aid');
+      };
+    });
     box.querySelector('#kidAddOk').onclick = function(){
       var name = box.querySelector('#kidAddName').value.trim();
-      var avatar = box.querySelector('#kidAddAvatar').value.trim() || '👶';
       var lwb = parseInt(box.querySelector('#kidAddLwb').value) || 0;
-      if(!name){toast('请输入姓名');return;}
-      apiCall('POST','/api/kids',{name:name, avatar:avatar, last_week_balance:lwb}).then(function(r){
+      if(!name){toast(t('kid_field_name'));return;}
+      apiCall('POST','/api/kids',{name:name, avatar:selectedAvatar, last_week_balance:lwb}).then(function(r){
         if(r&&r.ok){
-          toast('添加成功 ✓');
+          safePlay(playSoundDone);
+          toast(t('toast_added')+' ✓');
           document.body.removeChild(mask);
           _curKidId = r.kid_id;
           loadKidPage();
         }else{
-          toast(r&&r.error||'添加失败');
+          toast(r&&r.error||'失败');
         }
       });
     };
   }
   
-  // 编辑孩子
   function showEditKidDialog(kidId){
     var k = _kidsList.find(function(x){return x.id===kidId;});
     if(!k) return;
+    var selectedAvatar = k.avatar_emoji && KID_AVATARS.find(function(a){return a.id===k.avatar_emoji;}) ? k.avatar_emoji : 'happy';
     var mask = document.createElement('div'); mask.className='manage-mask';
     var box = document.createElement('div'); box.className='manage-box';
-    box.innerHTML = '<div class="manage-title">编辑孩子信息</div>'
-      +'<div class="manage-row"><label>姓名</label><input id="kidEdName" maxlength="20" value="'+escapeHtml(k.name)+'"></div>'
-      +'<div class="manage-row"><label>头像</label><input id="kidEdAvatar" maxlength="2" value="'+(k.avatar_emoji||'👶')+'" style="width:60px;text-align:center;font-size:24px"></div>'
-      +'<div class="manage-row"><label>上周结余</label><input id="kidEdLwb" type="number" value="'+(k.last_week_balance||0)+'"></div>'
-      +'<div class="manage-actions"><button class="manage-btn" id="kidEdCancel" type="button">取消</button>'
-      +'<button class="manage-btn primary" id="kidEdOk" type="button">保存</button></div>';
+    var avatarHtml = '<div class="kid-avatar-grid">';
+    KID_AVATARS.forEach(function(a){
+      avatarHtml += '<div class="kid-avatar-opt'+(a.id===selectedAvatar?' selected':'')+'" data-aid="'+a.id+'">'+getAvatarSvg(a.id,44)+'</div>';
+    });
+    avatarHtml += '</div>';
+    box.innerHTML = '<div class="manage-title">'+t('kid_dlg_edit')+'</div>'
+      +'<div class="manage-row"><label>'+t('kid_field_name')+'</label><input id="kidEdName" maxlength="20" value="'+escapeHtml(k.name)+'"></div>'
+      +'<div class="manage-row"><label>'+t('kid_field_avatar')+'</label>'+avatarHtml+'</div>'
+      +'<div class="manage-row"><label>'+t('kid_field_lwb')+'</label><input id="kidEdLwb" type="number" value="'+(k.last_week_balance||0)+'"></div>'
+      +'<div class="manage-actions"><button class="manage-btn" id="kidEdCancel" type="button">'+t('cancel')+'</button>'
+      +'<button class="manage-btn primary" id="kidEdOk" type="button">'+t('save')+'</button></div>';
     mask.appendChild(box); document.body.appendChild(mask);
     box.querySelector('#kidEdCancel').onclick = function(){document.body.removeChild(mask);};
     mask.onclick = function(e){if(e.target===mask)document.body.removeChild(mask);};
+    box.querySelectorAll('.kid-avatar-opt').forEach(function(o){
+      o.onclick = function(){
+        box.querySelectorAll('.kid-avatar-opt').forEach(function(x){x.classList.remove('selected');});
+        o.classList.add('selected');
+        selectedAvatar = o.getAttribute('data-aid');
+      };
+    });
     box.querySelector('#kidEdOk').onclick = function(){
       var name = box.querySelector('#kidEdName').value.trim();
-      var avatar = box.querySelector('#kidEdAvatar').value.trim() || '👶';
       var lwb = parseInt(box.querySelector('#kidEdLwb').value) || 0;
-      if(!name){toast('请输入姓名');return;}
-      apiCall('POST','/api/kids/update',{kid_id:kidId, name:name, avatar:avatar, last_week_balance:lwb}).then(function(r){
+      if(!name){toast(t('kid_field_name'));return;}
+      apiCall('POST','/api/kids/update',{kid_id:kidId, name:name, avatar:selectedAvatar, last_week_balance:lwb}).then(function(r){
         if(r&&r.ok){
-          toast('已更新 ✓');
+          toast('✓');
           document.body.removeChild(mask);
           loadKidPage();
         }else{
-          toast(r&&r.error||'更新失败');
+          toast(r&&r.error||'失败');
         }
       });
     };
   }
   
-  // 申请删除
   function showDeleteKidDialog(kidId){
     var k = _kidsList.find(function(x){return x.id===kidId;});
     if(!k) return;
     var mask = document.createElement('div'); mask.className='manage-mask';
     var box = document.createElement('div'); box.className='manage-box';
-    box.innerHTML = '<div class="manage-title">申请删除「'+escapeHtml(k.name)+'」</div>'
-      +'<div style="font-size:13px;color:#8888a8;line-height:1.5;margin-bottom:12px">删除孩子需要管理员审批。提交后所有积分记录将被保留，但孩子从你的列表中消失。</div>'
-      +'<div class="manage-row"><label>申请原因 (可选)</label><textarea id="kidDelReason" maxlength="200" rows="3" style="width:100%;background:rgba(255,255,255,.04);color:#e8e8f0;border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:8px;font-family:inherit;resize:none"></textarea></div>'
-      +'<div class="manage-actions"><button class="manage-btn" id="kidDelCancel" type="button">取消</button>'
-      +'<button class="manage-btn primary" id="kidDelOk" type="button" style="background:#ef4444">提交申请</button></div>';
+    box.innerHTML = '<div class="manage-title">'+t('kid_dlg_del')+' 「'+escapeHtml(k.name)+'」</div>'
+      +'<div style="font-size:13px;color:#8888a8;line-height:1.5;margin-bottom:12px">'+t('kid_del_warn')+'</div>'
+      +'<div class="manage-row"><label>'+t('kid_field_reason')+'</label><textarea id="kidDelReason" maxlength="200" rows="3" style="width:100%;background:rgba(255,255,255,.04);color:#e8e8f0;border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:8px;font-family:inherit;resize:none"></textarea></div>'
+      +'<div class="manage-actions"><button class="manage-btn" id="kidDelCancel" type="button">'+t('cancel')+'</button>'
+      +'<button class="manage-btn primary" id="kidDelOk" type="button" style="background:#ef4444">'+t('kid_submit')+'</button></div>';
     mask.appendChild(box); document.body.appendChild(mask);
     box.querySelector('#kidDelCancel').onclick = function(){document.body.removeChild(mask);};
     mask.onclick = function(e){if(e.target===mask)document.body.removeChild(mask);};
@@ -2546,53 +3053,73 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
       var reason = box.querySelector('#kidDelReason').value.trim();
       apiCall('POST','/api/kids/delete-request',{kid_id:kidId, reason:reason}).then(function(r){
         if(r&&r.ok){
-          toast('申请已提交 ✓');
+          toast('✓');
           document.body.removeChild(mask);
         }else{
-          toast(r&&r.error||'提交失败');
+          toast(r&&r.error||'失败');
         }
       });
     };
   }
   
-  // 兑换对话框
+  // 兑换对话框（兑换看电视/游戏后自动创建定时器）
   function showRedeemDialog(typeCfg){
     var mask = document.createElement('div'); mask.className='manage-mask';
     var box = document.createElement('div'); box.className='manage-box';
-    var maxHint = typeCfg.max>0 ? '（最多 '+typeCfg.max+'）' : '';
-    box.innerHTML = '<div class="manage-title">'+typeCfg.icon+' 兑换：'+typeCfg.name+'</div>'
-      +'<div style="font-size:12px;color:#8888a8;margin-bottom:12px">'+typeCfg.rate+(typeCfg.note?' · '+typeCfg.note:'')+'</div>'
-      +'<div class="manage-row"><label>使用积分'+maxHint+'</label><input id="rdPoints" type="number" placeholder="例如 30" min="1"'+(typeCfg.max?' max="'+typeCfg.max+'"':'')+'></div>'
-      +'<div class="manage-row"><label>用途说明 (可选)</label><input id="rdNote" maxlength="100" placeholder="例如：买冰淇淋"></div>'
-      +'<div class="manage-actions"><button class="manage-btn" id="rdCancel" type="button">取消</button>'
-      +'<button class="manage-btn primary" id="rdOk" type="button">确认兑换</button></div>';
+    var maxHint = typeCfg.max>0 ? t('kid_redeem_max')+typeCfg.max+')' : '';
+    box.innerHTML = '<div class="manage-title">'+typeCfg.icon+' '+t('kid_redeem_dlg')+t(typeCfg.i18n)+'</div>'
+      +'<div style="font-size:12px;color:#8888a8;margin-bottom:12px">'+t(typeCfg.rateKey)+(typeCfg.noteKey?' · '+t(typeCfg.noteKey):'')+'</div>'
+      +'<div class="manage-row"><label>'+t('kid_redeem_pts')+maxHint+'</label><input id="rdPoints" type="number" placeholder="30" min="1"'+(typeCfg.max?' max="'+typeCfg.max+'"':'')+'></div>'
+      +'<div class="manage-row"><label>'+t('kid_redeem_note')+'</label><input id="rdNote" maxlength="100"></div>'
+      +'<div class="manage-actions"><button class="manage-btn" id="rdCancel" type="button">'+t('cancel')+'</button>'
+      +'<button class="manage-btn primary" id="rdOk" type="button">'+t('kid_redeem_confirm')+'</button></div>';
     mask.appendChild(box); document.body.appendChild(mask);
     box.querySelector('#rdCancel').onclick = function(){document.body.removeChild(mask);};
     mask.onclick = function(e){if(e.target===mask)document.body.removeChild(mask);};
     box.querySelector('#rdOk').onclick = function(){
       var pts = parseInt(box.querySelector('#rdPoints').value);
       var note = box.querySelector('#rdNote').value.trim();
-      if(!pts || pts<=0){toast('请输入有效积分');return;}
-      if(typeCfg.max>0 && pts>typeCfg.max){toast('一次最多兑换 '+typeCfg.max+' 积分');return;}
-      // 计算 value_text
+      if(!pts || pts<=0){toast('?');return;}
+      if(typeCfg.max>0 && pts>typeCfg.max){toast(t('kid_redeem_max').slice(1)+typeCfg.max);return;}
       var valueText = '';
-      if(typeCfg.key==='tv') valueText = (pts/5*10)+' 分钟';
-      else if(typeCfg.key==='game') valueText = pts+' 分钟';
-      else if(typeCfg.key==='shopping') valueText = pts+' THB';
-      apiCall('POST','/api/kids/redeem',{kid_id:_curKidId, type:typeCfg.name, points_used:pts, value_text:valueText, note:note}).then(function(r){
+      var minutes = 0;
+      if(typeCfg.key==='tv'){ minutes = pts/typeCfg.timerRate*typeCfg.timerMin; valueText = minutes+t('kid_redeem_minutes'); }
+      else if(typeCfg.key==='game'){ minutes = pts/typeCfg.timerRate*typeCfg.timerMin; valueText = minutes+t('kid_redeem_minutes'); }
+      else if(typeCfg.key==='shopping'){ valueText = pts+t('kid_redeem_thb'); }
+      apiCall('POST','/api/kids/redeem',{kid_id:_curKidId, type:t(typeCfg.i18n), points_used:pts, value_text:valueText, note:note}).then(function(r){
         if(r&&r.ok){
-          toast('兑换成功，剩余 '+r.balance+' 积分');
+          safePlay(playSoundDone);
+          // 创建定时器（看电视/玩游戏）
+          if(typeCfg.timer && minutes>0){
+            var timer = {
+              id: 'tm_'+Date.now()+'_'+Math.random().toString(36).slice(2,7),
+              kidId: _curKidId,
+              type: typeCfg.key,
+              totalSeconds: minutes*60,
+              remainingSeconds: minutes*60,
+              status: 'idle',
+              startedAt: null,
+              createdAt: Date.now()
+            };
+            addTimer(timer);
+            toast(t('kid_redeem_success')+r.balance+t('kid_redeem_unit')+' '+t('kid_redeem_success_emoji'));
+            // 切换到计时器 tab
+            _kidSubTab = 'timer';
+            renderKidPage();
+          }else{
+            toast(t('kid_redeem_success')+r.balance+t('kid_redeem_unit')+' '+t('kid_redeem_success_emoji'));
+            renderKidSubContent();
+            refreshKidBalance();
+          }
           document.body.removeChild(mask);
-          renderKidSubContent();
-          refreshKidBalance();
         }else{
-          toast(r&&r.error||'兑换失败');
+          toast(r&&r.error||'失败');
         }
       });
     };
   }
   
-  function escapeHtml(s){
+    function escapeHtml(s){
     if(s==null)return '';
     return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[c];});
   }
@@ -2644,7 +3171,7 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
     html+='<div class="my-section">'
       +'<div class="my-item danger" data-act="logout"><span class="my-item-icon">🚪</span><span class="my-item-text">退出登录</span></div>'
       +'</div>';
-    html+='<div style="text-align:center;color:#555570;font-size:11px;padding:16px 0 4px">每日打卡系统 v5.1-001</div>';
+    html+='<div style="text-align:center;color:#555570;font-size:11px;padding:16px 0 4px">每日打卡系统 v5.2-001</div>';
     
     c.innerHTML=html;
     
