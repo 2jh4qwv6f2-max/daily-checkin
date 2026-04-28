@@ -177,6 +177,14 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
 .manage-mask{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.85);z-index:300;display:flex;align-items:center;justify-content:center;padding:16px}
 .manage-box{background:#1a1a2e;border-radius:20px;border:1px solid rgba(255,255,255,.08);width:100%;max-width:440px;max-height:80vh;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:20px}
 .manage-title{font-size:17px;font-weight:700;color:#e8e8f0;margin-bottom:16px;text-align:center}
+.manage-row{margin-bottom:12px}
+.manage-row label{display:block;font-size:12px;color:#8888a8;margin-bottom:4px}
+.manage-row input,.manage-row textarea,.manage-row select{width:100%;background:rgba(255,255,255,.04);color:#e8e8f0;border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:8px 10px;font-family:inherit;font-size:14px;box-sizing:border-box;outline:none}
+.manage-row input:focus,.manage-row textarea:focus{border-color:#6366f1}
+.manage-actions{display:flex;gap:8px;margin-top:16px}
+.manage-btn{flex:1;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);color:#e8e8f0;font-family:inherit;font-size:14px;font-weight:600;cursor:pointer}
+.manage-btn:active{transform:scale(0.97)}
+.manage-btn.primary{background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;border-color:transparent}
 .manage-hint{font-size:12px;color:#8888a8;margin-bottom:12px}
 .manage-list{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
 .manage-item{display:inline-flex;align-items:center;gap:4px;padding:5px 10px;border-radius:8px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);color:#a0a0c0;font-size:13px}
@@ -268,6 +276,60 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
 .dc-good label.dc-item input.chk:checked + .rw .bx{background:#22c55e;border-color:#22c55e}
 
 /* ══ 底部导航（Instagram 风格）══ */
+
+/* ══ 积分页面 ══ */
+.kid-page{display:flex;flex-direction:column;gap:10px}
+.kid-empty{text-align:center;padding:40px 20px;color:#8888a8}
+.kid-empty-emoji{font-size:48px;margin-bottom:12px}
+.kid-empty-tip{font-size:14px;line-height:1.6}
+.kid-empty-btn{display:inline-block;margin-top:16px;padding:10px 24px;background:linear-gradient(135deg,#fbbf24,#f59e0b);color:#1c1c2e;border:none;border-radius:24px;font-weight:700;cursor:pointer;font-family:inherit;font-size:14px}
+
+.kid-tabs{display:flex;gap:8px;overflow-x:auto;padding:4px 0;-webkit-overflow-scrolling:touch}
+.kid-tabs::-webkit-scrollbar{display:none}
+.kid-tab{flex-shrink:0;display:flex;align-items:center;gap:6px;padding:8px 14px;background:#1c1c2e;border:1px solid rgba(255,255,255,.06);border-radius:20px;cursor:pointer;color:#8888a8;font-size:14px;font-family:inherit}
+.kid-tab.active{background:linear-gradient(135deg,#fbbf24,#f59e0b);color:#1c1c2e;border-color:transparent;font-weight:700}
+.kid-tab-add{flex-shrink:0;width:36px;height:36px;border-radius:50%;background:rgba(251,191,36,.15);border:1px dashed rgba(251,191,36,.4);color:#fbbf24;font-size:18px;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center}
+
+.kid-balance-card{background:linear-gradient(135deg,rgba(251,191,36,.15),rgba(245,158,11,.08));border:1px solid rgba(251,191,36,.3);border-radius:16px;padding:18px 20px;text-align:center}
+.kid-balance-label{font-size:12px;color:#8888a8;margin-bottom:6px}
+.kid-balance-num{font-size:36px;font-weight:900;color:#fbbf24;line-height:1}
+.kid-balance-sub{font-size:11px;color:#8888a8;margin-top:6px}
+
+.kid-subnav{display:flex;background:#1c1c2e;border-radius:12px;padding:4px;border:1px solid rgba(255,255,255,.06)}
+.kid-subnav-btn{flex:1;padding:8px;background:transparent;border:none;color:#8888a8;font-size:13px;cursor:pointer;border-radius:8px;font-family:inherit;font-weight:500}
+.kid-subnav-btn.active{background:rgba(251,191,36,.15);color:#fbbf24;font-weight:700}
+
+.kid-cat{background:#1c1c2e;border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:14px;margin-bottom:10px}
+.kid-cat-title{font-size:14px;font-weight:700;color:#e8e8f0;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.kid-cat-pos{border-left:3px solid #22c55e}
+.kid-cat-neg{border-left:3px solid #ef4444}
+.kid-cat-desc{font-size:11px;color:#8888a8;margin-bottom:10px;line-height:1.5}
+.kid-pt-btns{display:flex;gap:6px;flex-wrap:wrap}
+.kid-pt-btn{padding:8px 12px;border-radius:18px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04);color:#e8e8f0;cursor:pointer;font-size:13px;font-family:inherit;font-weight:600;display:flex;align-items:center;gap:4px}
+.kid-pt-btn.pos{color:#22c55e;border-color:rgba(34,197,94,.3)}
+.kid-pt-btn.pos:active{background:rgba(34,197,94,.15)}
+.kid-pt-btn.neg{color:#ef4444;border-color:rgba(239,68,68,.3)}
+.kid-pt-btn.neg:active{background:rgba(239,68,68,.15)}
+
+.kid-log-list{background:#1c1c2e;border:1px solid rgba(255,255,255,.06);border-radius:12px;overflow:hidden}
+.kid-log-row{display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid rgba(255,255,255,.04);font-size:13px}
+.kid-log-row:last-child{border-bottom:none}
+.kid-log-cat{flex:1;min-width:0}
+.kid-log-cat-name{color:#e8e8f0;font-weight:500}
+.kid-log-cat-time{color:#555570;font-size:11px;margin-top:2px}
+.kid-log-pts{font-weight:700;font-size:14px;flex-shrink:0}
+.kid-log-pts.pos{color:#22c55e}
+.kid-log-pts.neg{color:#ef4444}
+.kid-log-del{padding:4px 8px;color:#ef4444;cursor:pointer;font-size:12px;background:transparent;border:none;font-family:inherit;flex-shrink:0}
+
+.kid-redeem-card{background:#1c1c2e;border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:14px;margin-bottom:10px}
+.kid-redeem-title{font-size:14px;font-weight:700;color:#e8e8f0;margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.kid-redeem-rule{font-size:11px;color:#8888a8;line-height:1.5;margin-bottom:10px}
+.kid-redeem-btn{display:inline-block;padding:6px 16px;background:rgba(251,191,36,.15);color:#fbbf24;border:1px solid rgba(251,191,36,.3);border-radius:14px;cursor:pointer;font-size:13px;font-family:inherit;font-weight:600}
+
+.kid-tab-edit-btn{margin-left:8px;background:transparent;border:none;color:#8888a8;cursor:pointer;font-size:14px;padding:0}
+
+.kid-tip-box{background:rgba(96,165,250,.08);border:1px solid rgba(96,165,250,.2);border-radius:10px;padding:10px 12px;font-size:12px;color:#93c5fd;line-height:1.5}
 .nav-bar{position:fixed;bottom:0;left:0;right:0;background:#0d0d18;border-top:1px solid rgba(255,255,255,.06);display:flex;justify-content:space-around;align-items:center;height:60px;z-index:99;padding-bottom:env(safe-area-inset-bottom)}
 .nav-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;background:transparent;border:none;color:#8888a8;font-size:11px;cursor:pointer;padding:8px 0;font-family:inherit;-webkit-tap-highlight-color:transparent;transition:transform .15s}
 .nav-item:active{transform:scale(0.92)}
@@ -480,13 +542,17 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
     </div>
   </div>
 </div>
+<div class="pnl" id="sKid">
+  <div class="kid-page" id="kidPageContent"></div>
+</div>
 <div class="pnl" id="sMe"><div class="my-page" id="myPageContent"></div></div>
 </div>
 <div class="bot" id="botBar"><div class="bi"><button class="bn bs" id="btnR" type="button">↺ 重置</button><button class="bn bp" id="btnS" type="button">📸 生成截图</button></div></div>
 <nav class="nav-bar" id="navBar">
   <button class="nav-item active" data-nav="0" type="button"><span class="nav-icon">🏠</span><span class="nav-label">打卡</span></button>
   <button class="nav-item" data-nav="1" type="button"><span class="nav-icon">📚</span><span class="nav-label">学习</span></button>
-  <button class="nav-item" data-nav="2" type="button"><span class="nav-icon">👤</span><span class="nav-label">我的</span><span class="nav-badge" id="myBadge" style="display:none">0</span></button>
+  <button class="nav-item" data-nav="2" type="button"><span class="nav-icon">🌟</span><span class="nav-label">积分</span></button>
+  <button class="nav-item" data-nav="3" type="button"><span class="nav-icon">👤</span><span class="nav-label">我的</span><span class="nav-badge" id="myBadge" style="display:none">0</span></button>
 </nav>
 <script>
 (function(){
@@ -525,7 +591,7 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
   });
 
   function getCurDT(){var d=ge('pD').value,t=ge('pT').value;if(d&&t)return new Date(d+'T'+t);return new Date();}
-  var tbs=[ge('t0'),ge('t1'),ge('t2'),ge('t3')],pns=[ge('s0'),ge('s1'),ge('s2'),ge('s3'),ge('s4'),ge('s5'),ge('s6'),ge('sMe')],tcls=['am','pm','em','dc'];
+  var tbs=[ge('t0'),ge('t1'),ge('t2'),ge('t3')],pns=[ge('s0'),ge('s1'),ge('s2'),ge('s3'),ge('s4'),ge('s5'),ge('s6'),ge('sKid'),ge('sMe')],tcls=['am','pm','em','dc'];
 
   // Tab切换：用position:absolute移出屏幕（不是display:none）
   // 当前底部导航位置（0=打卡, 1=学习, 2=我的）
@@ -561,7 +627,7 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
     currentNav=navIdx;
     // 写入 URL hash，便于子页面返回时恢复到对应 tab
     try{
-      var hashMap=['','#learn','#me'];
+      var hashMap=['','#learn','#points','#me'];
       var newHash=hashMap[navIdx]||'';
       if(window.location.hash!==newHash){
         history.replaceState(null,'',window.location.pathname+newHash);
@@ -594,13 +660,22 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
       pns[4].className='pnl vis';
       loadLearnList();
     }else if(navIdx===2){
+      // 积分
+      topTabs.style.display='none';
+      dtRow.style.display='none';
+      botBar.style.display='none';
+      if(progBar)progBar.style.display='none';
+      ge('logoTitle').textContent='🌟 积分';
+      pns[7].className='pnl vis';
+      loadKidPage();
+    }else if(navIdx===3){
       // 我的
       topTabs.style.display='none';
       dtRow.style.display='none';
       botBar.style.display='none';
       if(progBar)progBar.style.display='none';
       ge('logoTitle').textContent='👤 我的';
-      pns[7].className='pnl vis';
+      pns[8].className='pnl vis';
       loadMyPage();
     }
     // 滚动到顶部，避免上一页滚动状态残留
@@ -1511,7 +1586,8 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
     try{
       var h=window.location.hash;
       if(h==='#learn')initNav=1;
-      else if(h==='#me')initNav=2;
+      else if(h==='#points')initNav=2;
+      else if(h==='#me')initNav=3;
     }catch(e){}
     navTo(initNav);
     // 切换好 panel 后再隐藏登录页，用户直接看到目标 tab
@@ -2109,6 +2185,419 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
     }
   }
 
+
+  // ══════════════════════════════════════════════
+  // 积分系统
+  // ══════════════════════════════════════════════
+  
+  // 项目分类配置（来源 PDF）
+  var KID_CATEGORIES_POS = [
+    {key:'homework',name:'写作业',icon:'📝',desc:'写作业 1 页 +10 分；测试写对一题 +5 分',options:[5,10,25]},
+    {key:'math',name:'数学',icon:'🔢',desc:'测试对题 +5；99 乘法口诀全对 +25',options:[5,15,25]},
+    {key:'english',name:'英语',icon:'🇬🇧',desc:'阅读对 +5~15；写 0-100 全对 +25；拼写对 +5',options:[5,15,25]},
+    {key:'chinese',name:'中文',icon:'🇨🇳',desc:'阅读对 +3；认真写字一字 +5',options:[3,5,15,25]},
+    {key:'meal',name:'吃饭',icon:'🍱',desc:'好好吃饭 +5~25；吃肉/吃菜 +10；好好吃饭 +15',options:[5,10,15,25]},
+    {key:'sleeping',name:'睡觉',icon:'😴',desc:'听话睡午觉 +15',options:[5,15,25]},
+    {key:'brushteeth',name:'刷牙',icon:'🪥',desc:'自己刷牙干净 +5',options:[5]},
+    {key:'washface',name:'洗脸',icon:'🧼',desc:'自己洗脸干净 +5',options:[5]},
+    {key:'sayhello',name:'说你好',icon:'👋',desc:'说一次你好 +5',options:[5]}
+  ];
+  var KID_CATEGORIES_NEG = [
+    {key:'no_homework',name:'不写作业',icon:'❌',desc:'不写作业一次 -25',options:[-25]},
+    {key:'not_serious',name:'不认真',icon:'😒',desc:'上课/补习不认真 -5~25',options:[-5,-15,-25]},
+    {key:'forgot',name:'忘记东西',icon:'🤔',desc:'忘记书本/作业/水瓶 -15',options:[-15]},
+    {key:'no_meal',name:'不好好吃饭',icon:'🍽️',desc:'不好好吃饭 -5~25',options:[-5,-15,-25]},
+    {key:'no_sleep',name:'不睡觉',icon:'😫',desc:'不睡午觉 -15',options:[-15]},
+    {key:'no_brush',name:'不刷牙',icon:'🦷',desc:'不刷牙 -15',options:[-5,-15]},
+    {key:'no_wash',name:'不洗脸',icon:'😶',desc:'不洗脸 -15',options:[-5,-15]},
+    {key:'no_hello',name:'不说你好',icon:'🙊',desc:'不说你好 -5',options:[-5]}
+  ];
+  // 兑换规则
+  var KID_REDEEM_TYPES = [
+    {key:'tv',name:'看电视',icon:'📺',rate:'5 积分 = 10 分钟',max:30,note:'一次最多 30 积分 = 60 分钟'},
+    {key:'game',name:'玩游戏',icon:'🎮',rate:'10 积分 = 10 分钟',max:50,note:'一次最多 50 积分 = 50 分钟'},
+    {key:'shopping',name:'美食/玩/购物',icon:'🍦',rate:'1 积分 = 1 THB',max:0,note:'按需兑换泰铢'}
+  ];
+  
+  // 积分页状态
+  var _kidsList = [];
+  var _curKidId = null;
+  var _kidSubTab = 'today'; // today / balance / redeem
+  
+  function loadKidPage(){
+    apiCall('GET','/api/kids').then(function(res){
+      _kidsList = (res && res.kids) || [];
+      renderKidPage();
+    });
+  }
+  
+  function renderKidPage(){
+    var c = ge('kidPageContent'); if(!c) return;
+    
+    // 没有孩子时显示空态
+    if(_kidsList.length===0){
+      c.innerHTML = '<div class="kid-empty">'
+        +'<div class="kid-empty-emoji">👶</div>'
+        +'<div class="kid-empty-tip">还没有孩子<br>添加一个开始记录积分吧</div>'
+        +'<button class="kid-empty-btn" id="kidAddFirst" type="button">+ 添加孩子</button>'
+        +'</div>';
+      ge('kidAddFirst').onclick = showAddKidDialog;
+      return;
+    }
+    
+    // 找当前孩子（默认第一个）
+    if(!_curKidId || !_kidsList.find(function(k){return k.id===_curKidId;})){
+      _curKidId = _kidsList[0].id;
+    }
+    
+    var html = '';
+    // 孩子 tabs
+    html += '<div class="kid-tabs">';
+    _kidsList.forEach(function(k){
+      var act = k.id===_curKidId ? ' active' : '';
+      html += '<button class="kid-tab'+act+'" data-kid="'+k.id+'" type="button">'
+        +(k.avatar_emoji||'👶')+' '+escapeHtml(k.name)+'</button>';
+    });
+    html += '<button class="kid-tab-add" id="kidAddBtn" type="button">+</button>';
+    html += '</div>';
+    
+    // 余额卡片
+    html += '<div class="kid-balance-card" id="kidBalanceCard">'
+      +'<div class="kid-balance-label">当前余额</div>'
+      +'<div class="kid-balance-num" id="kidBalanceNum">--</div>'
+      +'<div class="kid-balance-sub" id="kidBalanceSub">加载中...</div>'
+      +'</div>';
+    
+    // 子导航
+    html += '<div class="kid-subnav">'
+      +'<button class="kid-subnav-btn'+(_kidSubTab==='today'?' active':'')+'" data-sub="today" type="button">📊 录入</button>'
+      +'<button class="kid-subnav-btn'+(_kidSubTab==='balance'?' active':'')+'" data-sub="balance" type="button">📋 记录</button>'
+      +'<button class="kid-subnav-btn'+(_kidSubTab==='redeem'?' active':'')+'" data-sub="redeem" type="button">🎁 兑换</button>'
+      +'</div>';
+    
+    // 子内容容器
+    html += '<div id="kidSubContent"></div>';
+    
+    // 操作区（编辑/删除当前孩子）
+    html += '<div style="text-align:center;padding:8px 0">'
+      +'<button class="kid-redeem-btn" id="kidEditBtn" type="button" style="margin-right:8px">✏️ 编辑</button>'
+      +'<button class="kid-redeem-btn" id="kidDelBtn" type="button" style="background:rgba(239,68,68,.1);color:#ef4444;border-color:rgba(239,68,68,.3)">🗑️ 申请删除</button>'
+      +'</div>';
+    
+    c.innerHTML = html;
+    
+    // 绑定事件
+    c.querySelectorAll('.kid-tab').forEach(function(t){
+      t.onclick = function(){
+        _curKidId = parseInt(t.getAttribute('data-kid'));
+        renderKidPage();
+      };
+    });
+    ge('kidAddBtn').onclick = showAddKidDialog;
+    c.querySelectorAll('.kid-subnav-btn').forEach(function(b){
+      b.onclick = function(){
+        _kidSubTab = b.getAttribute('data-sub');
+        renderKidPage();
+      };
+    });
+    ge('kidEditBtn').onclick = function(){ showEditKidDialog(_curKidId); };
+    ge('kidDelBtn').onclick  = function(){ showDeleteKidDialog(_curKidId); };
+    
+    // 加载余额
+    refreshKidBalance();
+    // 加载子内容
+    renderKidSubContent();
+  }
+  
+  function refreshKidBalance(){
+    if(!_curKidId) return;
+    apiCall('GET','/api/kids/balance?kid_id='+_curKidId).then(function(res){
+      if(!res) return;
+      var num = ge('kidBalanceNum'); var sub = ge('kidBalanceSub');
+      if(num) num.textContent = res.balance!=null ? res.balance : '--';
+      if(sub){
+        sub.textContent = '上周结余 '+(res.last_week_balance||0)+' · 已得 '+(res.earned||0)+' · 已用 '+(res.used||0);
+      }
+    });
+  }
+  
+  function renderKidSubContent(){
+    var c = ge('kidSubContent'); if(!c) return;
+    c.innerHTML = '';
+    if(_kidSubTab==='today') renderKidToday(c);
+    else if(_kidSubTab==='balance') renderKidLogs(c);
+    else if(_kidSubTab==='redeem') renderKidRedeem(c);
+  }
+  
+  function renderKidToday(c){
+    var html = '<div class="kid-tip-box">点击下方按钮快速记一笔积分。每次记录都会保存到历史。</div>';
+    // 加分类
+    KID_CATEGORIES_POS.forEach(function(cat){
+      html += '<div class="kid-cat kid-cat-pos">'
+        +'<div class="kid-cat-title">'+cat.icon+' '+cat.name+'</div>'
+        +'<div class="kid-cat-desc">'+cat.desc+'</div>'
+        +'<div class="kid-pt-btns">';
+      cat.options.forEach(function(p){
+        html += '<button class="kid-pt-btn pos" data-cat="'+cat.key+'" data-name="'+cat.name+'" data-pts="+'+p+'" type="button">+'+p+'</button>';
+      });
+      html += '</div></div>';
+    });
+    // 减分类
+    KID_CATEGORIES_NEG.forEach(function(cat){
+      html += '<div class="kid-cat kid-cat-neg">'
+        +'<div class="kid-cat-title">'+cat.icon+' '+cat.name+'</div>'
+        +'<div class="kid-cat-desc">'+cat.desc+'</div>'
+        +'<div class="kid-pt-btns">';
+      cat.options.forEach(function(p){
+        html += '<button class="kid-pt-btn neg" data-cat="'+cat.key+'" data-name="'+cat.name+'" data-pts="'+p+'" type="button">'+p+'</button>';
+      });
+      html += '</div></div>';
+    });
+    c.innerHTML = html;
+    
+    // 绑定积分按钮
+    c.querySelectorAll('.kid-pt-btn').forEach(function(b){
+      b.onclick = function(){
+        var cat = b.getAttribute('data-cat');
+        var name = b.getAttribute('data-name');
+        var pts = parseInt(b.getAttribute('data-pts'));
+        var today = getTodayStr();
+        apiCall('POST','/api/kids/points',{kid_id:_curKidId, date:today, category:name, item:cat, points:pts}).then(function(r){
+          if(r && r.ok){
+            toast((pts>0?'+':'')+pts+' '+name+' ✓');
+            refreshKidBalance();
+            // 短暂高亮按钮
+            b.style.transform='scale(1.15)';
+            setTimeout(function(){b.style.transform='';},150);
+          }else{
+            toast(r&&r.error||'操作失败');
+          }
+        });
+      };
+    });
+  }
+  
+  function renderKidLogs(c){
+    c.innerHTML = '<div style="color:#8888a8;text-align:center;padding:20px">加载中...</div>';
+    apiCall('GET','/api/kids/points?kid_id='+_curKidId).then(function(res){
+      if(!res||!res.logs){ c.innerHTML='<div style="color:#8888a8;text-align:center;padding:20px">加载失败</div>'; return; }
+      if(res.logs.length===0){ c.innerHTML='<div style="color:#555570;text-align:center;padding:20px">还没有记录</div>'; return; }
+      var html = '<div class="kid-log-list">';
+      res.logs.forEach(function(log){
+        var posCls = log.points>=0 ? 'pos' : 'neg';
+        var sign = log.points>=0 ? '+' : '';
+        html += '<div class="kid-log-row">'
+          +'<div class="kid-log-cat">'
+            +'<div class="kid-log-cat-name">'+escapeHtml(log.category||'')+'</div>'
+            +'<div class="kid-log-cat-time">'+(log.date||'')+(log.note?' · '+escapeHtml(log.note):'')+'</div>'
+          +'</div>'
+          +'<div class="kid-log-pts '+posCls+'">'+sign+log.points+'</div>'
+          +'<button class="kid-log-del" data-id="'+log.id+'" type="button">删除</button>'
+          +'</div>';
+      });
+      html += '</div>';
+      c.innerHTML = html;
+      c.querySelectorAll('.kid-log-del').forEach(function(b){
+        b.onclick = function(){
+          if(!confirm('确定删除这条积分记录？')) return;
+          apiCall('POST','/api/kids/points/delete',{id:parseInt(b.getAttribute('data-id'))}).then(function(r){
+            if(r&&r.ok){toast('已删除');renderKidLogs(c);refreshKidBalance();}
+            else toast(r&&r.error||'删除失败');
+          });
+        };
+      });
+    });
+  }
+  
+  function renderKidRedeem(c){
+    var html = '<div class="kid-tip-box">使用规则：累积 100 分才可使用；吃完饭、写完作业、洗好澡之后才可以使用积分</div>';
+    KID_REDEEM_TYPES.forEach(function(t){
+      html += '<div class="kid-redeem-card">'
+        +'<div class="kid-redeem-title">'+t.icon+' '+t.name+'</div>'
+        +'<div class="kid-redeem-rule">'+t.rate+(t.max?' · '+t.note:'')+'</div>'
+        +'<button class="kid-redeem-btn" data-type="'+t.key+'" data-name="'+t.name+'" type="button">兑换</button>'
+        +'</div>';
+    });
+    // 兑换历史
+    html += '<div style="font-size:13px;color:#8888a8;margin:12px 0 6px">兑换历史</div>';
+    html += '<div id="kidRedeemList"><div style="color:#555570;text-align:center;padding:20px">加载中...</div></div>';
+    c.innerHTML = html;
+    
+    c.querySelectorAll('.kid-redeem-btn').forEach(function(b){
+      if(!b.getAttribute('data-type')) return;
+      b.onclick = function(){
+        var type = b.getAttribute('data-type');
+        var name = b.getAttribute('data-name');
+        var typeCfg = KID_REDEEM_TYPES.find(function(t){return t.key===type;});
+        showRedeemDialog(typeCfg);
+      };
+    });
+    
+    // 加载兑换历史
+    apiCall('GET','/api/kids/redeems?kid_id='+_curKidId).then(function(res){
+      var lc = ge('kidRedeemList'); if(!lc) return;
+      if(!res||!res.redeems||!res.redeems.length){
+        lc.innerHTML = '<div style="color:#555570;text-align:center;padding:20px">还没有兑换记录</div>';
+        return;
+      }
+      var lhtml = '<div class="kid-log-list">';
+      res.redeems.forEach(function(r){
+        lhtml += '<div class="kid-log-row">'
+          +'<div class="kid-log-cat">'
+            +'<div class="kid-log-cat-name">'+escapeHtml(r.type)+(r.value_text?' · '+escapeHtml(r.value_text):'')+'</div>'
+            +'<div class="kid-log-cat-time">'+(r.created_at||'').slice(0,16)+'</div>'
+          +'</div>'
+          +'<div class="kid-log-pts neg">-'+r.points_used+'</div>'
+          +'<button class="kid-log-del" data-rid="'+r.id+'" type="button">撤销</button>'
+          +'</div>';
+      });
+      lhtml += '</div>';
+      lc.innerHTML = lhtml;
+      lc.querySelectorAll('.kid-log-del').forEach(function(b){
+        b.onclick = function(){
+          if(!confirm('撤销这次兑换？积分会还回来。')) return;
+          apiCall('POST','/api/kids/redeem/delete',{id:parseInt(b.getAttribute('data-rid'))}).then(function(r){
+            if(r&&r.ok){toast('已撤销');renderKidSubContent();refreshKidBalance();}
+            else toast(r&&r.error||'操作失败');
+          });
+        };
+      });
+    });
+  }
+  
+  // 添加孩子对话框
+  function showAddKidDialog(){
+    var mask = document.createElement('div'); mask.className='manage-mask';
+    var box = document.createElement('div'); box.className='manage-box';
+    box.innerHTML = '<div class="manage-title">添加孩子</div>'
+      +'<div class="manage-row"><label>姓名</label><input id="kidAddName" maxlength="20" placeholder="例如：Bobo"></div>'
+      +'<div class="manage-row"><label>头像 emoji</label><input id="kidAddAvatar" maxlength="2" value="👶" style="width:60px;text-align:center;font-size:24px"></div>'
+      +'<div class="manage-row"><label>上周结余 (可选)</label><input id="kidAddLwb" type="number" placeholder="0"></div>'
+      +'<div class="manage-actions"><button class="manage-btn" id="kidAddCancel" type="button">取消</button>'
+      +'<button class="manage-btn primary" id="kidAddOk" type="button">添加</button></div>';
+    mask.appendChild(box); document.body.appendChild(mask);
+    box.querySelector('#kidAddCancel').onclick = function(){document.body.removeChild(mask);};
+    mask.onclick = function(e){if(e.target===mask)document.body.removeChild(mask);};
+    box.querySelector('#kidAddOk').onclick = function(){
+      var name = box.querySelector('#kidAddName').value.trim();
+      var avatar = box.querySelector('#kidAddAvatar').value.trim() || '👶';
+      var lwb = parseInt(box.querySelector('#kidAddLwb').value) || 0;
+      if(!name){toast('请输入姓名');return;}
+      apiCall('POST','/api/kids',{name:name, avatar:avatar, last_week_balance:lwb}).then(function(r){
+        if(r&&r.ok){
+          toast('添加成功 ✓');
+          document.body.removeChild(mask);
+          _curKidId = r.kid_id;
+          loadKidPage();
+        }else{
+          toast(r&&r.error||'添加失败');
+        }
+      });
+    };
+  }
+  
+  // 编辑孩子
+  function showEditKidDialog(kidId){
+    var k = _kidsList.find(function(x){return x.id===kidId;});
+    if(!k) return;
+    var mask = document.createElement('div'); mask.className='manage-mask';
+    var box = document.createElement('div'); box.className='manage-box';
+    box.innerHTML = '<div class="manage-title">编辑孩子信息</div>'
+      +'<div class="manage-row"><label>姓名</label><input id="kidEdName" maxlength="20" value="'+escapeHtml(k.name)+'"></div>'
+      +'<div class="manage-row"><label>头像</label><input id="kidEdAvatar" maxlength="2" value="'+(k.avatar_emoji||'👶')+'" style="width:60px;text-align:center;font-size:24px"></div>'
+      +'<div class="manage-row"><label>上周结余</label><input id="kidEdLwb" type="number" value="'+(k.last_week_balance||0)+'"></div>'
+      +'<div class="manage-actions"><button class="manage-btn" id="kidEdCancel" type="button">取消</button>'
+      +'<button class="manage-btn primary" id="kidEdOk" type="button">保存</button></div>';
+    mask.appendChild(box); document.body.appendChild(mask);
+    box.querySelector('#kidEdCancel').onclick = function(){document.body.removeChild(mask);};
+    mask.onclick = function(e){if(e.target===mask)document.body.removeChild(mask);};
+    box.querySelector('#kidEdOk').onclick = function(){
+      var name = box.querySelector('#kidEdName').value.trim();
+      var avatar = box.querySelector('#kidEdAvatar').value.trim() || '👶';
+      var lwb = parseInt(box.querySelector('#kidEdLwb').value) || 0;
+      if(!name){toast('请输入姓名');return;}
+      apiCall('POST','/api/kids/update',{kid_id:kidId, name:name, avatar:avatar, last_week_balance:lwb}).then(function(r){
+        if(r&&r.ok){
+          toast('已更新 ✓');
+          document.body.removeChild(mask);
+          loadKidPage();
+        }else{
+          toast(r&&r.error||'更新失败');
+        }
+      });
+    };
+  }
+  
+  // 申请删除
+  function showDeleteKidDialog(kidId){
+    var k = _kidsList.find(function(x){return x.id===kidId;});
+    if(!k) return;
+    var mask = document.createElement('div'); mask.className='manage-mask';
+    var box = document.createElement('div'); box.className='manage-box';
+    box.innerHTML = '<div class="manage-title">申请删除「'+escapeHtml(k.name)+'」</div>'
+      +'<div style="font-size:13px;color:#8888a8;line-height:1.5;margin-bottom:12px">删除孩子需要管理员审批。提交后所有积分记录将被保留，但孩子从你的列表中消失。</div>'
+      +'<div class="manage-row"><label>申请原因 (可选)</label><textarea id="kidDelReason" maxlength="200" rows="3" style="width:100%;background:rgba(255,255,255,.04);color:#e8e8f0;border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:8px;font-family:inherit;resize:none"></textarea></div>'
+      +'<div class="manage-actions"><button class="manage-btn" id="kidDelCancel" type="button">取消</button>'
+      +'<button class="manage-btn primary" id="kidDelOk" type="button" style="background:#ef4444">提交申请</button></div>';
+    mask.appendChild(box); document.body.appendChild(mask);
+    box.querySelector('#kidDelCancel').onclick = function(){document.body.removeChild(mask);};
+    mask.onclick = function(e){if(e.target===mask)document.body.removeChild(mask);};
+    box.querySelector('#kidDelOk').onclick = function(){
+      var reason = box.querySelector('#kidDelReason').value.trim();
+      apiCall('POST','/api/kids/delete-request',{kid_id:kidId, reason:reason}).then(function(r){
+        if(r&&r.ok){
+          toast('申请已提交 ✓');
+          document.body.removeChild(mask);
+        }else{
+          toast(r&&r.error||'提交失败');
+        }
+      });
+    };
+  }
+  
+  // 兑换对话框
+  function showRedeemDialog(typeCfg){
+    var mask = document.createElement('div'); mask.className='manage-mask';
+    var box = document.createElement('div'); box.className='manage-box';
+    var maxHint = typeCfg.max>0 ? '（最多 '+typeCfg.max+'）' : '';
+    box.innerHTML = '<div class="manage-title">'+typeCfg.icon+' 兑换：'+typeCfg.name+'</div>'
+      +'<div style="font-size:12px;color:#8888a8;margin-bottom:12px">'+typeCfg.rate+(typeCfg.note?' · '+typeCfg.note:'')+'</div>'
+      +'<div class="manage-row"><label>使用积分'+maxHint+'</label><input id="rdPoints" type="number" placeholder="例如 30" min="1"'+(typeCfg.max?' max="'+typeCfg.max+'"':'')+'></div>'
+      +'<div class="manage-row"><label>用途说明 (可选)</label><input id="rdNote" maxlength="100" placeholder="例如：买冰淇淋"></div>'
+      +'<div class="manage-actions"><button class="manage-btn" id="rdCancel" type="button">取消</button>'
+      +'<button class="manage-btn primary" id="rdOk" type="button">确认兑换</button></div>';
+    mask.appendChild(box); document.body.appendChild(mask);
+    box.querySelector('#rdCancel').onclick = function(){document.body.removeChild(mask);};
+    mask.onclick = function(e){if(e.target===mask)document.body.removeChild(mask);};
+    box.querySelector('#rdOk').onclick = function(){
+      var pts = parseInt(box.querySelector('#rdPoints').value);
+      var note = box.querySelector('#rdNote').value.trim();
+      if(!pts || pts<=0){toast('请输入有效积分');return;}
+      if(typeCfg.max>0 && pts>typeCfg.max){toast('一次最多兑换 '+typeCfg.max+' 积分');return;}
+      // 计算 value_text
+      var valueText = '';
+      if(typeCfg.key==='tv') valueText = (pts/5*10)+' 分钟';
+      else if(typeCfg.key==='game') valueText = pts+' 分钟';
+      else if(typeCfg.key==='shopping') valueText = pts+' THB';
+      apiCall('POST','/api/kids/redeem',{kid_id:_curKidId, type:typeCfg.name, points_used:pts, value_text:valueText, note:note}).then(function(r){
+        if(r&&r.ok){
+          toast('兑换成功，剩余 '+r.balance+' 积分');
+          document.body.removeChild(mask);
+          renderKidSubContent();
+          refreshKidBalance();
+        }else{
+          toast(r&&r.error||'兑换失败');
+        }
+      });
+    };
+  }
+  
+  function escapeHtml(s){
+    if(s==null)return '';
+    return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[c];});
+  }
+
+
   // ══ 我的页面 ══
   function loadMyPage(){
     var c=ge('myPageContent');
@@ -2155,7 +2644,7 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
     html+='<div class="my-section">'
       +'<div class="my-item danger" data-act="logout"><span class="my-item-icon">🚪</span><span class="my-item-text">退出登录</span></div>'
       +'</div>';
-    html+='<div style="text-align:center;color:#555570;font-size:11px;padding:16px 0 4px">每日打卡系统 v5.0-002</div>';
+    html+='<div style="text-align:center;color:#555570;font-size:11px;padding:16px 0 4px">每日打卡系统 v5.1-001</div>';
     
     c.innerHTML=html;
     
@@ -2189,14 +2678,71 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
     if(!CURRENT_USER||CURRENT_USER.role!=='admin')return;
     apiCall('GET','/api/admin/users').then(function(res){
       if(!res||!res.users)return;
-      var pending=res.users.filter(function(u){return u.status==='pending';}).length;
-      window._pendingUsersCount=pending;
-      var badge=ge('myBadge');
-      if(badge){
-        if(pending>0){badge.textContent=pending>99?'99+':pending;badge.style.display='flex';}
-        else{badge.style.display='none';}
-      }
+      window._pendingUsersCount=res.users.filter(function(u){return u.status==='pending';}).length;
+      updateMyBadge();
     });
+    apiCall('GET','/api/admin/kid-delete-requests').then(function(res){
+      if(!res||!res.requests)return;
+      window._kidDelRequestsCount=res.requests.length;
+      updateMyBadge();
+    });
+  }
+  function updateMyBadge(){
+    var total=(window._pendingUsersCount||0)+(window._kidDelRequestsCount||0);
+    var badge=ge('myBadge');
+    if(badge){
+      if(total>0){badge.textContent=total>99?'99+':total;badge.style.display='flex';}
+      else{badge.style.display='none';}
+    }
+  }
+
+  // ══ 孩子删除申请审批弹窗 ══
+  function showKidDelRequestsDialog(){
+    var mask=document.createElement('div');mask.className='manage-mask';
+    var box=document.createElement('div');box.className='manage-box';
+    box.innerHTML='<div class="manage-title">🗑️ 孩子删除申请</div><div id="kdrList">加载中...</div>'
+      +'<div class="manage-actions"><button class="manage-btn" id="kdrClose" type="button">关闭</button></div>';
+    mask.appendChild(box);document.body.appendChild(mask);
+    box.querySelector('#kdrClose').onclick=function(){document.body.removeChild(mask);};
+    mask.onclick=function(e){if(e.target===mask)document.body.removeChild(mask);};
+    function loadList(){
+      apiCall('GET','/api/admin/kid-delete-requests').then(function(res){
+        var lc=box.querySelector('#kdrList');
+        if(!res||!res.requests){lc.innerHTML='加载失败';return;}
+        if(res.requests.length===0){lc.innerHTML='<div style="color:#555570;text-align:center;padding:20px">没有待审批申请</div>';return;}
+        var html='';
+        res.requests.forEach(function(r){
+          html+='<div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:12px;margin-bottom:8px">'
+            +'<div style="font-size:14px;color:#e8e8f0;font-weight:600">'+escapeHtml(r.kid_name||'?')+'</div>'
+            +'<div style="font-size:12px;color:#8888a8;margin-top:4px">申请人：'+escapeHtml(r.requested_by_name||'?')+' · '+(r.created_at||'').slice(0,16)+'</div>'
+            +(r.reason?'<div style="font-size:12px;color:#a0a0c0;margin-top:6px;padding:6px 8px;background:rgba(0,0,0,.2);border-radius:6px">'+escapeHtml(r.reason)+'</div>':'')
+            +'<div style="display:flex;gap:6px;margin-top:10px">'
+              +'<button class="manage-btn" data-rj="'+r.id+'" type="button">拒绝</button>'
+              +'<button class="manage-btn primary" data-ap="'+r.id+'" type="button" style="background:#ef4444">批准删除</button>'
+            +'</div>'
+            +'</div>';
+        });
+        lc.innerHTML=html;
+        lc.querySelectorAll('[data-ap]').forEach(function(b){
+          b.onclick=function(){
+            if(!confirm('确定批准删除？此操作不可撤销。'))return;
+            apiCall('POST','/api/admin/kid-delete-approve',{request_id:parseInt(b.getAttribute('data-ap'))}).then(function(rr){
+              if(rr&&rr.ok){toast('已批准');loadList();checkPendingUsers();}
+              else toast(rr&&rr.error||'操作失败');
+            });
+          };
+        });
+        lc.querySelectorAll('[data-rj]').forEach(function(b){
+          b.onclick=function(){
+            apiCall('POST','/api/admin/kid-delete-reject',{request_id:parseInt(b.getAttribute('data-rj'))}).then(function(rr){
+              if(rr&&rr.ok){toast('已拒绝');loadList();checkPendingUsers();}
+              else toast(rr&&rr.error||'操作失败');
+            });
+          };
+        });
+      });
+    }
+    loadList();
   }
 
   // ══ 历史面板逻辑 ══
