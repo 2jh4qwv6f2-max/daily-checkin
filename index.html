@@ -300,7 +300,7 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
 </head>
 <body>
 <!-- 登录/注册界面 -->
-<div class="auth-screen" id="authScreen">
+<div class="auth-screen" id="authScreen" style="display:none">
   <div class="auth-box">
     <div class="auth-logo"><div class="auth-logo-icon">✓</div><div class="auth-logo-text">每日打卡</div></div>
     <!-- 账号密码登录表单 -->
@@ -489,6 +489,20 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
   <button class="nav-item" data-nav="2" type="button"><span class="nav-icon">👤</span><span class="nav-label">我的</span><span class="nav-badge" id="myBadge" style="display:none">0</span></button>
 </nav>
 <script>
+// 立即执行：如果没 token 就显示登录页，有 token 就保持隐藏（异步验证后决定）
+(function(){
+  try{
+    var tok = localStorage.getItem('session_token');
+    var dev = localStorage.getItem('device_token');
+    if(!tok && !dev){
+      var as = document.getElementById('authScreen');
+      if(as) as.style.display = 'flex';
+    }
+  }catch(e){
+    var as2 = document.getElementById('authScreen');
+    if(as2) as2.style.display = 'flex';
+  }
+})();
 (function(){
   function pad(n){return n<10?'0'+n:''+n;}
   function ge(id){return document.getElementById(id);}
@@ -559,6 +573,14 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
   // 底部导航切换
   function navTo(navIdx){
     currentNav=navIdx;
+    // 写入 URL hash，便于子页面返回时恢复到对应 tab
+    try{
+      var hashMap=['','#learn','#me'];
+      var newHash=hashMap[navIdx]||'';
+      if(window.location.hash!==newHash){
+        history.replaceState(null,'',window.location.pathname+newHash);
+      }
+    }catch(e){}
     // 更新底部导航高亮
     document.querySelectorAll('.nav-item').forEach(function(b,i){
       b.classList.toggle('active',i===navIdx);
@@ -1500,7 +1522,14 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
     hideAuthScreen();
     // 用户名显示在我的页面
     // 管理员功能在「我的」页面里显示，无需控制按钮
-    navTo(0); // 登录成功后默认显示打卡页
+    // 根据 URL hash 决定初始 tab（从 practice.html 等子页返回时用得到）
+    var initNav=0;
+    try{
+      var h=window.location.hash;
+      if(h==='#learn')initNav=1;
+      else if(h==='#me')initNav=2;
+    }catch(e){}
+    navTo(initNav);
     loadFromCloud();
     // 管理员：检查待审批用户数
     if(CURRENT_USER&&CURRENT_USER.role==='admin'){
@@ -1575,11 +1604,15 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
 
   // 页面加载时尝试恢复会话
   (function(){
-    // 先尝试设备token
     var dt=null;
     try{dt=localStorage.getItem('device_token');}catch(e){}
     var st=null;
     try{st=localStorage.getItem('session_token');}catch(e){}
+
+    // 如果有 token，先隐藏 authScreen 避免闪跳到登录页
+    if(st||dt){
+      ge('authScreen').style.display='none';
+    }
 
     if(st){
       SESSION_TOKEN=st;

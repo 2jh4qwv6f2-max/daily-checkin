@@ -1465,7 +1465,7 @@ img, svg { display: block; max-width: 100%; }
 }
 </style>
 <script>
-// 登录校验：未登录则跳回主页
+// 登录校验：未登录则跳回主页（不带 hash，让用户先登录）
 (function(){
   try{
     var token = localStorage.getItem('session_token');
@@ -2595,7 +2595,7 @@ img, svg { display: block; max-width: 100%; }
 (function(){
   var btn = document.getElementById('btn-back-app');
   if(btn){
-    btn.onclick = function(){window.location.replace('index.html');};
+    btn.onclick = function(){window.location.replace('index.html#learn');};
   }
 })();
 </script>
