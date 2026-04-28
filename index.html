@@ -13,7 +13,7 @@ html,body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Hiragino S
 .hdr{background:#0d0d18;border-bottom:1px solid rgba(255,255,255,.06);padding:12px 16px}
 .hdr-in{display:flex;align-items:center;justify-content:space-between;max-width:500px;margin:0 auto}
 .logo{font-size:17px;font-weight:700;color:#c084fc}
-.dt-row{display:flex;align-items:center;gap:4px}
+.dt-row{display:flex;align-items:center;gap:6px}
 .dt-row input{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:#a0a0c0;font-size:14px;font-family:inherit;font-weight:500;border-radius:6px;padding:6px 8px;outline:none;-webkit-appearance:none}
 .dt-row input[type="date"]{width:130px}.dt-row input[type="time"]{width:85px}
 .tabs{display:flex;gap:4px;padding:10px 16px;max-width:500px;margin:0 auto;background:#0a0a0f}
@@ -31,7 +31,7 @@ html,body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Hiragino S
 .pbar{height:4px;background:#1c1c2e;border-radius:2px;overflow:hidden}
 .pfill{height:100%;border-radius:2px;background:linear-gradient(90deg,#f59e0b,#06b6d4,#8b5cf6);transition:width .4s;width:0}
 .ptx{display:flex;justify-content:space-between;margin-top:5px;font-size:11px;color:#555570;font-weight:500}
-.wrap{max-width:500px;margin:0 auto;padding:12px 16px 20px}
+.wrap{max-width:500px;margin:0 auto;padding:12px 16px 140px}
 /* 关键：用position+clip隐藏panel，保持input值可读 */
 .pnl{position:absolute;left:-9999px;opacity:0}
 .pnl.vis{position:static;left:auto;opacity:1}
@@ -69,7 +69,7 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
   outline:none;-webkit-appearance:none;min-height:44px;
 }
 .tfd:focus{border-color:#6366f1}
-.bot{background:#0d0d18;border-top:1px solid rgba(255,255,255,.06);padding:12px 16px;padding-bottom:calc(12px + env(safe-area-inset-bottom,8px))}
+.bot{position:fixed;left:0;right:0;bottom:60px;z-index:98;background:#0d0d18;border-top:1px solid rgba(255,255,255,.06);padding:10px 16px}
 .bi{max-width:500px;margin:0 auto;display:flex;gap:10px}
 .bn{flex:1;padding:14px;border:none;border-radius:16px;font-size:15px;font-weight:600;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:6px;-webkit-appearance:none}.bn:active{opacity:.7}
 .bp{background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff}.bs{background:#1c1c2e;color:#8888a8;border:1px solid rgba(255,255,255,.06)}
@@ -266,6 +266,34 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
 .dc-bad label.dc-item input.chk:checked + .rw .bx{background:#ef4444;border-color:#ef4444}
 .dc-bad label.dc-item input.chk:checked + .rw .tx{color:#ef4444;text-decoration:line-through}
 .dc-good label.dc-item input.chk:checked + .rw .bx{background:#22c55e;border-color:#22c55e}
+
+/* ══ 底部导航（Instagram 风格）══ */
+.nav-bar{position:fixed;bottom:0;left:0;right:0;background:#0d0d18;border-top:1px solid rgba(255,255,255,.06);display:flex;justify-content:space-around;align-items:center;height:60px;z-index:99;padding-bottom:env(safe-area-inset-bottom)}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;background:transparent;border:none;color:#8888a8;font-size:11px;cursor:pointer;padding:8px 0;font-family:inherit;-webkit-tap-highlight-color:transparent;transition:transform .15s}
+.nav-item:active{transform:scale(0.92)}
+.nav-item .nav-icon{font-size:22px;line-height:1;filter:grayscale(.4);transition:filter .15s}
+.nav-item .nav-label{font-size:11px;font-weight:500}
+.nav-item.active{color:#a78bfa}
+.nav-item.active .nav-icon{filter:grayscale(0) drop-shadow(0 0 8px rgba(167,139,250,0.5))}
+.nav-item.active .nav-label{font-weight:700}
+
+/* ══ 我的页面 ══ */
+.my-page{padding:0;display:flex;flex-direction:column;gap:8px}
+.my-card{background:#1c1c2e;border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:16px;display:flex;align-items:center;gap:14px}
+.my-avatar{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#6366f1,#8b5cf6);display:flex;align-items:center;justify-content:center;font-size:28px;color:#fff;font-weight:700;flex-shrink:0}
+.my-info{flex:1;min-width:0}
+.my-name{font-size:18px;font-weight:700;color:#e8e8f0}
+.my-role{font-size:12px;color:#8888a8;margin-top:2px}
+.my-email{font-size:12px;color:#8888a8;margin-top:4px;display:flex;align-items:center;gap:4px}
+.my-section{background:#1c1c2e;border:1px solid rgba(255,255,255,.06);border-radius:14px;overflow:hidden}
+.my-item{display:flex;align-items:center;gap:12px;padding:14px 16px;cursor:pointer;border-bottom:1px solid rgba(255,255,255,.04);transition:background .15s;color:#e8e8f0;font-size:14px}
+.my-item:last-child{border-bottom:none}
+.my-item:active{background:#252540}
+.my-item-icon{font-size:20px;width:28px;text-align:center;flex-shrink:0}
+.my-item-text{flex:1}
+.my-item-arrow{color:#555570;font-size:18px;flex-shrink:0}
+.my-item.danger{color:#ef4444}
+.my-section-title{font-size:12px;color:#8888a8;font-weight:600;padding:14px 4px 6px;text-transform:uppercase;letter-spacing:.5px}
 </style>
 </head>
 <body>
@@ -358,8 +386,8 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
   </div>
 </div>
 <div class="toast" id="toast"></div>
-<div class="hdr"><div class="hdr-in"><span class="logo">每日打卡</span><div class="dt-row"><button class="user-menu-btn" id="userMenuBtn" type="button">👤</button><input type="date" id="pD"><input type="time" id="pT" step="60"></div></div></div>
-<div class="tabs"><button class="tbtn am" id="t0" type="button">🌅 早上</button><button class="tbtn" id="t1" type="button">🌞 中午</button><button class="tbtn" id="t2" type="button">🌙 晚上</button><button class="tbtn" id="t3" type="button">⭐ 自律</button><button class="tbtn" id="t4" type="button">📚 学习</button><button class="tbtn" id="t5" type="button">📊 历史</button><button class="tbtn" id="t6" type="button" style="display:none">👑 管理</button></div>
+<div class="hdr" id="hdrBar"><div class="hdr-in"><span class="logo" id="logoTitle">每日打卡</span><div class="dt-row" id="dtRow"><input type="date" id="pD"><input type="time" id="pT" step="60"></div></div></div>
+<div class="tabs" id="topTabs"><button class="tbtn am" id="t0" type="button">🌅 早上</button><button class="tbtn" id="t1" type="button">🌞 中午</button><button class="tbtn" id="t2" type="button">🌙 晚上</button><button class="tbtn" id="t3" type="button">⭐ 自律</button></div>
 <div class="prog"><div class="pbar"><div class="pfill" id="pf" style="width: 0%;"></div></div><div class="ptx"><span id="pl">已完成 0/20 项</span><span id="pp">0%</span></div><div id="modifiedBadge" style="display:none;margin-top:4px;text-align:right"></div></div>
 <div class="wrap">
 <div class="pnl vis" id="s0"><div class="shd"><div class="sico sico-m">🌅</div><div class="stt">早上</div></div><div class="stk">
@@ -451,7 +479,13 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
   </div>
 </div>
 </div>
+<div class="pnl" id="sMe"><div class="my-page" id="myPageContent"></div></div>
 <div class="bot" id="botBar"><div class="bi"><button class="bn bs" id="btnR" type="button">↺ 重置</button><button class="bn bp" id="btnS" type="button">📸 生成截图</button></div></div>
+<nav class="nav-bar" id="navBar">
+  <button class="nav-item active" data-nav="0" type="button"><span class="nav-icon">🏠</span><span class="nav-label">打卡</span></button>
+  <button class="nav-item" data-nav="1" type="button"><span class="nav-icon">📚</span><span class="nav-label">学习</span></button>
+  <button class="nav-item" data-nav="2" type="button"><span class="nav-icon">👤</span><span class="nav-label">我的</span></button>
+</nav>
 <script>
 (function(){
   function pad(n){return n<10?'0'+n:''+n;}
@@ -489,11 +523,16 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
   });
 
   function getCurDT(){var d=ge('pD').value,t=ge('pT').value;if(d&&t)return new Date(d+'T'+t);return new Date();}
-  var tbs=[ge('t0'),ge('t1'),ge('t2'),ge('t3'),ge('t4'),ge('t5'),ge('t6')],pns=[ge('s0'),ge('s1'),ge('s2'),ge('s3'),ge('s4'),ge('s5'),ge('s6')],tcls=['am','pm','em','dc','lr','ht','ht'];
+  var tbs=[ge('t0'),ge('t1'),ge('t2'),ge('t3')],pns=[ge('s0'),ge('s1'),ge('s2'),ge('s3'),ge('s4'),ge('s5'),ge('s6'),ge('sMe')],tcls=['am','pm','em','dc'];
 
   // Tab切换：用position:absolute移出屏幕（不是display:none）
+  // 当前底部导航位置（0=打卡, 1=学习, 2=我的）
+  var currentNav=0;
+  // 当前时段 tab（仅打卡导航下有效）
+  var currentSubTab=0;
+
   function doTab(idx){
-    // 先清除所有旧遮罩
+    // 仅用于切换时段子tab（0-3）
     [0,1,2].forEach(function(i){
       var cfg=SECTION_LOCK[i];
       var old=document.getElementById('sectionLock_'+cfg.panelId);
@@ -502,17 +541,63 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
         old.parentNode.removeChild(old);
       }
     });
-    // 切换 tab（panel 变成 vis 后 getBoundingClientRect 才正确）
-    for(var i=0;i<7;i++){tbs[i].className='tbtn';pns[i].className='pnl';}
+    for(var i=0;i<4;i++){tbs[i].className='tbtn';pns[i].className='pnl';}
     tbs[idx].className='tbtn '+tcls[idx];pns[idx].className='pnl vis';
-    ge('botBar').style.display=(idx>=4)?'none':'';
-    if(idx===5)loadHistory();
-    if(idx===6)loadAdminUsers();
-    if(idx===4)loadLearnList();
-    // 切换完成后再检查当前 tab 的锁定（此时 panel 已 vis，位置正确）
+    currentSubTab=idx;
     if(idx===0||idx===1||idx===2)checkSectionLock(idx);
   }
-  tbs[0].onclick=function(){doTab(0);};tbs[1].onclick=function(){doTab(1);};tbs[2].onclick=function(){doTab(2);};tbs[3].onclick=function(){doTab(3);};tbs[4].onclick=function(){doTab(4);};tbs[5].onclick=function(){doTab(5);};tbs[6].onclick=function(){doTab(6);};
+
+  // 底部导航切换
+  function navTo(navIdx){
+    currentNav=navIdx;
+    // 更新底部导航高亮
+    document.querySelectorAll('.nav-item').forEach(function(b,i){
+      b.classList.toggle('active',i===navIdx);
+    });
+    // 隐藏所有 panel
+    for(var i=0;i<7;i++)pns[i].className='pnl';
+    // 顶部 tabs / 日期时间 / 底部按钮的显示控制
+    var topTabs=ge('topTabs'),dtRow=ge('dtRow'),botBar=ge('botBar');
+    if(navIdx===0){
+      // 打卡：显示顶部 tabs、日期时间、底部按钮
+      topTabs.style.display='';
+      dtRow.style.display='';
+      botBar.style.display='';
+      ge('logoTitle').textContent='每日打卡';
+      doTab(currentSubTab);
+    }else if(navIdx===1){
+      // 学习
+      topTabs.style.display='none';
+      dtRow.style.display='none';
+      botBar.style.display='none';
+      ge('logoTitle').textContent='📚 学习';
+      pns[4].className='pnl vis';
+      loadLearnList();
+    }else if(navIdx===2){
+      // 我的
+      topTabs.style.display='none';
+      dtRow.style.display='none';
+      botBar.style.display='none';
+      ge('logoTitle').textContent='👤 我的';
+      pns[7].className='pnl vis';
+      loadMyPage();
+    }
+  }
+
+  // 我的菜单中的子页面切换（历史、管理）
+  function showSubPage(panelIdx){
+    for(var i=0;i<8;i++)pns[i].className='pnl';
+    pns[panelIdx].className='pnl vis';
+    if(panelIdx===5){loadHistory();ge('logoTitle').textContent='📊 历史记录';}
+    if(panelIdx===6){loadAdminUsers();ge('logoTitle').textContent='👑 用户管理';}
+  }
+  tbs[0].onclick=function(){doTab(0);};tbs[1].onclick=function(){doTab(1);};tbs[2].onclick=function(){doTab(2);};tbs[3].onclick=function(){doTab(3);};
+  // 底部导航绑定
+  document.querySelectorAll('.nav-item').forEach(function(b){
+    b.onclick=function(){navTo(parseInt(b.getAttribute('data-nav')));};
+  });
+  // 初始化导航到打卡页
+  navTo(0);
   // 页面加载时只检查当前显示的 tab（s0），其他 tab 切换时再检查
   setTimeout(function(){checkSectionLock(0);},200);
 
@@ -1391,9 +1476,8 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
   // 登录成功
   function onLoginSuccess(isNewDevice){
     hideAuthScreen();
-    ge('userMenuBtn').textContent='👤 '+CURRENT_USER.username;
-    if(CURRENT_USER.role==='admin')ge('t6').style.display='';
-    else ge('t6').style.display='none';
+    // 用户名显示在我的页面
+    // 管理员功能在「我的」页面里显示，无需控制按钮
     loadFromCloud();
     loadTagsFromCloud();
     // 新设备询问是否信任
@@ -1502,43 +1586,8 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
     }
   })();
 
-  // ══ 用户菜单 ══
-  ge('userMenuBtn').onclick=function(){
-    var mask=document.createElement('div');mask.className='user-menu-mask';
-    var box=document.createElement('div');box.className='user-menu-box';
-    var emailBadge=CURRENT_USER&&CURRENT_USER.email
-      ?'<div class="auth-email-badge"><span class="auth-email-badge-icon">📧</span><span>'+CURRENT_USER.email+'</span></div>'
-      :'<div class="auth-email-none">未绑定邮箱</div>';
-    var html='<div style="text-align:center;margin-bottom:12px"><div style="font-size:16px;font-weight:700;color:#e8e8f0">'+((CURRENT_USER&&CURRENT_USER.username)||'')+'</div><div style="font-size:12px;color:#8888a8;margin-top:4px">'+(CURRENT_USER&&CURRENT_USER.role==='admin'?'👑 管理员':'普通用户')+'</div></div>';
-    html+=emailBadge;
-    html+='<div class="user-menu-item" id="umBindEmail">'+(CURRENT_USER&&CURRENT_USER.email?'📧 更换绑定邮箱':'📧 绑定邮箱')+'</div>';
-    if(CURRENT_USER&&CURRENT_USER.email)html+='<div class="user-menu-item" id="umUnbindEmail" style="color:#f59e0b">🔓 解绑邮箱</div>';
-    html+='<div class="user-menu-item" id="umTrust">🔒 信任此设备</div>';
-    html+='<div class="user-menu-item" id="umDevices">📱 管理信任设备</div>';
-    html+='<div class="user-menu-item" id="umChangePw">🔑 修改密码</div>';
-    html+='<div class="user-menu-item danger" id="umLogout">退出登录</div>';
-    html+='<button class="manage-close" style="margin-top:12px" id="umClose">关闭</button>';
-    box.innerHTML=html;
-    mask.appendChild(box);document.body.appendChild(mask);
-    mask.onclick=function(e){if(e.target===mask)document.body.removeChild(mask);};
-    ge('umClose').onclick=function(){document.body.removeChild(mask);};
-    ge('umLogout').onclick=function(){document.body.removeChild(mask);doLogout();};
-    ge('umBindEmail').onclick=function(){document.body.removeChild(mask);showBindEmail();};
-    if(ge('umUnbindEmail'))ge('umUnbindEmail').onclick=function(){document.body.removeChild(mask);showUnbindEmail();};
-    ge('umTrust').onclick=function(){
-      document.body.removeChild(mask);
-      var name=prompt('给这台设备起个名字（如：我的iPhone）','');
-      if(name===null)return;
-      apiCall('POST','/api/auth/trust-device',{device_name:name||'未命名设备'}).then(function(res){
-        if(res&&res.device_token){
-          try{localStorage.setItem('device_token',res.device_token);}catch(e){}
-          toast('设备已信任，下次可免密登录 ✓');
-        }else{toast(res&&res.error||'操作失败');}
-      });
-    };
-    ge('umDevices').onclick=function(){document.body.removeChild(mask);showDeviceManager();};
-    ge('umChangePw').onclick=function(){document.body.removeChild(mask);showChangePw();};
-  };
+  // 旧的用户菜单弹窗已替换为底部导航的「我的」页面
+
 
   // 信任设备管理弹窗
   function showDeviceManager(){
@@ -2004,6 +2053,78 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
         };
       })(cards[i]);
     }
+  }
+
+  // ══ 我的页面 ══
+  function loadMyPage(){
+    var c=ge('myPageContent');
+    if(!c)return;
+    var u=CURRENT_USER||{};
+    var uname=u.username||'用户';
+    var avatar=uname.charAt(0).toUpperCase();
+    var role=u.role==='admin'?'👑 管理员':'普通用户';
+    var email=u.email||'未绑定邮箱';
+    var emailIcon=u.email?'📧':'🔒';
+    
+    var html='<div class="my-card">'
+      +'<div class="my-avatar">'+avatar+'</div>'
+      +'<div class="my-info">'
+      +'<div class="my-name">'+uname+'</div>'
+      +'<div class="my-role">'+role+'</div>'
+      +'<div class="my-email">'+emailIcon+' '+email+'</div>'
+      +'</div></div>';
+    
+    html+='<div class="my-section-title">📊 数据</div>';
+    html+='<div class="my-section">'
+      +'<div class="my-item" data-act="history"><span class="my-item-icon">📊</span><span class="my-item-text">历史记录</span><span class="my-item-arrow">›</span></div>'
+      +'</div>';
+    
+    html+='<div class="my-section-title">⚙️ 账号</div>';
+    html+='<div class="my-section">'
+      +'<div class="my-item" data-act="bindEmail"><span class="my-item-icon">📧</span><span class="my-item-text">'+(u.email?'更换绑定邮箱':'绑定邮箱')+'</span><span class="my-item-arrow">›</span></div>';
+    if(u.email)html+='<div class="my-item" data-act="unbindEmail" style="color:#f59e0b"><span class="my-item-icon">🔓</span><span class="my-item-text">解绑邮箱</span><span class="my-item-arrow">›</span></div>';
+    html+='<div class="my-item" data-act="trust"><span class="my-item-icon">🔒</span><span class="my-item-text">信任此设备</span><span class="my-item-arrow">›</span></div>'
+      +'<div class="my-item" data-act="devices"><span class="my-item-icon">📱</span><span class="my-item-text">管理信任设备</span><span class="my-item-arrow">›</span></div>'
+      +'<div class="my-item" data-act="changePw"><span class="my-item-icon">🔑</span><span class="my-item-text">修改密码</span><span class="my-item-arrow">›</span></div>'
+      +'</div>';
+    
+    if(u.role==='admin'){
+      html+='<div class="my-section-title">👑 管理员</div>';
+      html+='<div class="my-section">'
+        +'<div class="my-item" data-act="admin"><span class="my-item-icon">👥</span><span class="my-item-text">用户管理</span><span class="my-item-arrow">›</span></div>'
+        +'</div>';
+    }
+    
+    html+='<div class="my-section-title">　</div>';
+    html+='<div class="my-section">'
+      +'<div class="my-item danger" data-act="logout"><span class="my-item-icon">🚪</span><span class="my-item-text">退出登录</span></div>'
+      +'</div>';
+    
+    c.innerHTML=html;
+    
+    // 绑定点击事件
+    c.querySelectorAll('.my-item').forEach(function(item){
+      item.onclick=function(){
+        var act=item.getAttribute('data-act');
+        if(act==='history')showSubPage(5);
+        else if(act==='admin')showSubPage(6);
+        else if(act==='bindEmail')showBindEmail();
+        else if(act==='unbindEmail')showUnbindEmail();
+        else if(act==='devices')showDeviceManager();
+        else if(act==='changePw')showChangePw();
+        else if(act==='logout')doLogout();
+        else if(act==='trust'){
+          var name=prompt('给这台设备起个名字（如：我的iPhone）','');
+          if(name===null)return;
+          apiCall('POST','/api/auth/trust-device',{device_name:name||'未命名设备'}).then(function(res){
+            if(res&&res.device_token){
+              try{localStorage.setItem('device_token',res.device_token);}catch(e){}
+              toast('设备已信任，下次可免密登录 ✓');
+            }else{toast(res&&res.error||'操作失败');}
+          });
+        }
+      };
+    });
   }
 
   // ══ 历史面板逻辑 ══
