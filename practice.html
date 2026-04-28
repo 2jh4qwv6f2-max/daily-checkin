@@ -1470,28 +1470,23 @@ img, svg { display: block; max-width: 100%; }
   try{
     var token = localStorage.getItem('session_token');
     if(!token){
-      window.location.href = 'index.html';
+      window.location.replace('index.html');
       return;
     }
   }catch(e){
-    window.location.href = 'index.html';
+    window.location.replace('index.html');
   }
 })();
 </script>
 </head>
 <body>
 
-<!-- 返回主应用浮动按钮 -->
-<button id="backToApp" type="button" style="position:fixed;top:env(safe-area-inset-top,8px);left:8px;z-index:9999;background:rgba(26,26,26,.85);color:#fff;border:none;border-radius:50%;width:36px;height:36px;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.2);padding:0;line-height:1" aria-label="返回打卡">←</button>
-<script>
-document.getElementById('backToApp').onclick = function(){
-  window.location.href = 'index.html';
-};
-</script>
-
 <div class="app" id="app">
   <!-- 顶栏 -->
   <header class="topbar">
+    <button class="icon-btn" id="btn-back-app" aria-label="返回打卡" style="background:transparent;border:none;color:var(--ink);cursor:pointer;padding:6px;display:flex;align-items:center;justify-content:center">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    </button>
     <button class="icon-btn" id="btn-settings" aria-label="设置">
       <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
     </button>
@@ -2596,5 +2591,13 @@ document.getElementById('backToApp').onclick = function(){
 
 </script>
 
+<script>
+(function(){
+  var btn = document.getElementById('btn-back-app');
+  if(btn){
+    btn.onclick = function(){window.location.replace('index.html');};
+  }
+})();
+</script>
 </body>
 </html>

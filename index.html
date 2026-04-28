@@ -276,6 +276,8 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
 .nav-item.active{color:#a78bfa}
 .nav-item.active .nav-icon{filter:grayscale(0) drop-shadow(0 0 8px rgba(167,139,250,0.5))}
 .nav-item.active .nav-label{font-weight:700}
+.nav-item{position:relative}
+.nav-badge{position:absolute;top:6px;left:50%;margin-left:8px;min-width:18px;height:18px;padding:0 5px;background:#ef4444;color:#fff;border-radius:9px;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;line-height:1;border:2px solid #0d0d18}
 
 /* ══ 我的页面 ══ */
 .my-page{padding:0;display:flex;flex-direction:column;gap:8px}
@@ -388,7 +390,7 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
 <div class="toast" id="toast"></div>
 <div class="hdr" id="hdrBar"><div class="hdr-in"><span class="logo" id="logoTitle">每日打卡</span><div class="dt-row" id="dtRow"><input type="date" id="pD"><input type="time" id="pT" step="60"></div></div></div>
 <div class="tabs" id="topTabs"><button class="tbtn am" id="t0" type="button">🌅 早上</button><button class="tbtn" id="t1" type="button">🌞 中午</button><button class="tbtn" id="t2" type="button">🌙 晚上</button><button class="tbtn" id="t3" type="button">⭐ 自律</button></div>
-<div class="prog"><div class="pbar"><div class="pfill" id="pf" style="width: 0%;"></div></div><div class="ptx"><span id="pl">已完成 0/20 项</span><span id="pp">0%</span></div><div id="modifiedBadge" style="display:none;margin-top:4px;text-align:right"></div></div>
+<div class="prog" id="progBar"><div class="pbar"><div class="pfill" id="pf" style="width: 0%;"></div></div><div class="ptx"><span id="pl">已完成 0/20 项</span><span id="pp">0%</span></div><div id="modifiedBadge" style="display:none;margin-top:4px;text-align:right"></div></div>
 <div class="wrap">
 <div class="pnl vis" id="s0"><div class="shd"><div class="sico sico-m">🌅</div><div class="stt">早上</div></div><div class="stk">
   <div class="ic"><div class="il">⏰ 起床时间</div><input type="time" id="wakeTime" step="60" class="tfd"></div>
@@ -478,13 +480,13 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
     </div>
   </div>
 </div>
-</div>
 <div class="pnl" id="sMe"><div class="my-page" id="myPageContent"></div></div>
+</div>
 <div class="bot" id="botBar"><div class="bi"><button class="bn bs" id="btnR" type="button">↺ 重置</button><button class="bn bp" id="btnS" type="button">📸 生成截图</button></div></div>
 <nav class="nav-bar" id="navBar">
   <button class="nav-item active" data-nav="0" type="button"><span class="nav-icon">🏠</span><span class="nav-label">打卡</span></button>
   <button class="nav-item" data-nav="1" type="button"><span class="nav-icon">📚</span><span class="nav-label">学习</span></button>
-  <button class="nav-item" data-nav="2" type="button"><span class="nav-icon">👤</span><span class="nav-label">我的</span></button>
+  <button class="nav-item" data-nav="2" type="button"><span class="nav-icon">👤</span><span class="nav-label">我的</span><span class="nav-badge" id="myBadge" style="display:none">0</span></button>
 </nav>
 <script>
 (function(){
@@ -562,14 +564,16 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
       b.classList.toggle('active',i===navIdx);
     });
     // 隐藏所有 panel
-    for(var i=0;i<7;i++)pns[i].className='pnl';
+    for(var i=0;i<pns.length;i++)pns[i].className='pnl';
     // 顶部 tabs / 日期时间 / 底部按钮的显示控制
     var topTabs=ge('topTabs'),dtRow=ge('dtRow'),botBar=ge('botBar');
+    var progBar=ge('progBar');
     if(navIdx===0){
-      // 打卡：显示顶部 tabs、日期时间、底部按钮
+      // 打卡：显示顶部 tabs、日期时间、进度条、底部按钮
       topTabs.style.display='';
       dtRow.style.display='';
       botBar.style.display='';
+      if(progBar)progBar.style.display='';
       ge('logoTitle').textContent='每日打卡';
       doTab(currentSubTab);
     }else if(navIdx===1){
@@ -577,6 +581,7 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
       topTabs.style.display='none';
       dtRow.style.display='none';
       botBar.style.display='none';
+      if(progBar)progBar.style.display='none';
       ge('logoTitle').textContent='📚 学习';
       pns[4].className='pnl vis';
       loadLearnList();
@@ -585,18 +590,23 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
       topTabs.style.display='none';
       dtRow.style.display='none';
       botBar.style.display='none';
+      if(progBar)progBar.style.display='none';
       ge('logoTitle').textContent='👤 我的';
       pns[7].className='pnl vis';
       loadMyPage();
     }
+    // 滚动到顶部，避免上一页滚动状态残留
+    window.scrollTo(0,0);
   }
 
   // 我的菜单中的子页面切换（历史、管理）
   function showSubPage(panelIdx){
-    for(var i=0;i<8;i++)pns[i].className='pnl';
+    for(var i=0;i<pns.length;i++)pns[i].className='pnl';
     pns[panelIdx].className='pnl vis';
+    var progBar=ge('progBar');if(progBar)progBar.style.display='none';
     if(panelIdx===5){loadHistory();ge('logoTitle').textContent='📊 历史记录';}
     if(panelIdx===6){loadAdminUsers();ge('logoTitle').textContent='👑 用户管理';}
+    window.scrollTo(0,0);
   }
   tbs[0].onclick=function(){doTab(0);};tbs[1].onclick=function(){doTab(1);};tbs[2].onclick=function(){doTab(2);};tbs[3].onclick=function(){doTab(3);};
   // 底部导航绑定
@@ -608,6 +618,7 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
   if(ge('botBar'))ge('botBar').style.display='none';
   if(ge('topTabs'))ge('topTabs').style.display='none';
   if(ge('dtRow'))ge('dtRow').style.display='none';
+  if(ge('progBar'))ge('progBar').style.display='none';
 
 
   function checkSectionLock(tabIdx){
@@ -1491,6 +1502,13 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
     // 管理员功能在「我的」页面里显示，无需控制按钮
     navTo(0); // 登录成功后默认显示打卡页
     loadFromCloud();
+    // 管理员：检查待审批用户数
+    if(CURRENT_USER&&CURRENT_USER.role==='admin'){
+      checkPendingUsers();
+      // 每60秒检查一次
+      if(window._pendingTimer)clearInterval(window._pendingTimer);
+      window._pendingTimer=setInterval(checkPendingUsers,60000);
+    }
     loadTagsFromCloud();
     // 新设备询问是否信任
     if(isNewDevice){
@@ -1739,14 +1757,14 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
       ge('adminUserList').querySelectorAll('.admin-btn-approve').forEach(function(btn){
         btn.onclick=function(){
           apiCall('POST','/api/admin/approve',{user_id:parseInt(btn.getAttribute('data-uid'))}).then(function(r){
-            if(r&&r.ok){toast('已批准');loadAdminUsers();}
+            if(r&&r.ok){toast('已批准');loadAdminUsers();checkPendingUsers();}
           });
         };
       });
       ge('adminUserList').querySelectorAll('.admin-btn-reject').forEach(function(btn){
         btn.onclick=function(){
           apiCall('POST','/api/admin/reject',{user_id:parseInt(btn.getAttribute('data-uid'))}).then(function(r){
-            if(r&&r.ok){toast('已拒绝');loadAdminUsers();}
+            if(r&&r.ok){toast('已拒绝');loadAdminUsers();checkPendingUsers();}
           });
         };
       });
@@ -2102,8 +2120,10 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
     
     if(u.role==='admin'){
       html+='<div class="my-section-title">👑 管理员</div>';
+      var pendingCount=window._pendingUsersCount||0;
+      var pendingBadge=pendingCount>0?'<span style="background:#ef4444;color:#fff;border-radius:10px;padding:2px 8px;font-size:11px;font-weight:700;margin-right:6px">'+pendingCount+'</span>':'';
       html+='<div class="my-section">'
-        +'<div class="my-item" data-act="admin"><span class="my-item-icon">👥</span><span class="my-item-text">用户管理</span><span class="my-item-arrow">›</span></div>'
+        +'<div class="my-item" data-act="admin"><span class="my-item-icon">👥</span><span class="my-item-text">用户管理</span>'+pendingBadge+'<span class="my-item-arrow">›</span></div>'
         +'</div>';
     }
     
@@ -2136,6 +2156,21 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
           });
         }
       };
+    });
+  }
+
+  // ══ 检查待审批用户数 ══
+  function checkPendingUsers(){
+    if(!CURRENT_USER||CURRENT_USER.role!=='admin')return;
+    apiCall('GET','/api/admin/users').then(function(res){
+      if(!res||!res.users)return;
+      var pending=res.users.filter(function(u){return u.status==='pending';}).length;
+      window._pendingUsersCount=pending;
+      var badge=ge('myBadge');
+      if(badge){
+        if(pending>0){badge.textContent=pending>99?'99+':pending;badge.style.display='flex';}
+        else{badge.style.display='none';}
+      }
     });
   }
 
