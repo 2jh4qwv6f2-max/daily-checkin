@@ -531,7 +531,14 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
   // 当前时段 tab（仅打卡导航下有效）
   var currentSubTab=0;
 
-  function doTab(idx){
+  // 时段锁定配置：早上7:00，中午11:00，晚上17:00；历史日期不锁定
+  var SECTION_LOCK=[
+    {panelId:'s0',unlockH:7,unlockMins:7*60,emoji:'🌅',label:'早上时段将在 07:00 后开放'},
+    {panelId:'s1',unlockH:11,unlockMins:11*60,emoji:'🌞',label:'中午时段将在 11:00 后开放'},
+    {panelId:'s2',unlockH:17,unlockMins:17*60,emoji:'🌙',label:'晚上时段将在 17:00 后开放'}
+  ];
+
+    function doTab(idx){
     // 仅用于切换时段子tab（0-3）
     [0,1,2].forEach(function(i){
       var cfg=SECTION_LOCK[i];
@@ -596,17 +603,13 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
   document.querySelectorAll('.nav-item').forEach(function(b){
     b.onclick=function(){navTo(parseInt(b.getAttribute('data-nav')));};
   });
-  // 初始化导航到打卡页
-  navTo(0);
-  // 页面加载时只检查当前显示的 tab（s0），其他 tab 切换时再检查
-  setTimeout(function(){checkSectionLock(0);},200);
+  // 默认隐藏导航相关元素，等登录成功后由 onLoginSuccess 中调 navTo(0) 显示
+  if(ge('navBar'))ge('navBar').style.display='none';
+  if(ge('botBar'))ge('botBar').style.display='none';
+  if(ge('topTabs'))ge('topTabs').style.display='none';
+  if(ge('dtRow'))ge('dtRow').style.display='none';
 
-  // 时段锁定配置：早上7:00，中午11:00，晚上17:00；历史日期不锁定
-  var SECTION_LOCK=[
-    {panelId:'s0',unlockH:7,unlockMins:7*60,emoji:'🌅',label:'早上时段将在 07:00 后开放'},
-    {panelId:'s1',unlockH:11,unlockMins:11*60,emoji:'🌞',label:'中午时段将在 11:00 后开放'},
-    {panelId:'s2',unlockH:17,unlockMins:17*60,emoji:'🌙',label:'晚上时段将在 17:00 后开放'}
-  ];
+
   function checkSectionLock(tabIdx){
     var cfg=SECTION_LOCK[tabIdx];if(!cfg)return;
     var panel=ge(cfg.panelId);
@@ -1298,10 +1301,18 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
 
   function showAuthScreen(formId){
     ge('authScreen').style.display='flex';
+    ge('navBar').style.display='none';
+    ge('botBar').style.display='none';
+    ge('topTabs').style.display='none';
+    ge('dtRow').style.display='none';
     ge('pendingScreen').style.display='none';
     AUTH_FORMS.forEach(function(id){ge(id).style.display=id===(formId||'loginForm')?'':'none';});
   }
-  function hideAuthScreen(){ge('authScreen').style.display='none';}
+  function hideAuthScreen(){
+    ge('authScreen').style.display='none';
+    ge('navBar').style.display='flex';
+    // botBar 和 topTabs 由 navTo 控制
+  }
   function showPendingScreen(){
     AUTH_FORMS.forEach(function(id){ge(id).style.display='none';});
     ge('pendingScreen').style.display='';
@@ -1478,6 +1489,7 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
     hideAuthScreen();
     // 用户名显示在我的页面
     // 管理员功能在「我的」页面里显示，无需控制按钮
+    navTo(0); // 登录成功后默认显示打卡页
     loadFromCloud();
     loadTagsFromCloud();
     // 新设备询问是否信任
