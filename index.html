@@ -489,20 +489,6 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
   <button class="nav-item" data-nav="2" type="button"><span class="nav-icon">👤</span><span class="nav-label">我的</span><span class="nav-badge" id="myBadge" style="display:none">0</span></button>
 </nav>
 <script>
-// 立即执行：如果没 token 就显示登录页，有 token 就保持隐藏（异步验证后决定）
-(function(){
-  try{
-    var tok = localStorage.getItem('session_token');
-    var dev = localStorage.getItem('device_token');
-    if(!tok && !dev){
-      var as = document.getElementById('authScreen');
-      if(as) as.style.display = 'flex';
-    }
-  }catch(e){
-    var as2 = document.getElementById('authScreen');
-    if(as2) as2.style.display = 'flex';
-  }
-})();
 (function(){
   function pad(n){return n<10?'0'+n:''+n;}
   function ge(id){return document.getElementById(id);}
@@ -1519,10 +1505,7 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
 
   // 登录成功
   function onLoginSuccess(isNewDevice){
-    hideAuthScreen();
-    // 用户名显示在我的页面
-    // 管理员功能在「我的」页面里显示，无需控制按钮
-    // 根据 URL hash 决定初始 tab（从 practice.html 等子页返回时用得到）
+    // 先决定目标 tab，并提前切换 panel，避免 hideAuthScreen 后短暂看到打卡页
     var initNav=0;
     try{
       var h=window.location.hash;
@@ -1530,6 +1513,8 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
       else if(h==='#me')initNav=2;
     }catch(e){}
     navTo(initNav);
+    // 切换好 panel 后再隐藏登录页，用户直接看到目标 tab
+    hideAuthScreen();
     loadFromCloud();
     // 管理员：检查待审批用户数
     if(CURRENT_USER&&CURRENT_USER.role==='admin'){
@@ -1609,9 +1594,8 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
     var st=null;
     try{st=localStorage.getItem('session_token');}catch(e){}
 
-    // 如果有 token，先隐藏 authScreen 避免闪跳到登录页
-    if(st||dt){
-      ge('authScreen').style.display='none';
+    if(!st && !dt){
+      ge('authScreen').style.display='flex';
     }
 
     if(st){
