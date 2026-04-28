@@ -298,7 +298,7 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
 .my-section-title{font-size:12px;color:#8888a8;font-weight:600;padding:14px 4px 6px;text-transform:uppercase;letter-spacing:.5px}
 </style>
 </head>
-<body>
+<body style="visibility:hidden">
 <!-- 登录/注册界面 -->
 <div class="auth-screen" id="authScreen" style="display:none">
   <div class="auth-box">
@@ -1320,6 +1320,7 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
 
   function showAuthScreen(formId){
     ge('authScreen').style.display='flex';
+    document.body.style.visibility='visible';
     ge('navBar').style.display='none';
     ge('botBar').style.display='none';
     ge('topTabs').style.display='none';
@@ -1515,6 +1516,8 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
     navTo(initNav);
     // 切换好 panel 后再隐藏登录页，用户直接看到目标 tab
     hideAuthScreen();
+    // 所有切换完成，让页面可见（避免任何闪跳）
+    document.body.style.visibility='visible';
     loadFromCloud();
     // 管理员：检查待审批用户数
     if(CURRENT_USER&&CURRENT_USER.role==='admin'){
@@ -1596,6 +1599,7 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
 
     if(!st && !dt){
       ge('authScreen').style.display='flex';
+      document.body.style.visibility='visible';
     }
 
     if(st){
@@ -1617,6 +1621,9 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
     }else{
       showAuthScreen();
     }
+
+    // 兜底：3秒后强制 visible，防止 JS 异常导致页面全黑
+    setTimeout(function(){document.body.style.visibility='visible';},3000);
 
     function loginWithDevice(token){
       apiCall('POST','/api/auth/device-login',{device_token:token}).then(function(res){
@@ -2148,6 +2155,7 @@ input[type="checkbox"]:checked+.rw .bx{background:#6366f1;border-color:#6366f1}i
     html+='<div class="my-section">'
       +'<div class="my-item danger" data-act="logout"><span class="my-item-icon">🚪</span><span class="my-item-text">退出登录</span></div>'
       +'</div>';
+    html+='<div style="text-align:center;color:#555570;font-size:11px;padding:16px 0 4px">每日打卡系统 v5.0-002</div>';
     
     c.innerHTML=html;
     
