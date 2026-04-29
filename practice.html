@@ -636,6 +636,34 @@ img, svg { display: block; max-width: 100%; }
 }
 .fb-extra-names .name-chip .mini-speak svg { width: 12px; height: 12px; fill: currentColor; }
 
+/* 反馈卡里的"用途"区块(反向模式专用) */
+.fb-about {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px dashed var(--line-soft);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.fb-about-title {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .12em;
+  color: var(--ink-mute);
+  text-transform: uppercase;
+}
+.fb-about-parent {
+  display: inline-block;
+  font-size: 12px;
+  color: var(--ink-soft);
+}
+.fb-about-parent strong { color: var(--ink); font-weight: 700; }
+.fb-about-desc {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--ink);
+}
+
 .next-btn {
   margin-top: 8px;
   width: 100%;
@@ -2161,6 +2189,28 @@ var __practiceApp = function () {
          </div>`
       : '';
 
+    // 反向模式:答完后(无论对错)展示该组件的中文用途说明
+    // 主组件用 q.desc;变体用 "属于 父组件名" + q.parentDesc
+    let aboutHtml = '';
+    if (store.mode === 'reverse') {
+      let aboutBody = '';
+      if (q.kind === 'variant') {
+        const parent = q.parentZh ? `<span class="fb-about-parent">属于 <strong>${escapeHtml(q.parentZh)}</strong></span>` : '';
+        const desc = q.parentDesc ? `<div class="fb-about-desc">${escapeHtml(q.parentDesc)}</div>` : '';
+        aboutBody = `${parent}${desc}`;
+      } else if (q.desc) {
+        aboutBody = `<div class="fb-about-desc">${escapeHtml(q.desc)}</div>`;
+      }
+      if (aboutBody) {
+        aboutHtml = `
+          <div class="fb-about">
+            <div class="fb-about-title">用途 · About</div>
+            ${aboutBody}
+          </div>
+        `;
+      }
+    }
+
     $fb.innerHTML = `
       <div class="feedback ${ok ? 'correct' : 'wrong'}">
         <div class="fb-title">
@@ -2175,6 +2225,7 @@ var __practiceApp = function () {
           </button>
         </div>
         ${otherHtml}
+        ${aboutHtml}
       </div>
       <button class="next-btn" id="next-btn">
         ${session.idx + 1 >= session.pool.length ? '查看结果' : '下一题'}
