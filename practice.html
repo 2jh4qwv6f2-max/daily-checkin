@@ -500,6 +500,12 @@ img, svg { display: block; max-width: 100%; }
   padding: 14px 0 6px;
   text-align: center;
 }
+.q-reverse-prompt .rp-zh-main {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: .04em;
+}
 .q-reverse-prompt .rp-en {
   font-family: var(--serif);
   font-size: 24px;
@@ -1928,8 +1934,8 @@ var __practiceApp = function () {
       : store.mode === 'input' ? renderInputMode(q)
       : renderReverseMode(q);
 
-    // 反向模式:题面隐藏 SVG,改用大字"英文名 + IPA",答题区呈现 4 个 SVG 卡片
-    // 注意:题面不显示中文,卡片下方也不显示中文,否则就是中文找中文,失去识图意义
+    // 反向模式:题面隐藏 SVG,改用大字"中文 · 英文 · IPA",答题区呈现 4 个 SVG 卡片
+    // 注意:卡片下方不显示中文,否则就成了"中文找中文"的连连看,失去识图意义
     const promptCardHTML = (store.mode === 'reverse')
       ? `
         <div class="card">
@@ -1938,6 +1944,7 @@ var __practiceApp = function () {
             <span class="counter">${session.idx + 1} / ${session.pool.length}</span>
           </div>
           <div class="q-reverse-prompt">
+            <span class="rp-zh-main">${escapeHtml(q.zh)}</span>
             <span class="rp-en">${escapeHtml(q.answers[0])}</span>
             ${q.names[0] && q.names[0].ipa ? `<span class="rp-ipa">${escapeHtml(q.names[0].ipa)}</span>` : ''}
             <span class="rp-zh">${q.kind === 'variant' ? '变体 · Variant' : '主组件 · Main'}</span>
