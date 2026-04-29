@@ -431,6 +431,96 @@ img, svg { display: block; max-width: 100%; }
 }
 .choice-btn:disabled { cursor: default; pointer-events: none; }
 
+/* === 反向模式(看名选图):2x2 SVG 卡片 === */
+.reverse-mode {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.reverse-card {
+  position: relative;
+  background: var(--bg-card);
+  border: 1.5px solid var(--line-soft);
+  border-radius: var(--radius-sm);
+  padding: 12px 10px 10px;
+  cursor: pointer;
+  transition: all .15s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  font-family: inherit;
+  color: var(--ink);
+}
+.reverse-card:active { transform: scale(0.97); }
+.reverse-card:hover { border-color: var(--ink); background: var(--bg-card-hover); }
+.reverse-card-svg {
+  width: 100%;
+  aspect-ratio: 5 / 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.reverse-card-svg svg {
+  width: 88%;
+  max-height: 86%;
+}
+.reverse-card-zh {
+  font-size: 12px;
+  color: var(--ink-mute);
+  letter-spacing: .04em;
+}
+.reverse-card.correct {
+  background: var(--success-soft);
+  border-color: var(--success);
+  color: var(--success);
+}
+.reverse-card.wrong {
+  background: var(--error-soft);
+  border-color: var(--error);
+  color: var(--error);
+}
+.reverse-card.correct::after,
+.reverse-card.wrong::after {
+  content: '✓';
+  position: absolute;
+  top: 6px; right: 8px;
+  font-size: 14px;
+  font-weight: 900;
+}
+.reverse-card.wrong::after { content: '✗'; }
+.reverse-card:disabled { cursor: default; pointer-events: none; opacity: .85; }
+.reverse-card.correct:disabled, .reverse-card.wrong:disabled { opacity: 1; }
+
+/* 反向模式题面:把英文名做主标题、中文做副标题 */
+.q-reverse-prompt {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 14px 0 6px;
+  text-align: center;
+}
+.q-reverse-prompt .rp-en {
+  font-family: var(--serif);
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: .01em;
+}
+.q-reverse-prompt .rp-ipa {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--ink-mute);
+}
+.q-reverse-prompt .rp-zh {
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+
 /* === 反馈卡(答对/答错后展示) === */
 .feedback {
   margin-top: 6px;
@@ -1549,6 +1639,28 @@ var __practiceApp = function () {
 
   // 数据从 <script id="data-script"> 读
   const RAW = JSON.parse(document.getElementById('data-script').textContent);
+
+  // 拼音映射表(题库涉及汉字的全拼,用于支持中文拼音/首字母搜索)
+  const PINYIN_MAP = {"一":"yi","三":"san","上":"shang","下":"xia","不":"bu","与":"yu","专":"zhuan","业":"ye","两":"liang","个":"ge","中":"zhong","临":"lin","为":"wei","主":"zhu","义":"yi","乐":"le","九":"jiu","事":"shi","二":"er","于":"yu","互":"hu","五":"wu","交":"jiao","产":"chan","享":"xiang","亮":"liang","人":"ren","仅":"jin","今":"jin","介":"jie","从":"cong","付":"fu","代":"dai","令":"ling","以":"yi","仪":"yi","件":"jian","价":"jia","任":"ren","优":"you","传":"chuan","估":"gu","位":"wei","低":"di","住":"zhu","体":"ti","余":"yu","作":"zuo","你":"ni","佳":"jia","使":"shi","例":"li","供":"gong","侧":"ce","便":"bian","促":"cu","信":"xin","修":"xiu","倍":"bei","倒":"dao","值":"zhi","假":"jia","停":"ting","像":"xiang","元":"yuan","充":"chong","先":"xian","光":"guang","免":"mian","兜":"dou","入":"ru","全":"quan","六":"liu","关":"guan","具":"ju","内":"nei","册":"ce","写":"xie","准":"zhun","减":"jian","凑":"cou","凸":"tu","出":"chu","击":"ji","分":"fen","切":"qie","划":"hua","列":"lie","刘":"liu","则":"ze","刚":"gang","删":"shan","利":"li","别":"bie","到":"dao","制":"zhi","刷":"shua","券":"quan","刻":"ke","前":"qian","剩":"sheng","剪":"jian","割":"ge","力":"li","功":"gong","加":"jia","务":"wu","动":"dong","助":"zhu","势":"shi","勾":"gou","包":"bao","化":"hua","区":"qu","升":"sheng","半":"ban","单":"dan","占":"zhan","卡":"ka","卫":"wei","危":"wei","即":"ji","历":"li","原":"yuan","叉":"cha","及":"ji","友":"you","双":"shuang","反":"fan","发":"fa","取":"qu","变":"bian","叠":"die","口":"kou","只":"zhi","召":"zhao","可":"ke","台":"tai","史":"shi","右":"you","号":"hao","合":"he","同":"tong","名":"ming","后":"hou","向":"xiang","含":"han","吸":"xi","告":"gao","周":"zhou","命":"ming","和":"he","品":"pin","响":"xiang","唤":"huan","商":"shang","器":"qi","囊":"nang","四":"si","回":"hui","因":"yin","围":"wei","固":"gu","图":"tu","圆":"yuan","圈":"quan","在":"zai","地":"di","场":"chang","块":"kuai","垂":"chui","型":"xing","域":"yu","基":"ji","堆":"dui","堡":"bao","塔":"ta","填":"tian","增":"zeng","备":"bei","复":"fu","外":"wai","多":"duo","大":"da","天":"tian","失":"shi","头":"tou","套":"tao","好":"hao","如":"ru","姓":"xing","媒":"mei","孔":"kong","字":"zi","安":"an","完":"wan","定":"ding","实":"shi","客":"ke","宫":"gong","容":"rong","宽":"kuan","密":"mi","富":"fu","寸":"cun","对":"dui","导":"dao","封":"feng","小":"xiao","尺":"chi","局":"ju","层":"ceng","居":"ju","屉":"ti","屏":"ping","屑":"xie","展":"zhan","属":"shu","岛":"dao","嵌":"qian","工":"gong","左":"zuo","差":"cha","己":"ji","已":"yi","布":"bu","带":"dai","常":"chang","幅":"fu","幕":"mu","干":"gan","平":"ping","年":"nian","并":"bing","幽":"you","序":"xu","应":"ying","底":"di","度":"du","建":"jian","开":"kai","异":"yi","式":"shi","引":"yin","张":"zhang","弹":"dan","强":"qiang","归":"gui","当":"dang","录":"lu","形":"xing","彩":"cai","影":"ying","径":"jing","待":"dai","微":"wei","徽":"hui","心":"xin","忘":"wang","快":"kuai","态":"tai","性":"xing","总":"zong","息":"xi","悬":"xuan","情":"qing","惠":"hui","感":"gan","懒":"lan","成":"cheng","或":"huo","户":"hu","手":"shou","打":"da","扣":"kou","扩":"kuo","扫":"sao","扰":"rao","承":"cheng","折":"zhe","报":"bao","抽":"chou","拉":"la","拍":"pai","拖":"tuo","拟":"ni","拨":"bo","择":"ze","拼":"pin","拽":"zhuai","持":"chi","指":"zhi","按":"an","换":"huan","据":"ju","捷":"jie","排":"pai","接":"jie","控":"kong","推":"tui","描":"miao","提":"ti","插":"cha","搜":"sou","摄":"she","播":"bo","操":"cao","支":"zhi","收":"shou","放":"fang","效":"xiao","散":"san","数":"shu","整":"zheng","文":"wen","斑":"ban","斗":"dou","料":"liao","斜":"xie","斥":"chi","断":"duan","新":"xin","方":"fang","旋":"xuan","无":"wu","日":"ri","时":"shi","明":"ming","星":"xing","昵":"ni","显":"xian","景":"jing","暂":"zan","暗":"an","曲":"qu","更":"geng","最":"zui","月":"yue","有":"you","期":"qi","未":"wei","本":"ben","机":"ji","杀":"sha","杂":"za","权":"quan","杠":"gang","条":"tiao","来":"lai","松":"song","板":"ban","构":"gou","析":"xi","果":"guo","架":"jia","染":"ran","查":"cha","柱":"zhu","栅":"zha","标":"biao","栏":"lan","树":"shu","样":"yang","核":"he","格":"ge","框":"kuang","案":"an","档":"dang","梯":"ti","楼":"lou","槛":"kan","槽":"cao","模":"mo","横":"heng","次":"ci","款":"kuan","止":"zhi","正":"zheng","步":"bu","段":"duan","母":"mu","每":"mei","比":"bi","气":"qi","水":"shui","汉":"han","沉":"chen","法":"fa","泡":"pao","波":"bo","注":"zhu","活":"huo","流":"liu","浅":"qian","浮":"fu","海":"hai","浸":"jin","消":"xiao","液":"ye","深":"shen","清":"qing","渲":"xuan","滑":"hua","滚":"gun","满":"man","滤":"lv","漏":"lou","瀑":"pu","灯":"deng","灰":"hui","灵":"ling","点":"dian","热":"re","焦":"jiao","照":"zhao","片":"pian","牌":"pai","物":"wu","特":"te","状":"zhuang","独":"du","率":"lv","玫":"mei","环":"huan","现":"xian","理":"li","琴":"qin","瑰":"gui","生":"sheng","用":"yong","电":"dian","画":"hua","界":"jie","略":"lve","登":"deng","百":"bai","的":"de","监":"jian","盘":"pan","目":"mu","直":"zhi","相":"xiang","看":"kan","矢":"shi","知":"zhi","矩":"ju","短":"duan","码":"ma","础":"chu","确":"que","示":"shi","社":"she","票":"piao","禁":"jin","种":"zhong","秒":"miao","积":"ji","称":"cheng","移":"yi","程":"cheng","空":"kong","突":"tu","窗":"chuang","立":"li","竖":"shu","章":"zhang","端":"duan","符":"fu","第":"di","等":"deng","筛":"shai","签":"qian","简":"jian","算":"suan","管":"guan","箭":"jian","类":"lei","粒":"li","系":"xi","素":"su","索":"suo","紧":"jin","级":"ji","纯":"chun","纵":"zong","纹":"wen","线":"xian","组":"zu","细":"xi","织":"zhi","终":"zhong","结":"jie","绕":"rao","统":"tong","续":"xu","维":"wei","缀":"zhui","缓":"huan","编":"bian","缘":"yuan","缩":"suo","罐":"guan","网":"wang","罩":"zhao","置":"zhi","翻":"fan","聊":"liao","联":"lian","聚":"ju","背":"bei","胶":"jiao","能":"neng","自":"zi","航":"hang","色":"se","节":"jie","芯":"xin","范":"fan","菜":"cai","营":"ying","蒙":"meng","藏":"cang","虑":"lv","虚":"xu","行":"xing","补":"bu","表":"biao","裁":"cai","裂":"lie","裹":"guo","要":"yao","见":"jian","规":"gui","视":"shi","览":"lan","觉":"jue","角":"jiao","解":"jie","触":"chu","警":"jing","计":"ji","订":"ding","认":"ren","议":"yi","讯":"xun","记":"ji","论":"lun","设":"she","访":"fang","证":"zheng","评":"ping","识":"shi","词":"ci","话":"hua","详":"xiang","语":"yu","误":"wu","说":"shuo","读":"du","调":"diao","账":"zhang","货":"huo","质":"zhi","购":"gou","贴":"tie","费":"fei","资":"zi","赞":"zan","起":"qi","趋":"qu","足":"zu","距":"ju","跟":"gen","路":"lu","跳":"tiao","车":"che","转":"zhuan","轮":"lun","轴":"zhou","轻":"qing","载":"zai","较":"jiao","辅":"fu","辑":"ji","输":"shu","边":"bian","达":"da","过":"guo","运":"yun","返":"fan","进":"jin","连":"lian","述":"shu","迷":"mi","退":"tui","送":"song","适":"shi","选":"xuan","透":"tou","逐":"zhu","递":"di","通":"tong","速":"su","遮":"zhe","避":"bi","部":"bu","配":"pei","采":"cai","重":"zhong","量":"liang","金":"jin","钟":"zhong","钮":"niu","铺":"pu","链":"lian","销":"xiao","错":"cuo","键":"jian","镜":"jing","长":"zhang","门":"men","闪":"shan","闭":"bi","问":"wen","间":"jian","阈":"yu","防":"fang","阴":"yin","阵":"zhen","阶":"jie","附":"fu","降":"jiang","限":"xian","除":"chu","险":"xian","随":"sui","隐":"yin","隔":"ge","集":"ji","雷":"lei","需":"xu","面":"mian","音":"yin","页":"ye","顶":"ding","项":"xiang","顺":"shun","预":"yu","领":"ling","频":"pin","题":"ti","颜":"yan","额":"e","风":"feng","飞":"fei","饱":"bao","饼":"bing","馈":"kui","首":"shou","马":"ma","驻":"zhu","验":"yan","骤":"zhou","骨":"gu","高":"gao","黑":"hei","齐":"qi"};
+  // 把中文串转为全拼串和首字母串。非汉字原样保留。
+  function zhToPinyin(s) {
+    let full = '', initial = '';
+    for (const ch of (s || '')) {
+      const py = PINYIN_MAP[ch];
+      if (py) { full += py; initial += py[0]; }
+      else { full += ch.toLowerCase(); initial += ch.toLowerCase(); }
+    }
+    return { full, initial };
+  }
+  // 关键词匹配中文文本:命中"中文原串/全拼/首字母"任一即可
+  function matchZh(text, kw, nkw) {
+    if (!text) return false;
+    if (text.toLowerCase().includes(kw)) return true;
+    const py = zhToPinyin(text);
+    if (py.full.includes(nkw)) return true;
+    if (py.initial.includes(nkw)) return true;
+    return false;
+  }
   // RAW 是 [{chapter:{num,en,zh}, zh, names:[{en,ipa}], desc, svg, tag, variants:[{zh,en,ipa,svg}]}]
 
   // ========== 题库构建 ==========
@@ -1608,7 +1720,7 @@ var __practiceApp = function () {
   }
   const store = Object.assign({
     chapters: ['all'],   // 章节筛选
-    scope: 'both',       // 'main' | 'variant' | 'both'
+    scope: 'main',       // 'main' | 'variant' | 'both'  默认仅主组件
     mode: 'choice',      // 'choice' | 'input'
     sessionLen: 20,      // 单次题数
     reviewBook: {},      // {key: {zh, en, ipa, svg, times}}
@@ -1752,6 +1864,33 @@ var __practiceApp = function () {
     return shuffle([correct, ...distractors]);
   }
 
+  // 反向模式:返回 4 个完整题目对象({zh, svg, answers, ...}),含正确项
+  function buildReverseChoices(q) {
+    const all = QBANK.main.concat(QBANK.variant);
+    const correctEn = normalize(q.answers[0]);
+    // 候选池:排除本题、排除答案同名(避免"两个 Button")、必须有 svg
+    const candidates = all.filter(o =>
+      o !== q
+      && normalize(o.answers[0]) !== correctEn
+      && o.svg
+    );
+    // 优先同章节
+    let pool = candidates;
+    if (q.chapter) {
+      const same = candidates.filter(o => o.chapter && o.chapter.num === q.chapter.num);
+      if (same.length >= 3) pool = same;
+    }
+    // 去重(同 zh 不要重复出现)
+    const seen = new Set([q.zh]);
+    const distinct = pool.filter(o => {
+      if (seen.has(o.zh)) return false;
+      seen.add(o.zh);
+      return true;
+    });
+    const distractors = sample(distinct, 3);
+    return shuffle([q, ...distractors]);
+  }
+
   // ========== 渲染 ==========
   const $main = document.getElementById('main');
   const $progress = document.getElementById('progress');
@@ -1784,32 +1923,55 @@ var __practiceApp = function () {
     }
 
     // 提示行:明确告诉用户在问什么
-    const promptText = q.kind === 'variant'
-      ? '这一变体的英文名是?'
-      : '这个组件的英文名是?';
+    const promptText = (store.mode === 'reverse')
+      ? '哪一个是这个组件?'
+      : (q.kind === 'variant' ? '这一变体的英文名是?' : '这个组件的英文名是?');
 
-    const answerHTML = store.mode === 'choice'
-      ? renderChoiceMode(q)
-      : renderInputMode(q);
+    const answerHTML =
+      store.mode === 'choice'  ? renderChoiceMode(q)
+      : store.mode === 'input' ? renderInputMode(q)
+      : renderReverseMode(q);
+
+    // 反向模式:题面隐藏 SVG,改用大字"英文名 + IPA + 中文",答题区呈现 4 个 SVG 卡片
+    const promptCardHTML = (store.mode === 'reverse')
+      ? `
+        <div class="card">
+          <div class="q-meta">
+            <span class="chapter">${chapText}</span>
+            <span class="counter">${session.idx + 1} / ${session.pool.length}</span>
+          </div>
+          <div class="q-reverse-prompt">
+            <span class="rp-en">${escapeHtml(q.answers[0])}</span>
+            ${q.names[0] && q.names[0].ipa ? `<span class="rp-ipa">${escapeHtml(q.names[0].ipa)}</span>` : ''}
+            <span class="rp-zh">${escapeHtml(q.zh)} · ${tagHtml ? q.tag : (q.kind === 'variant' ? '变体' : '主组件')}</span>
+          </div>
+          ${descHTML}
+          <div class="q-prompt">${promptText}</div>
+        </div>
+      `
+      : `
+        <div class="card">
+          <div class="q-meta">
+            <span class="chapter">${chapText}</span>
+            <span class="counter">${session.idx + 1} / ${session.pool.length}</span>
+          </div>
+          <div class="q-illust">${q.svg}</div>
+          <div class="q-name">
+            <span class="zh">${escapeHtml(q.zh)}</span>
+            ${tagHtml || scopeHtml}
+          </div>
+          ${descHTML}
+          <div class="q-prompt">${promptText}</div>
+        </div>
+      `;
 
     $main.innerHTML = `
-      <div class="card">
-        <div class="q-meta">
-          <span class="chapter">${chapText}</span>
-          <span class="counter">${session.idx + 1} / ${session.pool.length}</span>
-        </div>
-        <div class="q-illust">${q.svg}</div>
-        <div class="q-name">
-          <span class="zh">${escapeHtml(q.zh)}</span>
-          ${tagHtml || scopeHtml}
-        </div>
-        ${descHTML}
-        <div class="q-prompt">${promptText}</div>
-      </div>
+      ${promptCardHTML}
       <div class="card answer-area">
         <div class="mode-tabs" id="mode-tabs">
           <button class="mode-tab ${store.mode === 'choice' ? 'active' : ''}" data-mode="choice">四选一 · Choose</button>
           <button class="mode-tab ${store.mode === 'input' ? 'active' : ''}" data-mode="input">输入 · Type</button>
+          <button class="mode-tab ${store.mode === 'reverse' ? 'active' : ''}" data-mode="reverse">看名选图 · Reverse</button>
         </div>
         <div id="answer-zone">${answerHTML}</div>
         <div id="feedback-zone"></div>
@@ -1824,13 +1986,8 @@ var __practiceApp = function () {
       if (m === store.mode) return;
       store.mode = m;
       saveStore(store);
-      // 重渲染答题区
-      const $ans = document.getElementById('answer-zone');
-      $ans.innerHTML = m === 'choice' ? renderChoiceMode(q) : renderInputMode(q);
-      bindAnswerEvents(q);
-      document.querySelectorAll('.mode-tab').forEach(tab => {
-        tab.classList.toggle('active', tab.dataset.mode === m);
-      });
+      // reverse 与其它模式题面布局不同,直接整页重渲染最稳妥
+      renderQuestion();
     });
 
     bindAnswerEvents(q);
@@ -1860,6 +2017,20 @@ var __practiceApp = function () {
       </div>
     `;
   }
+  function renderReverseMode(q) {
+    const choices = buildReverseChoices(q);
+    // 用 zh 作为 data-key 关联,handleAnswer 时用它判定正确
+    return `
+      <div class="reverse-mode" id="reverse-grid">
+        ${choices.map(o => `
+          <button class="reverse-card" data-key="${escapeAttr(o.zh)}">
+            <span class="reverse-card-svg">${o.svg}</span>
+            <span class="reverse-card-zh">${escapeHtml(o.zh)}</span>
+          </button>
+        `).join('')}
+      </div>
+    `;
+  }
 
   function bindAnswerEvents(q) {
     if (store.mode === 'choice') {
@@ -1868,6 +2039,13 @@ var __practiceApp = function () {
         const b = e.target.closest('.choice-btn');
         if (!b) return;
         handleAnswer(q, b.dataset.en, b);
+      });
+    } else if (store.mode === 'reverse') {
+      document.getElementById('reverse-grid').addEventListener('click', (e) => {
+        if (revealed) return;
+        const b = e.target.closest('.reverse-card');
+        if (!b) return;
+        handleAnswer(q, b.dataset.key, b);
       });
     } else {
       const inp = document.getElementById('input-en');
@@ -1890,7 +2068,10 @@ var __practiceApp = function () {
   function handleAnswer(q, userAns, choiceBtn) {
     if (revealed) return;
     revealed = true;
-    const ok = checkAnswer(userAns, q.answers);
+    // reverse 模式按 zh 判定;其它模式按英文判定
+    const ok = (store.mode === 'reverse')
+      ? (userAns === q.zh)
+      : checkAnswer(userAns, q.answers);
     if (ok) {
       session.correct++;
       vibrate(40);
@@ -1930,6 +2111,15 @@ var __practiceApp = function () {
       } else {
         document.querySelectorAll('.choice-btn').forEach(b => { b.disabled = true; });
       }
+    } else if (store.mode === 'reverse' && choiceBtn) {
+      choiceBtn.classList.add(ok ? 'correct' : 'wrong');
+      // 若答错,标出正确卡片
+      document.querySelectorAll('.reverse-card').forEach(b => {
+        b.disabled = true;
+        if (!ok && b.dataset.key === q.zh) {
+          b.classList.add('correct');
+        }
+      });
     } else {
       const wrap = document.getElementById('input-wrap');
       wrap.classList.add(ok ? 'correct' : 'wrong');
@@ -2097,6 +2287,7 @@ var __practiceApp = function () {
         <div class="opt-row" data-key="mode">
           <button class="opt-chip ${store.mode === 'choice' ? 'active' : ''}" data-val="choice">四选一</button>
           <button class="opt-chip ${store.mode === 'input' ? 'active' : ''}" data-val="input">手动输入</button>
+          <button class="opt-chip ${store.mode === 'reverse' ? 'active' : ''}" data-val="reverse">看名选图</button>
         </div>
       </div>
       <div class="opt-group">
@@ -2249,28 +2440,31 @@ var __practiceApp = function () {
   }
 
   function filterDict() {
-    let list = RAW.slice();
-    if (dictState.chapter !== 'all') {
-      list = list.filter(it => it.chapter && String(it.chapter.num) === dictState.chapter);
-    }
     const kw = dictState.keyword.trim().toLowerCase();
-    if (kw) {
-      const nkw = normalize(kw);
-      list = list.filter(it => {
-        // 中文名
-        if (it.zh && it.zh.toLowerCase().includes(kw)) return true;
-        // 英文主名
-        if (it.names.some(n => n.en && n.en.toLowerCase().includes(kw))) return true;
-        if (it.names.some(n => normalize(n.en).includes(nkw))) return true;
-        // 描述
-        if (it.desc && it.desc.toLowerCase().includes(kw)) return true;
-        // 变体名(中英)
-        if (it.variants.some(v => (v.zh && v.zh.includes(kw))
-          || (v.en && (v.en.toLowerCase().includes(kw) || normalize(v.en).includes(nkw))))) return true;
-        return false;
-      });
+    let list = RAW.slice();
+    // 关键有词时执行全量搜索(忽略章节筛选);无关键词时按章节筛选
+    if (!kw) {
+      if (dictState.chapter !== 'all') {
+        list = list.filter(it => it.chapter && String(it.chapter.num) === dictState.chapter);
+      }
+      return list;
     }
-    return list;
+    const nkw = normalize(kw);
+    return list.filter(it => {
+      // 中文名(支持原文/拼音/首字母)
+      if (matchZh(it.zh, kw, nkw)) return true;
+      // 英文主名
+      if (it.names.some(n => n.en && n.en.toLowerCase().includes(kw))) return true;
+      if (it.names.some(n => normalize(n.en).includes(nkw))) return true;
+      // 描述(中文支持拼音)
+      if (matchZh(it.desc, kw, nkw)) return true;
+      // 变体名(中英)
+      if (it.variants.some(v =>
+        matchZh(v.zh, kw, nkw)
+        || (v.en && (v.en.toLowerCase().includes(kw) || normalize(v.en).includes(nkw)))
+      )) return true;
+      return false;
+    });
   }
 
   // 章节面板默认展开状态(放在状态对象,切回还在原位)
@@ -2343,7 +2537,7 @@ var __practiceApp = function () {
             <div class="dict-chap-grid" id="chap-grid">${chapPanelHTML}</div>
           </div>
         </div>
-        <div class="dict-meta">${filtered.length} / ${RAW.length} 项 · ${dictState.keyword ? '搜索:'+escapeHtml(dictState.keyword) : '全部展示'}</div>
+        <div class="dict-meta">${filtered.length} / ${RAW.length} 项 · ${dictState.keyword ? ('搜索全部 14 章: '+escapeHtml(dictState.keyword)) : (curNum === 'all' ? '全部展示' : ('当前: '+escapeHtml(curLabel)))}</div>
       </div>
       ${listHTML}
     `;
@@ -2603,7 +2797,13 @@ var __practiceApp = function () {
     $main.innerHTML = `<div class="card"><div class="empty-state"><div>题库为空</div></div></div>`;
   }
 
-})();
+};
+// 数据可能已就绪(同步内联)或需等待 fetch 完成
+if (document.getElementById('data-script') && document.getElementById('data-script').textContent.trim()) {
+  __practiceApp();
+} else {
+  window.addEventListener('practice-data-ready', __practiceApp);
+}
 
 </script>
 
@@ -2613,13 +2813,7 @@ var __practiceApp = function () {
   if(btn){
     btn.onclick = function(){window.location.replace('index.html#learn');};
   }
-};
-// 数据可能已就绪(同步内联)或需等待 fetch 完成
-if (document.getElementById('data-script') && document.getElementById('data-script').textContent.trim()) {
-  __practiceApp();
-} else {
-  window.addEventListener('practice-data-ready', __practiceApp);
-}
+})();
 </script>
 </body>
 </html>
