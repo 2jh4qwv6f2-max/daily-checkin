@@ -1,4 +1,4 @@
-<!-- UI 组件英文练习 v5.2-001 -->
+<!-- UI 组件英文练习 v5.3 - 反向模式答后显示中文用途 -->
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -2191,8 +2191,13 @@ var __practiceApp = function () {
 
     // 反向模式:答完后(无论对错)展示该组件的中文用途说明
     // 主组件用 q.desc;变体用 "属于 父组件名" + q.parentDesc
+    // 注:用 dataset 而不是 store.mode 判定,避免 store 异步未同步导致漏渲染
+    const isReverseNow = (function(){
+      const t = document.querySelector('.mode-tab.active');
+      return (t && t.dataset.mode === 'reverse') || store.mode === 'reverse';
+    })();
     let aboutHtml = '';
-    if (store.mode === 'reverse') {
+    if (isReverseNow) {
       let aboutBody = '';
       if (q.kind === 'variant') {
         const parent = q.parentZh ? `<span class="fb-about-parent">属于 <strong>${escapeHtml(q.parentZh)}</strong></span>` : '';
@@ -2212,7 +2217,7 @@ var __practiceApp = function () {
     }
 
     $fb.innerHTML = `
-      <div class="feedback ${ok ? 'correct' : 'wrong'}">
+      <div class="feedback ${ok ? 'correct' : 'wrong'}" data-mode="${isReverseNow ? 'reverse' : store.mode}" data-has-desc="${q.desc ? '1' : '0'}" data-has-parent-desc="${q.parentDesc ? '1' : '0'}">
         <div class="fb-title">
           <span class="fb-icon">${ok ? '✓' : '✗'}</span>
           <span>${ok ? '正确 · Correct' : '答错 · Try again'}</span>
