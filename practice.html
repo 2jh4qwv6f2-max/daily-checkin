@@ -1,4 +1,4 @@
-<!-- UI 组件英文练习 v5.3 - 反向模式答后显示中文用途 -->
+<!-- UI 组件英文练习 v5.4 - 反向模式 SVG 文字改为占位字符,保留结构感 -->
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -2048,14 +2048,47 @@ var __practiceApp = function () {
       </div>
     `;
   }
-  // 反向模式下把 SVG 里的文字节点清掉,避免选项里直接写着英文名("Heading"/"Badge"/"Click here" 等)
-  // 一并清掉 <tspan>(避免空 <text> 残留干扰布局)
-  function stripSvgText(svg) {
-    if (!svg) return svg;
-    return svg
-      .replace(/<text\b[^>]*>[\s\S]*?<\/text>/gi, '')
-      .replace(/<tspan\b[^>]*>[\s\S]*?<\/tspan>/gi, '');
+  // 反向模式下处理 SVG 里的 <text>/<tspan>:
+  // 不是直接删除(那样很多组件会变成空盒子,如 Descriptions/Breadcrumb),
+  // 而是把每个字符替换为占位文本(A/a/0/中文→a),保留长度感和结构性符号(冒号、斜线、箭头、货币符等)
+  // 这样既消除答案泄露,又保住"这是文字层级 / 这是键值对 / 这是导航项"的视觉信号
+  function _maskCharText(s) {
+    if (!s) return s;
+    let out = '';
+    for (const ch of s) {
+      if (/\s/.test(ch)) out += ch;
+      // 结构性符号原样保留(分隔/标点/单位)
+      else if (/[\/·•▶→←↑↓:：—\-_=+,.;|()()【】\[\]<>《》"""''`~!?@#$%^&*¥$€£%]/.test(ch)) out += ch;
+      else if (/[0-9]/.test(ch)) out += '0';
+      else if (/[A-Z]/.test(ch)) out += 'A';
+      else if (/[a-z]/.test(ch)) out += 'a';
+      else if (/[\u4e00-\u9fff]/.test(ch)) out += 'a';  // 中文也用 a 占位,视觉中立
+      else out += ch;
+    }
+    return out;
   }
+  // 处理 <text>/<tspan> 标签内的纯文本内容(不破坏属性、不破坏嵌套子标签)
+  // 操作字符级幂等:多次运行结果一致(a→a / 0→0 / A→A),所以即便 <text> 里嵌 <tspan>,
+  // 外层一次替换 + 内层标签内容看起来已是占位文本也不会出错
+  function maskSvgText(svg) {
+    if (!svg) return svg;
+    return svg.replace(
+      /(<(?:text|tspan)\b[^>]*>)([\s\S]*?)(<\/(?:text|tspan)>)/gi,
+      (full, open, content, close) => {
+        // 仅替换 content 里的"非标签字符":通过把每段 ">...<" 之间的文本独立处理
+        // 当 content 不含子标签时(常见情况),整段就是一个纯文本块,直接全替换
+        if (!/[<>]/.test(content)) {
+          return open + _maskCharText(content) + close;
+        }
+        // 有嵌套子标签:仅处理纯文本片段(>...<之间)
+        const replaced = content.replace(/(^|>)([^<]+)(?=<|$)/g,
+          (f, prefix, txt) => prefix + _maskCharText(txt));
+        return open + replaced + close;
+      }
+    );
+  }
+  // 保留 stripSvgText 名字以兼容旧调用,但改为新行为
+  function stripSvgText(svg) { return maskSvgText(svg); }
   function renderReverseMode(q) {
     const choices = buildReverseChoices(q);
     // 用 zh 作为 data-key 关联(用户不可见,仅用于点击判定)
