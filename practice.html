@@ -442,13 +442,14 @@ img, svg { display: block; max-width: 100%; }
   background: var(--bg-card);
   border: 1.5px solid var(--line-soft);
   border-radius: var(--radius-sm);
-  padding: 12px 10px 10px;
+  padding: 14px 12px;
   cursor: pointer;
   transition: all .15s ease;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 6px;
+  justify-content: center;
+  min-height: 110px;
   font-family: inherit;
   color: var(--ink);
 }
@@ -465,13 +466,8 @@ img, svg { display: block; max-width: 100%; }
   overflow: hidden;
 }
 .reverse-card-svg svg {
-  width: 88%;
-  max-height: 86%;
-}
-.reverse-card-zh {
-  font-size: 12px;
-  color: var(--ink-mute);
-  letter-spacing: .04em;
+  width: 90%;
+  max-height: 90%;
 }
 .reverse-card.correct {
   background: var(--success-soft);
@@ -1932,7 +1928,8 @@ var __practiceApp = function () {
       : store.mode === 'input' ? renderInputMode(q)
       : renderReverseMode(q);
 
-    // 反向模式:题面隐藏 SVG,改用大字"英文名 + IPA + 中文",答题区呈现 4 个 SVG 卡片
+    // 反向模式:题面隐藏 SVG,改用大字"英文名 + IPA",答题区呈现 4 个 SVG 卡片
+    // 注意:题面不显示中文,卡片下方也不显示中文,否则就是中文找中文,失去识图意义
     const promptCardHTML = (store.mode === 'reverse')
       ? `
         <div class="card">
@@ -1943,9 +1940,8 @@ var __practiceApp = function () {
           <div class="q-reverse-prompt">
             <span class="rp-en">${escapeHtml(q.answers[0])}</span>
             ${q.names[0] && q.names[0].ipa ? `<span class="rp-ipa">${escapeHtml(q.names[0].ipa)}</span>` : ''}
-            <span class="rp-zh">${escapeHtml(q.zh)} · ${tagHtml ? q.tag : (q.kind === 'variant' ? '变体' : '主组件')}</span>
+            <span class="rp-zh">${q.kind === 'variant' ? '变体 · Variant' : '主组件 · Main'}</span>
           </div>
-          ${descHTML}
           <div class="q-prompt">${promptText}</div>
         </div>
       `
@@ -2017,15 +2013,23 @@ var __practiceApp = function () {
       </div>
     `;
   }
+  // 反向模式下把 SVG 里的文字节点清掉,避免选项里直接写着英文名("Heading"/"Badge"/"Click here" 等)
+  // 一并清掉 <tspan>(避免空 <text> 残留干扰布局)
+  function stripSvgText(svg) {
+    if (!svg) return svg;
+    return svg
+      .replace(/<text\b[^>]*>[\s\S]*?<\/text>/gi, '')
+      .replace(/<tspan\b[^>]*>[\s\S]*?<\/tspan>/gi, '');
+  }
   function renderReverseMode(q) {
     const choices = buildReverseChoices(q);
-    // 用 zh 作为 data-key 关联,handleAnswer 时用它判定正确
+    // 用 zh 作为 data-key 关联(用户不可见,仅用于点击判定)
+    // 卡片只显示 SVG,不显示中文,否则就是"中文找中文"失去识图意义
     return `
       <div class="reverse-mode" id="reverse-grid">
         ${choices.map(o => `
-          <button class="reverse-card" data-key="${escapeAttr(o.zh)}">
-            <span class="reverse-card-svg">${o.svg}</span>
-            <span class="reverse-card-zh">${escapeHtml(o.zh)}</span>
+          <button class="reverse-card" data-key="${escapeAttr(o.zh)}" aria-label="${escapeAttr(o.zh)}">
+            <span class="reverse-card-svg">${stripSvgText(o.svg)}</span>
           </button>
         `).join('')}
       </div>
